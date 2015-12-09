@@ -1,2 +1,0 @@
-# jilt
-Jilt Image Board
