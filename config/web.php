@@ -38,6 +38,7 @@ $config = [
             ],
         ],
         'db' => require(__DIR__ . '/db.php'),
+        'urlManager' => require(__DIR__ . '/routes.php')
     ],
     'params' => $params,
 ];
