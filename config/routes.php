@@ -5,46 +5,50 @@ return [
     'showScriptName' => false,
     'rules' => [
         /*Boards*/
-        'GET boards/<boardName:\w+>' => 'boards/get',
-        'POST boards' => 'boards/post',
-        'PUT boards/<boardName:\w+>' => 'boards/update',
-        'DELETE boards/<boardName:\w+>' => 'boards/delete',
-        'GET boards/<boardName:\w+>/pages/<pageNum:\d+>' => 'boards/getPage',
+        'GET /boards/<name:\w+>' => 'board/get',
+        'POST /boards' => 'board/create',
+        'PUT /boards/<name:\w+>' => 'board/update',
+        'DELETE /boards/<name:\w+>' => 'board/delete',
+        'GET /boards/<name:\w+>/pages/<pageNum:\d+>' => 'board/getPage',
 
         /*Threads*/
-        'GET /boards/<boardName:\w+>/threads/<threadNum:\d+>' => 'threads/get',
-        'POST /boards/<boardName:\w+>/threads' => 'threads/post',
-        'PUT /boards/<boardName:\w+>/threads/<threadNum:\d+>' => 'threads/update',
-        'DELETE /boards/<boardName:\w+>/threads/<threadNum:\d+>' => 'threads/delete',
+        'GET /boards/<name:\w+>/threads/<threadNum:\d+>' => 'thread/get',
+        'POST /boards/<name:\w+>/threads' => 'thread/create',
+        'PUT /boards/<name:\w+>/threads/<threadNum:\d+>' => 'thread/update',
+        'DELETE /boards/<name:\w+>/threads/<threadNum:\d+>' => 'thread/delete',
 
         /*Chats*/
-        'GET /boards/<boardName:\w+>/threads/<threadNum:\d+>/pages/<pageNum:\d+>' => 'threads/getPage',
+        'GET /boards/<name:\w+>/threads/<threadNum:\d+>/pages/<pageNum:\d+>' => 'thread/getPage',
 
         /*Posts*/
-        'GET /boards/<boardName:\w+>/threads/<threadNum:\d+>/posts/<postNum:\d+>' => 'posts/get',
-        'POST /boards/<boardName:\w+>/threads/<threadNum:\d+>/posts' => 'posts/post',
-        'PUT /boards/<boardName:\w+>/threads/<threadNum:\d+>/posts/<postNum:\d+>' => 'posts/update',
-        'DELETE /boards/<boardName:\w+>/threads/<threadNum:\d+>/posts/<postNum:\d+>' => 'posts/delete',
+        'GET /boards/<name:\w+>/threads/<threadNum:\d+>/posts/<createNum:\d+>' => 'post/get',
+        'POST /boards/<name:\w+>/threads/<threadNum:\d+>/posts' => 'post/create',
+        'PUT /boards/<name:\w+>/threads/<threadNum:\d+>/posts/<createNum:\d+>' => 'post/update',
+        'DELETE /boards/<name:\w+>/threads/<threadNum:\d+>/posts/<createNum:\d+>' => 'post/delete',
 
         /*Authentication*/
-        'POST /control-panel/login' => 'auth/login',
-        'POST /control-panel/logout' => 'auth/logout',
-        'POST /control-panel/resetPassword' => 'auth/resetPassword',
+        'POST /login' => 'auth/login',
+        'POST /logout' => 'auth/logout',
+        'POST /resetPassword' => 'auth/resetPassword',
 
         /*Users*/
-        'GET /control-panel/users' => 'users/index',
-        'POST /control-panel/users' => 'users/post',
-        'GET /control-panel/users/<id:\d+>' => 'users/get',
-        'PUT /control-panel/users/<id:\d+>' => 'users/update',
-        'DELETE /control-panel/users/<id:\d+>' => 'users/delete',
-        'GET /control-panel/users/<id:\d+>/cp-rights' => 'users/getCpRights',
-        'PUT /control-panel/users/<id:\d+>/cp-rights' => 'users/updateCpRights',
+        'GET /users' => 'user/index',
+        'POST /users' => 'user/create',
+        'GET /users/<id:\d+>' => 'user/get',
+        'PUT /users/<id:\d+>' => 'user/update',
+        'DELETE /users/<id:\d+>' => 'user/delete',
+        'GET /users/<id:\d+>/cp-rights' => 'user/getCpRights',
+        'PUT /users/<id:\d+>/cp-rights' => 'user/updateCpRights',
 
         /*Board and chat rights*/
-        'GET /control-panel/users/<id:\d+>/rights' => 'users/getRights',
-        'PUT /control-panel/users/<id:\d+>/rights' => 'users/updateRights',
+        'GET /users/<id:\d+>/rights' => 'user/getRights',
+        'PUT /users/<id:\d+>/rights' => 'user/updateRights',
 
-        /*Boards settings*/
-        'GET /cintr'
+        /*Bans*/
+        'GET /bans' => 'ban/index',
+        'POST /bans' => 'ban/create',
+        'GET /bans/<id:\d+>' => 'ban/get',
+        'PUT /bans/<id:\d+>' => 'ban/update',
+        'DELETE /bans/<id:\d+>' => 'ban/delete',
     ]
 ];
