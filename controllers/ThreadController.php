@@ -2,7 +2,7 @@
 
 namespace app\controllers;
 
-use yii\web;
+use yii\web\Controller;
 
 class ThreadController extends Controller
 {

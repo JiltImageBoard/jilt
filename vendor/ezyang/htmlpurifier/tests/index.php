@@ -19,7 +19,7 @@
  * the enclosed instructions.
  *
  * @warning File setup does not exactly match with autoloader; make sure that
- *          non-test classes (i.e. classes that are not retrieved using
+ *          non-test helpers (i.e. helpers that are not retrieved using
  *          $test_files) do not have underscores in their names.
  */
 

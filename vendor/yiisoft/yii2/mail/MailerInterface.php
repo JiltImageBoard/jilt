@@ -8,7 +8,7 @@
 namespace yii\mail;
 
 /**
- * MailerInterface is the interface that should be implemented by mailer classes.
+ * MailerInterface is the interface that should be implemented by mailer helpers.
  *
  * A mailer should mainly support creating and sending [[MessageInterface|mail messages]]. It should
  * also support composition of the message body through the view rendering mechanism. For example,

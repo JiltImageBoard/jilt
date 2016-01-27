@@ -11,7 +11,7 @@ use Yii;
 use yii\base\InvalidRouteException;
 
 /**
- * Application is the base class for all web application classes.
+ * Application is the base class for all web application helpers.
  *
  * @property string $homeUrl The homepage URL.
  * @property Session $session The session component. This property is read-only.

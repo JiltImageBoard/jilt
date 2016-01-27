@@ -8,7 +8,7 @@
 namespace yii\base;
 
 /**
- * Configurable is the interface that should be implemented by classes who support configuring
+ * Configurable is the interface that should be implemented by helpers who support configuring
  * its properties through the last parameter to its constructor.
  *
  * The interface does not declare any method. Classes implementing this interface must declare their constructors

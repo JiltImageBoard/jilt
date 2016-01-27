@@ -8,7 +8,7 @@
 namespace yii\web;
 
 /**
- * The AssetConverterInterface must be implemented by asset converter classes.
+ * The AssetConverterInterface must be implemented by asset converter helpers.
  *
  * @author Qiang Xue <qiang.xue@gmail.com>
  * @since 2.0

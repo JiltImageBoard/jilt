@@ -28,7 +28,7 @@ defined('STDERR') or define('STDERR', fopen('php://stderr', 'w'));
  * - User specifies which command to run on the command line;
  * - The command processes the user request with the specified parameters.
  *
- * The command classes should be under the namespace specified by [[controllerNamespace]].
+ * The command helpers should be under the namespace specified by [[controllerNamespace]].
  * Their naming should follow the same naming convention as controllers. For example, the `help` command
  * is implemented using the `HelpController` class.
  *

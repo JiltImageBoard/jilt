@@ -38,7 +38,7 @@ class QueryBuilder extends \yii\base\Object
     /**
      * @var array the abstract column types mapped to physical column types.
      * This is mainly used to support creating/modifying tables using DB-independent data type specifications.
-     * Child classes should override this property to declare supported type mappings.
+     * Child helpers should override this property to declare supported type mappings.
      */
     public $typeMap = [];
 

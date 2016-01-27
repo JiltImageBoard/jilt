@@ -10,7 +10,7 @@ namespace yii\base;
 use Yii;
 
 /**
- * Controller is the base class for classes containing controller logic.
+ * Controller is the base class for helpers containing controller logic.
  *
  * @property Module[] $modules All ancestor modules that this controller is located within. This property is
  * read-only.

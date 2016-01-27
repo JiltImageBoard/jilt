@@ -118,7 +118,7 @@ class Menu extends Widget
     public $activateItems = true;
     /**
      * @var boolean whether to activate parent menu items when one of the corresponding child menu items is active.
-     * The activated parent menu items will also have its CSS classes appended with [[activeCssClass]].
+     * The activated parent menu items will also have its CSS helpers appended with [[activeCssClass]].
      */
     public $activateParents = false;
     /**

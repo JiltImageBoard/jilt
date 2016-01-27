@@ -378,7 +378,7 @@ class Base
      * Regex delimiters '/.../' and begin/end markers '^...$' are ignored.
      *
      * Only supports a small subset of the regex syntax. For instance,
-     * unicode, negated classes, unbouned ranges, subpatterns, back references,
+     * unicode, negated helpers, unbouned ranges, subpatterns, back references,
      * assertions, recursive patterns, and comments are not supported. Escaping
      * support is extremely fragile.
      *

@@ -6,7 +6,7 @@ use Doctrine\Common\Persistence\ObjectManager;
 
 /**
  * Service class for populating a database using the Doctrine ORM or ODM.
- * A Populator can populate several tables using ActiveRecord classes.
+ * A Populator can populate several tables using ActiveRecord helpers.
  */
 class Populator
 {
@@ -49,7 +49,7 @@ class Populator
     }
 
     /**
-     * Populate the database using all the Entity classes previously added.
+     * Populate the database using all the Entity helpers previously added.
      *
      * @param EntityManager $entityManager A Doctrine connection object
      *

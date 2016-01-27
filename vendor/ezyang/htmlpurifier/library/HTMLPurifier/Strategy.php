@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Supertype for classes that define a strategy for modifying/purifying tokens.
+ * Supertype for helpers that define a strategy for modifying/purifying tokens.
  *
  * While HTMLPurifier's core purpose is fixing HTML into something proper,
  * strategies provide plug points for extra configuration or even extra

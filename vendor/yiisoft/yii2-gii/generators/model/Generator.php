@@ -17,7 +17,7 @@ use yii\helpers\Inflector;
 use yii\base\NotSupportedException;
 
 /**
- * This generator will generate one or multiple ActiveRecord classes for the specified database table.
+ * This generator will generate one or multiple ActiveRecord helpers for the specified database table.
  *
  * @author Qiang Xue <qiang.xue@gmail.com>
  * @since 2.0
@@ -111,13 +111,13 @@ class Generator extends \yii\gii\Generator
             'tableName' => 'This is the name of the DB table that the new ActiveRecord class is associated with, e.g. <code>post</code>.
                 The table name may consist of the DB schema part if needed, e.g. <code>public.post</code>.
                 The table name may end with asterisk to match multiple table names, e.g. <code>tbl_*</code>
-                will match tables who name starts with <code>tbl_</code>. In this case, multiple ActiveRecord classes
+                will match tables who name starts with <code>tbl_</code>. In this case, multiple ActiveRecord helpers
                 will be generated, one for each matching table name; and the class names will be generated from
                 the matching characters. For example, table <code>tbl_post</code> will generate <code>Post</code>
                 class.',
             'modelClass' => 'This is the name of the ActiveRecord class to be generated. The class name should not contain
                 the namespace part as it is specified in "Namespace". You do not need to specify the class name
-                if "Table Name" ends with asterisk, in which case multiple ActiveRecord classes will be generated.',
+                if "Table Name" ends with asterisk, in which case multiple ActiveRecord helpers will be generated.',
             'baseClass' => 'This is the base class of the new ActiveRecord class. It should be a fully qualified namespaced class name.',
             'generateRelations' => 'This indicates whether the generator should generate relations based on
                 foreign key constraints it detects in the database. Note that if your database contains too many tables,
@@ -134,7 +134,7 @@ class Generator extends \yii\gii\Generator
             'queryNs' => 'This is the namespace of the ActiveQuery class to be generated, e.g., <code>app\models</code>',
             'queryClass' => 'This is the name of the ActiveQuery class to be generated. The class name should not contain
                 the namespace part as it is specified in "ActiveQuery Namespace". You do not need to specify the class name
-                if "Table Name" ends with asterisk, in which case multiple ActiveQuery classes will be generated.',
+                if "Table Name" ends with asterisk, in which case multiple ActiveQuery helpers will be generated.',
             'queryBaseClass' => 'This is the base class of the new ActiveQuery class. It should be a fully qualified namespaced class name.',
         ]);
     }

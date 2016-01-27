@@ -6,7 +6,7 @@
  * @warning This class is strongly defined: that means that the class
  *          will fail if an undefined directive is retrieved or set.
  *
- * @note Many classes that could (although many times don't) use the
+ * @note Many helpers that could (although many times don't) use the
  *       configuration object make it a mandatory parameter.  This is
  *       because a configuration object should always be forwarded,
  *       otherwise, you run the risk of missing a parameter and then

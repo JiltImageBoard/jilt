@@ -13,7 +13,7 @@ use yii\base\InvalidConfigException;
 use yii\di\Instance;
 
 /**
- * DbMutex is the base class for classes, which relies on database while implementing mutex "lock" mechanism.
+ * DbMutex is the base class for helpers, which relies on database while implementing mutex "lock" mechanism.
  *
  * @see Mutex
  *

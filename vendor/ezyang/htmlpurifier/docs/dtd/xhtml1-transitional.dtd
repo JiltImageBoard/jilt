@@ -126,7 +126,7 @@
 
 <!-- core attributes common to most elements
   id       document-wide unique id
-  class    space separated list of classes
+  class    space separated list of helpers
   style    associated style info
   title    advisory title/amplification
 -->

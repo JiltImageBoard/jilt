@@ -10,12 +10,12 @@ namespace yii\base;
 use Yii;
 
 /**
- * Action is the base class for all controller action classes.
+ * Action is the base class for all controller action helpers.
  *
  * Action provides a way to reuse action method code. An action method in an Action
  * class can be used in multiple controllers or in different projects.
  *
- * Derived classes must implement a method named `run()`. This method
+ * Derived helpers must implement a method named `run()`. This method
  * will be invoked by the controller when the action is requested.
  * The `run()` method can have parameters which will be filled up
  * with user input values automatically according to their names.

@@ -3,7 +3,7 @@
 /**
  * Base class for all validating attribute definitions.
  *
- * This family of classes forms the core for not only HTML attribute validation,
+ * This family of helpers forms the core for not only HTML attribute validation,
  * but also any sort of string that needs to be validated or cleaned (which
  * means CSS properties and composite definitions are defined here too).
  * Besides defining (through code) what precisely makes the string valid,

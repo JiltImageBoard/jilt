@@ -18,7 +18,7 @@ use yii\base\InvalidCallException;
 use yii\helpers\ArrayHelper;
 
 /**
- * ActiveRecord is the base class for classes representing relational data in terms of objects.
+ * ActiveRecord is the base class for helpers representing relational data in terms of objects.
  *
  * See [[\yii\db\ActiveRecord]] for a concrete implementation.
  *

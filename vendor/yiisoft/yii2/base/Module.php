@@ -11,7 +11,7 @@ use Yii;
 use yii\di\ServiceLocator;
 
 /**
- * Module is the base class for module and application classes.
+ * Module is the base class for module and application helpers.
  *
  * A module represents a sub-application which contains MVC elements by itself, such as
  * models, views, controllers, etc.
@@ -25,7 +25,7 @@ use yii\di\ServiceLocator;
  * with '@') and the array values are the corresponding paths or aliases. See [[setAliases()]] for an example.
  * This property is write-only.
  * @property string $basePath The root directory of the module.
- * @property string $controllerPath The directory that contains the controller classes. This property is
+ * @property string $controllerPath The directory that contains the controller helpers. This property is
  * read-only.
  * @property string $layoutPath The root directory of layout files. Defaults to "[[viewPath]]/layouts".
  * @property array $modules The modules (indexed by their IDs).
@@ -86,8 +86,8 @@ class Module extends ServiceLocator
      */
     public $controllerMap = [];
     /**
-     * @var string the namespace that controller classes are in.
-     * This namespace will be used to load controller classes by prepending it to the controller
+     * @var string the namespace that controller helpers are in.
+     * This namespace will be used to load controller helpers by prepending it to the controller
      * class name.
      *
      * If not set, it will use the `controllers` sub-namespace under the namespace of this module.
@@ -95,7 +95,7 @@ class Module extends ServiceLocator
      * controller namespace would be "foo\bar\controllers".
      *
      * See also the [guide section on autoloading](guide:concept-autoloading) to learn more about
-     * defining namespaces and how classes are loaded.
+     * defining namespaces and how helpers are loaded.
      */
     public $controllerNamespace;
     /**
@@ -226,10 +226,10 @@ class Module extends ServiceLocator
     }
 
     /**
-     * Returns the directory that contains the controller classes according to [[controllerNamespace]].
+     * Returns the directory that contains the controller helpers according to [[controllerNamespace]].
      * Note that in order for this method to return a value, you must define
      * an alias for the root namespace of [[controllerNamespace]].
-     * @return string the directory that contains the controller classes.
+     * @return string the directory that contains the controller helpers.
      * @throws InvalidParamException if there is no alias defined for the root namespace of [[controllerNamespace]].
      */
     public function getControllerPath()

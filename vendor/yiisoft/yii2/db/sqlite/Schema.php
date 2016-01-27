@@ -83,7 +83,7 @@ class Schema extends \yii\db\Schema
 
     /**
      * Creates a query builder for the MySQL database.
-     * This method may be overridden by child classes to create a DBMS-specific query builder.
+     * This method may be overridden by child helpers to create a DBMS-specific query builder.
      * @return QueryBuilder query builder instance
      */
     public function createQueryBuilder()

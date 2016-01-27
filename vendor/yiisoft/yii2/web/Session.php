@@ -101,7 +101,7 @@ class Session extends Component implements \IteratorAggregate, \ArrayAccess, \Co
 
     /**
      * Returns a value indicating whether to use custom session storage.
-     * This method should be overridden to return true by child classes that implement custom session storage.
+     * This method should be overridden to return true by child helpers that implement custom session storage.
      * To implement custom session storage, override these methods: [[openSession()]], [[closeSession()]],
      * [[readSession()]], [[writeSession()]], [[destroySession()]] and [[gcSession()]].
      * @return boolean whether to use custom storage.
@@ -676,7 +676,7 @@ class Session extends Component implements \IteratorAggregate, \ArrayAccess, \Co
      * } ?>
      * ```
      *
-     * With the above code you can use the [bootstrap alert][] classes such as `success`, `info`, `danger`
+     * With the above code you can use the [bootstrap alert][] helpers such as `success`, `info`, `danger`
      * as the flash message key to influence the color of the div.
      *
      * Note that if you use [[addFlash()]], `$message` will be an array, and you will have to adjust the above code.

@@ -10,7 +10,7 @@ namespace yii\base;
 use Yii;
 
 /**
- * Application is the base class for all application classes.
+ * Application is the base class for all application helpers.
  *
  * @property \yii\web\AssetManager $assetManager The asset manager application component. This property is
  * read-only.
@@ -83,8 +83,8 @@ abstract class Application extends Module
     const STATE_END = 6;
 
     /**
-     * @var string the namespace that controller classes are located in.
-     * This namespace will be used to load controller classes by prepending it to the controller class name.
+     * @var string the namespace that controller helpers are located in.
+     * This namespace will be used to load controller helpers by prepending it to the controller class name.
      * The default namespace is `app\controllers`.
      *
      * Please refer to the [guide about class autoloading](guide:concept-autoloading.md) for more details.

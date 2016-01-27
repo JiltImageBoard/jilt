@@ -16,7 +16,7 @@ use yii\web\View;
 /**
  * BaseMailer serves as a base class that implements the basic functions required by [[MailerInterface]].
  *
- * Concrete child classes should may focus on implementing the [[sendMessage()]] method.
+ * Concrete child helpers should may focus on implementing the [[sendMessage()]] method.
  *
  * @see BaseMessage
  *
@@ -238,7 +238,7 @@ abstract class BaseMailer extends Component implements MailerInterface, ViewCont
      * This method will log a message about the email being sent.
      * If [[useFileTransport]] is true, it will save the email as a file under [[fileTransportPath]].
      * Otherwise, it will call [[sendMessage()]] to send the email to its recipient(s).
-     * Child classes should implement [[sendMessage()]] with the actual email sending logic.
+     * Child helpers should implement [[sendMessage()]] with the actual email sending logic.
      * @param MessageInterface $message email message instance to be sent
      * @return boolean whether the message has been sent successfully
      */
@@ -268,7 +268,7 @@ abstract class BaseMailer extends Component implements MailerInterface, ViewCont
      * Sends multiple messages at once.
      *
      * The default implementation simply calls [[send()]] multiple times.
-     * Child classes may override this method to implement more efficient way of
+     * Child helpers may override this method to implement more efficient way of
      * sending multiple messages.
      *
      * @param array $messages list of email messages, which should be sent.
@@ -306,7 +306,7 @@ abstract class BaseMailer extends Component implements MailerInterface, ViewCont
 
     /**
      * Sends the specified message.
-     * This method should be implemented by child classes with the actual email sending logic.
+     * This method should be implemented by child helpers with the actual email sending logic.
      * @param MessageInterface $message the message to be sent
      * @return boolean whether the message is sent successfully
      */

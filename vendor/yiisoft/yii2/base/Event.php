@@ -8,7 +8,7 @@
 namespace yii\base;
 
 /**
- * Event is the base class for all event classes.
+ * Event is the base class for all event helpers.
  *
  * It encapsulates the parameters associated with an event.
  * The [[sender]] property describes who raises the event.
@@ -55,7 +55,7 @@ class Event extends Object
      * Attaches an event handler to a class-level event.
      *
      * When a class-level event is triggered, event handlers attached
-     * to that class and all parent classes will be invoked.
+     * to that class and all parent helpers will be invoked.
      *
      * For example, the following code attaches an event handler to `ActiveRecord`'s
      * `afterInsert` event:
@@ -129,7 +129,7 @@ class Event extends Object
 
     /**
      * Returns a value indicating whether there is any handler attached to the specified class-level event.
-     * Note that this method will also check all parent classes to see if there is any handler attached
+     * Note that this method will also check all parent helpers to see if there is any handler attached
      * to the named event.
      * @param string|object $class the object or the fully qualified class name specifying the class-level event.
      * @param string $name the event name.
@@ -157,7 +157,7 @@ class Event extends Object
     /**
      * Triggers a class-level event.
      * This method will cause invocation of event handlers that are attached to the named event
-     * for the specified class and all its parent classes.
+     * for the specified class and all its parent helpers.
      * @param string|object $class the object or the fully qualified class name specifying the class-level event.
      * @param string $name the event name.
      * @param Event $event the event parameter. If not set, a default [[Event]] object will be created.

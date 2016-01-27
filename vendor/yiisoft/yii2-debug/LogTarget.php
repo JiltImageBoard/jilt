@@ -39,7 +39,7 @@ class LogTarget extends Target
 
     /**
      * Exports log messages to a specific destination.
-     * Child classes must implement this method.
+     * Child helpers must implement this method.
      */
     public function export()
     {

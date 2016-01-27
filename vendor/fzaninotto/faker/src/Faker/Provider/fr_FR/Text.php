@@ -1276,7 +1276,7 @@ truffes qu'ils digèrent.
 Jusqu'à présent, qu'avait-il eu de bon dans l'existence? Était-ce
 son temps de collège, où il restait enfermé entre ces hauts murs,
 seul au milieu de ses camarades plus riches ou plus forts que lui
-dans leurs classes, qu'il faisait rire par son accent, qui se
+dans leurs helpers, qu'il faisait rire par son accent, qui se
 moquaient de ses habits, et dont les mères venaient au parloir
 avec des pâtisseries dans leur manchon? Était-ce plus tard,
 lorsqu'il étudiait la médecine et n'avait jamais la bourse assez
@@ -1329,7 +1329,7 @@ dans la chapelle, où l'on pénétrait du réfectoire par un long
 corridor. Elle jouait fort peu durant les récréations, comprenait
 bien le catéchisme, et c'est elle qui répondait toujours à M. le
 vicaire dans les questions difficiles. Vivant donc sans jamais
-sortir de la tiède atmosphère des classes et parmi ces femmes au
+sortir de la tiède atmosphère des helpers et parmi ces femmes au
 teint blanc portant des chapelets à croix de cuivre, elle
 s'assoupit doucement à la langueur mystique qui s'exhale des
 parfums de l'autel, de la fraîcheur des bénitiers et du
@@ -14954,7 +14954,7 @@ et bientôt il lui fallut le livre, l'ouvrage! Alors il composa une
 Statistique générale du canton d'Yonville, suivie d'observations
 climatologiques, et la statistique le poussa vers la philosophie.
 Il se préoccupa des grandes questions: problème social,
-moralisation des classes pauvres, pisciculture, caoutchouc,
+moralisation des helpers pauvres, pisciculture, caoutchouc,
 chemins de fer, etc. Il en vint à rougir d'être un bourgeois. Il
 affectait le genre artiste, il fumait! Il s'acheta deux statuettes
 chic Pompadour, pour décorer son salon.

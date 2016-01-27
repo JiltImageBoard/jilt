@@ -288,7 +288,7 @@ class HTMLPurifier_Printer_HTMLDefinition extends HTMLPurifier_Printer
     }
 
     /**
-     * Listifies a hash of attributes to AttrDef classes
+     * Listifies a hash of attributes to AttrDef helpers
      * @param array $array Array hash in form of array('attrname' => HTMLPurifier_AttrDef)
      * @return string
      */

@@ -15,7 +15,7 @@ use yii\helpers\VarDumper;
 use yii\web\View;
 
 /**
- * This is the base class for all generator classes.
+ * This is the base class for all generator helpers.
  *
  * A generator instance is responsible for taking user inputs, validating them,
  * and using them to generate the corresponding code based on a set of code template files.
@@ -65,7 +65,7 @@ abstract class Generator extends Model
     abstract public function getName();
     /**
      * Generates the code based on the current user input and the specified code template files.
-     * This is the main method that child classes should implement.
+     * This is the main method that child helpers should implement.
      * Please refer to [[\yii\gii\generators\controller\Generator::generate()]] as an example
      * on how to implement this method.
      * @return CodeFile[] a list of code files to be created.
@@ -99,7 +99,7 @@ abstract class Generator extends Model
 
     /**
      * Returns a list of code template files that are required.
-     * Derived classes usually should override this method if they require the existence of
+     * Derived helpers usually should override this method if they require the existence of
      * certain template files.
      * @return array list of code template files that are required. They should be file paths
      * relative to [[templatePath]].
@@ -148,7 +148,7 @@ abstract class Generator extends Model
 
     /**
      * Returns the message to be displayed when the newly generated code is saved successfully.
-     * Child classes may override this method to customize the message.
+     * Child helpers may override this method to customize the message.
      * @return string the message to be displayed when the newly generated code is saved successfully.
      */
     public function successMessage()
@@ -193,7 +193,7 @@ abstract class Generator extends Model
     /**
      * @inheritdoc
      *
-     * Child classes should override this method like the following so that the parent
+     * Child helpers should override this method like the following so that the parent
      * rules are included:
      *
      * ~~~

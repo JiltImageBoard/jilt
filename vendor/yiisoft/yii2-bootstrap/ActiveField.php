@@ -16,7 +16,7 @@ use yii\helpers\ArrayHelper;
  * sorts of Bootstrap 3 form fields in different form layouts:
  *
  * - [[inputTemplate]] is an optional template to render complex inputs, for example input groups
- * - [[horizontalCssClasses]] defines the CSS grid classes to add to label, wrapper, error and hint
+ * - [[horizontalCssClasses]] defines the CSS grid helpers to add to label, wrapper, error and hint
  *   in horizontal forms
  * - [[inline]]/[[inline()]] is used to render inline [[checkboxList()]] and [[radioList()]]
  * - [[enableError]] can be set to `false` to disable to the error
@@ -103,7 +103,7 @@ class ActiveField extends \yii\widgets\ActiveField
      */
     public $wrapperOptions = [];
     /**
-     * @var null|array CSS grid classes for horizontal layout. This must be an array with these keys:
+     * @var null|array CSS grid helpers for horizontal layout. This must be an array with these keys:
      *  - 'offset' the offset grid class to append to the wrapper if no label is rendered
      *  - 'label' the label grid class
      *  - 'wrapper' the wrapper grid class

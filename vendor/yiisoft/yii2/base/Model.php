@@ -88,7 +88,7 @@ class Model extends Component implements IteratorAggregate, ArrayAccess, Arrayab
      * Returns the validation rules for attributes.
      *
      * Validation rules are used by [[validate()]] to check if attribute values are valid.
-     * Child classes may override this method to declare different validation rules.
+     * Child helpers may override this method to declare different validation rules.
      *
      * Each rule is an array with the following structure:
      *

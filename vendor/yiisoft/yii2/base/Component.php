@@ -405,7 +405,7 @@ class Component extends Object
     /**
      * Returns a list of behaviors that this component should behave as.
      *
-     * Child classes may override this method to specify the behaviors they want to behave as.
+     * Child helpers may override this method to specify the behaviors they want to behave as.
      *
      * The return value of this method should be an array of behavior objects or configurations
      * indexed by behavior names. A behavior configuration can be either a string specifying

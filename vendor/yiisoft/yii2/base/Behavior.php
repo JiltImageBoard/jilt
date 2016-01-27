@@ -8,7 +8,7 @@
 namespace yii\base;
 
 /**
- * Behavior is the base class for all behavior classes.
+ * Behavior is the base class for all behavior helpers.
  *
  * A behavior can be used to enhance the functionality of an existing component without modifying its code.
  * In particular, it can "inject" its own methods and properties into the component
@@ -29,7 +29,7 @@ class Behavior extends Object
     /**
      * Declares event handlers for the [[owner]]'s events.
      *
-     * Child classes may override this method to declare what PHP callbacks should
+     * Child helpers may override this method to declare what PHP callbacks should
      * be attached to the events of the [[owner]] component.
      *
      * The callbacks will be attached to the [[owner]]'s events when the behavior is

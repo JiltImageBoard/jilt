@@ -19,7 +19,7 @@ namespace Composer\Autoload;
  *
  *     $loader = new \Composer\Autoload\ClassLoader();
  *
- *     // register classes with namespaces
+ *     // register helpers with namespaces
  *     $loader->add('Symfony\Component', __DIR__.'/component');
  *     $loader->add('Symfony',           __DIR__.'/framework');
  *
@@ -241,7 +241,7 @@ class ClassLoader
 
     /**
      * Can be used to check if the autoloader uses the include path to check
-     * for classes.
+     * for helpers.
      *
      * @return bool
      */
@@ -251,7 +251,7 @@ class ClassLoader
     }
 
     /**
-     * Turns off searching the prefix and fallback directories for classes
+     * Turns off searching the prefix and fallback directories for helpers
      * that have not been registered with the class map.
      *
      * @param bool $classMapAuthoritative

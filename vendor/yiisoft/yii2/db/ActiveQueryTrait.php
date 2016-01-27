@@ -8,7 +8,7 @@
 namespace yii\db;
 
 /**
- * ActiveQueryTrait implements the common methods and properties for active record query classes.
+ * ActiveQueryTrait implements the common methods and properties for active record query helpers.
  *
  * @author Qiang Xue <qiang.xue@gmail.com>
  * @author Carsten Brandt <mail@cebe.cc>

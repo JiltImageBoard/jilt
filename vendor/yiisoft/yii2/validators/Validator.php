@@ -14,8 +14,8 @@ use yii\base\NotSupportedException;
 /**
  * Validator is the base class for all validators.
  *
- * Child classes should override the [[validateValue()]] and/or [[validateAttribute()]] methods to provide the actual
- * logic of performing data validation. Child classes may also override [[clientValidateAttribute()]]
+ * Child helpers should override the [[validateValue()]] and/or [[validateAttribute()]] methods to provide the actual
+ * logic of performing data validation. Child helpers may also override [[clientValidateAttribute()]]
  * to provide client-side validation support.
  *
  * Validator declares a set of [[builtInValidators|built-in validators] which can
@@ -245,7 +245,7 @@ class Validator extends Component
 
     /**
      * Validates a single attribute.
-     * Child classes must implement this method to provide the actual validation logic.
+     * Child helpers must implement this method to provide the actual validation logic.
      * @param \yii\base\Model $model the data model to be validated
      * @param string $attribute the name of the attribute to be validated.
      */

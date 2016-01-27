@@ -11,7 +11,7 @@ use yii\base\Component;
 use yii\helpers\StringHelper;
 
 /**
- * Cache is the base class for cache classes supporting different cache storage implementations.
+ * Cache is the base class for cache helpers supporting different cache storage implementations.
  *
  * A data item can be stored in the cache by calling [[set()]] and be retrieved back
  * later (in the same or different request) by [[get()]]. In both operations,
@@ -37,7 +37,7 @@ use yii\helpers\StringHelper;
  * echo $cache['foo'];
  * ```
  *
- * Derived classes should implement the following methods which do the actual cache storage operations:
+ * Derived helpers should implement the following methods which do the actual cache storage operations:
  *
  * - [[getValue()]]: retrieve the value with a key (if any) from cache
  * - [[setValue()]]: store the value with a key into cache
@@ -319,7 +319,7 @@ abstract class Cache extends Component implements \ArrayAccess
 
     /**
      * Retrieves a value from cache with a specified key.
-     * This method should be implemented by child classes to retrieve the data
+     * This method should be implemented by child helpers to retrieve the data
      * from specific cache storage.
      * @param string $key a unique key identifying the cached value
      * @return string|boolean the value stored in cache, false if the value is not in the cache or expired.
@@ -328,7 +328,7 @@ abstract class Cache extends Component implements \ArrayAccess
 
     /**
      * Stores a value identified by a key in cache.
-     * This method should be implemented by child classes to store the data
+     * This method should be implemented by child helpers to store the data
      * in specific cache storage.
      * @param string $key the key identifying the value to be cached
      * @param string $value the value to be cached
@@ -339,7 +339,7 @@ abstract class Cache extends Component implements \ArrayAccess
 
     /**
      * Stores a value identified by a key into cache if the cache does not contain this key.
-     * This method should be implemented by child classes to store the data
+     * This method should be implemented by child helpers to store the data
      * in specific cache storage.
      * @param string $key the key identifying the value to be cached
      * @param string $value the value to be cached
@@ -350,7 +350,7 @@ abstract class Cache extends Component implements \ArrayAccess
 
     /**
      * Deletes a value with the specified key from cache
-     * This method should be implemented by child classes to delete the data from actual cache storage.
+     * This method should be implemented by child helpers to delete the data from actual cache storage.
      * @param string $key the key of the value to be deleted
      * @return boolean if no error happens during deletion
      */
@@ -358,7 +358,7 @@ abstract class Cache extends Component implements \ArrayAccess
 
     /**
      * Deletes all values from cache.
-     * Child classes may implement this method to realize the flush operation.
+     * Child helpers may implement this method to realize the flush operation.
      * @return boolean whether the flush operation was successful.
      */
     abstract protected function flushValues();

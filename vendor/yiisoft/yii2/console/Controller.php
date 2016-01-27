@@ -14,7 +14,7 @@ use yii\base\InvalidRouteException;
 use yii\helpers\Console;
 
 /**
- * Controller is the base class of console command classes.
+ * Controller is the base class of console command helpers.
  *
  * A console controller consists of one or several actions known as sub-commands.
  * Users call a console command by specifying the corresponding route which identifies a controller action.
@@ -264,7 +264,7 @@ class Controller extends \yii\base\Controller
      * Returns the names of valid options for the action (id)
      * An option requires the existence of a public member variable whose
      * name is the option name.
-     * Child classes may override this method to specify possible options.
+     * Child helpers may override this method to specify possible options.
      *
      * Note that the values setting via options are not available
      * until [[beforeAction()]] is being called.

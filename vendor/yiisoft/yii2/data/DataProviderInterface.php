@@ -8,7 +8,7 @@
 namespace yii\data;
 
 /**
- * DataProviderInterface is the interface that must be implemented by data provider classes.
+ * DataProviderInterface is the interface that must be implemented by data provider helpers.
  *
  * Data providers are components that sort and paginate data, and provide them to widgets
  * such as [[\yii\grid\GridView]], [[\yii\widgets\ListView]].

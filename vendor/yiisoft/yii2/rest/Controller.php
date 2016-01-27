@@ -15,7 +15,7 @@ use yii\web\Response;
 use yii\filters\VerbFilter;
 
 /**
- * Controller is the base class for RESTful API controller classes.
+ * Controller is the base class for RESTful API controller helpers.
  *
  * Controller implements the following steps in a RESTful API request handling cycle:
  *

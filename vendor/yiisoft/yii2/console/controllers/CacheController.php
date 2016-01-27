@@ -165,7 +165,7 @@ class CacheController extends Controller
 
     /**
      * Notifies user that given caches are found and can be flushed.
-     * @param array $caches array of cache component classes
+     * @param array $caches array of cache component helpers
      */
     private function notifyCachesCanBeFlushed($caches)
     {

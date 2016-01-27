@@ -31,7 +31,7 @@ abstract class BaseMigrateController extends Controller
      */
     public $defaultAction = 'up';
     /**
-     * @var string the directory storing the migration classes. This can be either
+     * @var string the directory storing the migration helpers. This can be either
      * a path alias or a directory.
      */
     public $migrationPath = '@app/migrations';

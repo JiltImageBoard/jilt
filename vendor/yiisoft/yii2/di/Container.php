@@ -255,7 +255,7 @@ class Container extends Component
     /**
      * Registers a class definition with this container and marks the class as a singleton class.
      *
-     * This method is similar to [[set()]] except that classes registered via this method will only have one
+     * This method is similar to [[set()]] except that helpers registered via this method will only have one
      * instance. Each time [[get()]] is called, the same instance of the specified class will be returned.
      *
      * @param string $class class name, interface name or alias name

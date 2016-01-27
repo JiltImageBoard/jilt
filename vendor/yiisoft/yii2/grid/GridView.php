@@ -36,7 +36,7 @@ use yii\base\Model;
  * ]) ?>
  * ```
  *
- * The columns of the grid table are configured in terms of [[Column]] classes,
+ * The columns of the grid table are configured in terms of [[Column]] helpers,
  * which are configured via [[columns]].
  *
  * The look and feel of a grid view can be customized using the large amount of properties.

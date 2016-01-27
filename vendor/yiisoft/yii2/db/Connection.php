@@ -254,7 +254,7 @@ class Connection extends Component
      */
     public $tablePrefix = '';
     /**
-     * @var array mapping between PDO driver names and [[Schema]] classes.
+     * @var array mapping between PDO driver names and [[Schema]] helpers.
      * The keys of the array are PDO driver names while the values the corresponding
      * schema class name or configuration. Please refer to [[Yii::createObject()]] for
      * details on how to specify a configuration.

@@ -12,7 +12,7 @@ use yii\base\Object;
 use yii\helpers\Html;
 
 /**
- * Column is the base class of all [[GridView]] column classes.
+ * Column is the base class of all [[GridView]] column helpers.
  *
  * @author Qiang Xue <qiang.xue@gmail.com>
  * @since 2.0

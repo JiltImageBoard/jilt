@@ -124,7 +124,7 @@ class HTMLPurifier_AttrValidator
             } elseif (is_string($result)) {
                 // generally, if a substitution is happening, there
                 // was some sort of implicit correction going on. We'll
-                // delegate it to the attribute classes to say exactly what.
+                // delegate it to the attribute helpers to say exactly what.
 
                 // simple substitution
                 $attr[$attr_key] = $result;

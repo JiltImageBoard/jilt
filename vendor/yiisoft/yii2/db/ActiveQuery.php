@@ -51,7 +51,7 @@ use yii\base\InvalidConfigException;
  * Relational query
  * ----------------
  *
- * In relational context ActiveQuery represents a relation between two Active Record classes.
+ * In relational context ActiveQuery represents a relation between two Active Record helpers.
  *
  * Relational ActiveQuery instances are usually created by calling [[ActiveRecord::hasOne()]] and
  * [[ActiveRecord::hasMany()]]. An Active Record class declares a relation by defining

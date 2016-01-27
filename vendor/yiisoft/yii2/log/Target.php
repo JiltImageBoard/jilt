@@ -14,7 +14,7 @@ use yii\helpers\VarDumper;
 use yii\web\Request;
 
 /**
- * Target is the base class for all log target classes.
+ * Target is the base class for all log target helpers.
  *
  * A log target object will filter the messages logged by [[Logger]] according
  * to its [[levels]] and [[categories]] properties. It may also export the filtered
@@ -85,7 +85,7 @@ abstract class Target extends Component
 
     /**
      * Exports log [[messages]] to a specific destination.
-     * Child classes must implement this method.
+     * Child helpers must implement this method.
      */
     abstract public function export();
 

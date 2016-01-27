@@ -8,7 +8,7 @@
 namespace yii\mail;
 
 /**
- * MessageInterface is the interface that should be implemented by mail message classes.
+ * MessageInterface is the interface that should be implemented by mail message helpers.
  *
  * A message represents the settings and content of an email, such as the sender, recipient,
  * subject, body, etc.

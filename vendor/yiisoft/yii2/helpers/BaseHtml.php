@@ -1790,7 +1790,7 @@ class BaseHtml
     }
 
     /**
-     * Adds a CSS class (or several classes) to the specified options.
+     * Adds a CSS class (or several helpers) to the specified options.
      * If the CSS class is already in the options, it will not be added again.
      * If class specification at given options is an array, and some class placed there with the named (string) key,
      * overriding of such key will have no effect. For example:
@@ -1819,10 +1819,10 @@ class BaseHtml
     }
 
     /**
-     * Merges already existing CSS classes with new one.
-     * This method provides the priority for named existing classes over additional.
-     * @param array $existingClasses already existing CSS classes.
-     * @param array $additionalClasses CSS classes to be added.
+     * Merges already existing CSS helpers with new one.
+     * This method provides the priority for named existing helpers over additional.
+     * @param array $existingClasses already existing CSS helpers.
+     * @param array $additionalClasses CSS helpers to be added.
      * @return array merge result.
      */
     private static function mergeCssClasses(array $existingClasses, array $additionalClasses)
