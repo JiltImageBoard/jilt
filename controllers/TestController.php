@@ -22,7 +22,6 @@ class TestController extends Controller
         $threads = [];
 
         foreach ($threadsRaw as $thread){
-            $threads[] =
         }
     }
 }
