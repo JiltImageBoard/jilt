@@ -1,39 +1,41 @@
-bans_boards
-bans_chat_pages
-bans_global
-bans_settings
-bans_threads
-board_counters
-board_settings
-boards
-boards_file_formats
-boards_file_ratings
-boards_markup_types
-boards_wordfilters
-chat_pages
-chat_pages_posts
-cp_board_rights
-cp_chat_rights
-cp_modlog
-cp_users
-cp_users_board_rights
-cp_users_chat_rights
-cp_users_cp_rights
-file_formats
-file_ratings
-files_audio
-files_doc
-files_images
-files_info
-files_video
-markup_tags
-markup_types
-markup_types_tags
-post_data
-post_data_files_info
-post_messages
-posts
-tags
-threads
-threads_tags
-wordfilters
+# Tables
+
+##### bans_boards
+##### bans_chat_pages
+##### bans_global
+##### bans_settings
+##### bans_threads
+##### board_counters
+##### board_settings
+##### boards
+##### boards_file_formats
+##### boards_file_ratings
+##### boards_markup_types
+##### boards_wordfilters
+##### chat_pages
+##### chat_pages_posts
+##### cp_board_rights
+##### cp_chat_rights
+##### cp_modlog
+##### cp_users
+##### cp_users_board_rights
+##### cp_users_chat_rights
+##### cp_users_cp_rights
+##### file_formats
+##### file_ratings
+##### files_audio
+##### files_doc
+##### files_images
+##### files_info
+##### files_video
+##### markup_tags
+##### markup_types
+##### markup_types_tags
+##### post_data
+##### post_data_files_info
+##### post_messages
+##### posts
+##### tags
+##### threads
+##### threads_tags
+##### wordfilters
