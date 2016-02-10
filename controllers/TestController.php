@@ -2,20 +2,27 @@
 
 namespace app\controllers;
 
-use app\models\BoardSetting;
 use app\models\Board;
 use yii\web\Controller;
-use app\common\helpers\DataFormatter;
 
 class TestController extends Controller
 {
-    public function actionRun()
-    {
-        $board = new Board();
-        $board->name = '1123';
-        $boardSettings = new BoardSetting();
-        $boardSettings->description = 'asdasd';
 
-        print_r(DataFormatter::toArray($board, $boardSettings));
+    /**
+     * @param string $boardName имя борды
+     * @param int $pageNum
+     */
+    public function actionRun($boardName = 'test', $pageNum = 1)
+    {
+        $threadsRaw = Board::find()
+            ->where('boards.name = :boardName', [':boardName' => $boardName])
+            ->one()
+            ->threads;
+
+        $threads = [];
+
+        foreach ($threadsRaw as $thread){
+            $threads[] =
+        }
     }
 }

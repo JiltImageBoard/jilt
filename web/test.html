@@ -8,14 +8,23 @@
 <form action="/boards" method="post" accept-charset="UTF-8" enctype="application/x-www-form-urlencoded">
     name:  <input type="text" name="name" value=""><br>
     description: <input type="text" name="description" value=""><br>
-    max_board_pages: <input type="text" name="max_board_pages" value=""><br>
-    max_threads_on_page: <input type="text" name="max_threads_on_page" value=""><br>
-    min_file_size: <input type="text" name="min_file_size" value=""><br>
-    max_file_size: <input type="text" name="max_file_size" value=""><br>
-    min_image_resolution: <input type="text" name="min_image_resolution" value=""><br>
-    max_image_resolution: <input type="text" name="max_image_resolution" value=""><br>
-    max_message_length: <input type="text" name="max_message_length" value=""><br>
-    thread_max_posts: <input type="text" name="thread_max_posts" value=""><br>
+    max_board_pages: <input type="text" name="maxBoardPages" value=""><br>
+    max_threads_on_page: <input type="text" name="maxThreadsOnPage" value=""><br>
+    min_file_size: <input type="text" name="minFileSize" value=""><br>
+    max_file_size: <input type="text" name="maxFileSize" value=""><br>
+    min_image_resolution: <input type="text" name="minImageResolution" value=""><br>
+    max_image_resolution: <input type="text" name="maxImageResolution" value=""><br>
+    max_message_length: <input type="text" name="maxMessageLength" value=""><br>
+    thread_max_posts: <input type="text" name="threadMaxPosts" value=""><br>
+    <br>
+    FileFormats_1: <input type="text" name="fileFormats[]" value=""><br>
+    FileFormats_2: <input type="text" name="fileFormats[]" value=""><br>
+    FileFormats_3: <input type="text" name="fileFormats[]" value=""><br>
+    <br>
+    WordFilters_1: <input type="text" name="wordFilters[]" value=""><br>
+    WordFilters_2: <input type="text" name="wordFilters[]" value=""><br>
+    WordFilters_3: <input type="text" name="wordFilters[]" value=""><br>
+
     <input type="submit" value="Submit">
 </form>
 </body>
