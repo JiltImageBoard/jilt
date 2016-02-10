@@ -2,27 +2,27 @@
 * [Errors](errors.md)
 
 ## Boards
-* [POST /api/boards/](API_add_board)
-* [GET /api/boards/](API_get_boards)
-* [GET /api/boards/{name}/pages/{page_num}](API_get_board)
-* [GET /api/boards/{name}](API_cp_get_board_settings)
-* [PUT /api/boards/{name}](API_cp_put_board_settings)
-* [DELETE /api/boards/{board_name}](API_delete_board)
+* [POST /api/boards/](create-board.md)
+* [GET /api/boards/](get-boards.md)
+* [GET /api/boards/{name}/pages/{page_num}](get-board-single.md)
+* [GET /api/boards/{name}](get-board-settings.md)
+* [PUT /api/boards/{name}](edit-board-settings.md)
+* [DELETE /api/boards/{board_name}](delete-board.md)
 
 ## Threads
-* [POST /api/boards/{name}/threads](API_add_thread)
-* [GET /api/boards/{name}/threads/{thread_num}](API_get_thread)
-* [PUT /api/boards/{name}/threads/{thread_num}](API_edit_thread)
-* [DELETE /api/boards/{name}/threads/{thread_num}](API_delete_thread)
+* [POST /api/boards/{name}/threads](create-thread.md)
+* [GET /api/boards/{name}/threads/{thread_num}](get-thread.md)
+* [PUT /api/boards/{name}/threads/{thread_num}](edit-thread.md)
+* [DELETE /api/boards/{name}/threads/{thread_num}](delete-thread.md)
 
 #### Chats
-* [GET /api/boards/{name}/threads/{thread_num}/pages/{page_num}](API_get_chat_page)
+* [GET /api/boards/{name}/threads/{thread_num}/pages/{page_num}](get-thread-page.md)
 
 ## Posts
-* [POST /api/boards/{name}/threads/{thread_num}/posts](API_add_post)
-* [GET /api/boards/{name}/threads/{thread_num}/posts/{post_num}](API_get_post)
-* [PUT /api/boards/{name}/threads/{thread_num}/posts/{post_num}](API_edit_post)
-* [DELETE /api/boards/{name}/threads/{thread_num}/posts/{post_num}](API_delete_post)
+* [POST /api/boards/{name}/threads/{thread_num}/posts](create-post.md)
+* [GET /api/boards/{name}/threads/{thread_num}/posts/{post_num}](get-post-single.md)
+* [PUT /api/boards/{name}/threads/{thread_num}/posts/{post_num}](edit-post.md)
+* [DELETE /api/boards/{name}/threads/{thread_num}/posts/{post_num}](delete-post.md)
 
 
 
@@ -30,29 +30,29 @@
 ## Control panel
 
 #### Authentication
-* [POST /api/control-panel/login](API_cp_login)
-* [POST /api/control-panel/logout](API_cp_logout)
-* [POST /api/control-panel/resetpassword](API_cp_resetpass)
+* [POST /api/control-panel/login](cp-login.md)
+* [POST /api/control-panel/logout](cp-logout.md)
+* [POST /api/control-panel/resetpassword](cp-reset-password.md)
 
 
 #### Users
-* [POST /api/control-panel/users](API_cp_post_user)
-* [GET /api/control-panel/users](API_cp_get_users)
-* [GET /api/control-panel/users/{id}](API_cp_get_user)
-* [PUT /api/control-panel/users/{id}](API_cp_edit_user)
-* [DELETE /api/control-panel/users/{id}](API_cp_delete_user)
-* [GET /api/control-panel/users/{id}/cp-rights](API_cp_get_user_cp_rights)
-* [PUT /api/control-panel/users/{id}/cp-rights](API_cp_edit_user_cp_rights)
+* [POST /api/control-panel/users](cp-create-user.md)
+* [GET /api/control-panel/users](cp-get-users.md)
+* [GET /api/control-panel/users/{id}](get-user-single.md)
+* [PUT /api/control-panel/users/{id}](cp-edit-user.md)
+* [DELETE /api/control-panel/users/{id}](cp-delete-user.md)
+* [GET /api/control-panel/users/{id}/cp-rights](cp-get-user-rights.md)
+* [PUT /api/control-panel/users/{id}/cp-rights](cp-edit-user-rights.md)
 
 
 #### Board and chat rights
-* [GET /api/control-panel/users/{id}/rights](API_cp_get_user_rights)
-* [PUT /api/control-panel/users/{id}/rights](API_cp_edit_user_rights)
+* [GET /api/control-panel/users/{id}/rights](cp-get-user-rights-boards.md)
+* [PUT /api/control-panel/users/{id}/rights](cp-edit-user-rights-boards.md)
 
 
 #### Bans
-* [POST /api/control-panel/bans](API_cp_post_bans)
-* [GET /api/control-panel/bans](API_cp_get_bans)
-* [GET /api/control-panel/bans/{id}](API_cp_get_bans_single)
-* [PUT /api/control-panel/bans/{id}](API_cp_put_bans)
-* [DELETE /api/control-panel/bans/{id}](API_cp_delete_bans)
+* [POST /api/control-panel/bans](cp-create-ban.md)
+* [GET /api/control-panel/bans](cp-get-bans.md)
+* [GET /api/control-panel/bans/{id}](cp-get-ban-single.md)
+* [PUT /api/control-panel/bans/{id}](cp-edit-ban.md)
+* [DELETE /api/control-panel/bans/{id}](cp-delete-ban.md)
