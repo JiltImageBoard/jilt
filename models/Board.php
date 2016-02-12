@@ -5,10 +5,13 @@ namespace app\models;
 /**
  * Class Board
  * @package app\models
+ *
  * @property int $id
  * @property string $name
  * @property int $settingsId
  * @property string $description
+ * @property \DateTime $createdAt
+ * @property \DateTime $updatedAt
  *
  * @property \app\models\FileFormat[] $fileFormats
  * @property \app\models\WordFilter[] $wordFilters
@@ -114,23 +117,30 @@ class Board extends ActiveRecordExtended
         ];
     }
 
+    //TODO: save не должен возвращаться void, так как в контроллере мы проверяем if ($board->save())
     /**
      * Overridden method handles setFileFormats method. Assigning ids to board in database
      * @param bool $runValidation
      * @param null $attributeNames
-     * @return void
+     * @return bool
      */
     public function save($runValidation = true, $attributeNames = null) {
-        parent::save($runValidation, $attributeNames);
-        foreach ($this->lazyRelations as $modelClass => $relationInfo) {
-            if (class_exists($modelClass)) {
-                $models = $modelClass::find()->where(['id' => $relationInfo['ids']])->all();
-                foreach ($models as $model) {
-                    if ($model) {
-                        $this->link($relationInfo['relationName'], $model);
+
+        if (empty($this->lazyRelations)){
+            return parent::save($runValidation, $attributeNames);
+        } else {
+            foreach ($this->lazyRelations as $modelClass => $relationInfo) {
+                if (class_exists($modelClass)) {
+                    $models = $modelClass::find()->where(['id' => $relationInfo['ids']])->all();
+                    foreach ($models as $model) {
+                        if ($model) {
+                            $this->link($relationInfo['relationName'], $model);
+                        }
                     }
                 }
             }
+            return parent::save($runValidation, $attributeNames);
         }
+
     }
 }

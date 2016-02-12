@@ -22,8 +22,9 @@ class MultiLoader {
                 }
             }
 
-            if (!$keyValueLoaded)
+            if (!$keyValueLoaded) {
                 return false;
+            }
         }
         return true;
     }

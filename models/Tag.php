@@ -8,4 +8,10 @@ class Tag extends ActiveRecordExtended
     {
         return 'tags';
     }
+
+    public function getBoards()
+    {
+        return $this->hasMany(Board::className(), ['id' => 'board_id'])
+            ->viaTable('threads_tags', ['tag_id' => 'id']);
+    }
 }

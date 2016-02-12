@@ -8,20 +8,9 @@ use yii\web\Controller;
 class TestController extends Controller
 {
 
-    /**
-     * @param string $boardName имя борды
-     * @param int $pageNum
-     */
-    public function actionRun($boardName = 'test', $pageNum = 1)
+
+    public function actionRun($boardName = 'test', $pageNum = 0)
     {
-        $threadsRaw = Board::find()
-            ->where('boards.name = :boardName', [':boardName' => $boardName])
-            ->one()
-            ->threads;
 
-        $threads = [];
-
-        foreach ($threadsRaw as $thread){
-        }
     }
 }

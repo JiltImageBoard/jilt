@@ -7,7 +7,6 @@ namespace app\models;
  * Class BoardSetting
  * @package app\models
  * @property int $id
- * @property string $description
  * @property int $min_file_size
  * @property int $max_file_size
  * @property string $min_image_resolution
