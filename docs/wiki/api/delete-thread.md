@@ -5,7 +5,7 @@
   Deletes thread by thread number and board name
 
 #### Resource information:
-  Requires authentication: yes
+  Requires authentication: yes    
   Response formats: `JSON`
 
 #### Url parameters

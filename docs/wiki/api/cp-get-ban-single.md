@@ -5,7 +5,7 @@
   Gets ban record by id
 
 #### Resource information:
-  Requires authentication: yes
+  Requires authentication: yes    
   Response formats: `JSON`
 
 #### Url parameters

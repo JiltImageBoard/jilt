@@ -5,7 +5,7 @@
   Adds post to thread. Need at least one image or message.
 
 #### Resource information:
-  Requires authentication: no
+  Requires authentication: no  
   Response formats: `JSON`
 
 #### Url parameters

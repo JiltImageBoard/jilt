@@ -5,7 +5,7 @@
   Gets board settings
 
 #### Resource information:
-  Requires authentication: yes
+  Requires authentication: yes    
   Response formats: `JSON`
 
 #### Url parameters

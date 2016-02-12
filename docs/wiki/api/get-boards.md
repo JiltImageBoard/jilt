@@ -5,7 +5,7 @@
   Gets all boards
 
 #### Resource information:
-  Requires authentication: no
+  Requires authentication: no  
   Response formats: `JSON`
 
 

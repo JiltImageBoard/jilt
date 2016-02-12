@@ -5,7 +5,7 @@
   Clearing auth data for current session
 
 #### Resource information:
-  Requires authentication: yes
+  Requires authentication: yes    
   Response formats: `JSON`
 
 #### Example Request

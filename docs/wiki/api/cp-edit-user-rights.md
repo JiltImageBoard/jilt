@@ -5,7 +5,7 @@
   Edits user rights for control panel.
 
 #### Resource information:
-  Requires authentication: yes
+  Requires authentication: yes    
   Response formats: `JSON`
 
 #### Url parameters

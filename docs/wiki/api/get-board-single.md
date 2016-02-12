@@ -5,7 +5,7 @@
   Gets threads from the board
 
 #### Resource information:
-  Requires authentication: no
+  Requires authentication: no  
   Response formats: `JSON`
 
 

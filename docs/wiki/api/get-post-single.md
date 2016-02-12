@@ -5,7 +5,7 @@
   Gets post by board name, thread number and post number
 
 #### Resource information:
-  Requires authentication: no
+  Requires authentication: no  
   Response formats: `JSON`
 
 #### Url parameters

@@ -7,7 +7,7 @@
   `ip` / `subnetwork` / `session` / `name` / `message` / `file` / `country`.
 
 #### Resource information:
-  Requires authentication: yes
+  Requires authenticationyes  
   Response formats: `JSON`
 
 

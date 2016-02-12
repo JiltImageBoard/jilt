@@ -5,7 +5,7 @@
   Gets thread by id and board name
 
 #### Resource information:
-  Requires authentication: no
+  Requires authentication: no  
   Response formats: `JSON`
 
 #### Url parameters

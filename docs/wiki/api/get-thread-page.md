@@ -5,7 +5,7 @@
   Gets posts from chat page by it's number, thread number and board name
 
 #### Resource information:
-  Requires authentication: no
+  Requires authentication: no  
   Response formats: `JSON`
 
 #### Url parameters

@@ -5,7 +5,7 @@
   Adds new user
 
 #### Resource information:
-  Requires authentication: yes
+  Requires authenticationyes  
   Response formats: `JSON`
 
 #### Post parameters

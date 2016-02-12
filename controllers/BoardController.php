@@ -51,7 +51,7 @@ class BoardController extends Controller
         foreach (Board::find()->all() as $board) {
             $boards[] = [
                 'name' => $board->name,
-                'description' => $board->description
+                'description' => $board->settings->description
             ];
         }
 

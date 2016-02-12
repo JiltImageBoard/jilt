@@ -6,7 +6,7 @@
   On success user gets cookie with auth data.
 
 #### Resource information:
-  Requires authentication: no
+  Requires authentication: no  
   Response formats: `JSON`
 
 #### Post parameters

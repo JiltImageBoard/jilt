@@ -5,7 +5,7 @@
   Resets password.
 
 #### Resource information:
-  Requires authentication: yes
+  Requires authentication: yes    
   Response formats: `JSON`
 
 #### Post parameters
