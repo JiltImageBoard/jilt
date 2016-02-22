@@ -8,7 +8,7 @@
 namespace yii\base;
 
 /**
- * Event is the base class for all event helpers.
+ * Event is the base class for all event classes.
  *
  * It encapsulates the parameters associated with an event.
  * The [[sender]] property describes who raises the event.
@@ -48,6 +48,9 @@ class Event extends Object
      */
     public $data;
 
+    /**
+     * @var array contains all globally registered event handlers.
+     */
     private static $_events = [];
 
 
@@ -55,16 +58,16 @@ class Event extends Object
      * Attaches an event handler to a class-level event.
      *
      * When a class-level event is triggered, event handlers attached
-     * to that class and all parent helpers will be invoked.
+     * to that class and all parent classes will be invoked.
      *
      * For example, the following code attaches an event handler to `ActiveRecord`'s
      * `afterInsert` event:
      *
-     * ~~~
+     * ```php
      * Event::on(ActiveRecord::className(), ActiveRecord::EVENT_AFTER_INSERT, function ($event) {
      *     Yii::trace(get_class($event->sender) . ' is inserted.');
      * });
-     * ~~~
+     * ```
      *
      * The handler will be invoked for EVERY successful ActiveRecord insertion.
      *
@@ -129,7 +132,7 @@ class Event extends Object
 
     /**
      * Returns a value indicating whether there is any handler attached to the specified class-level event.
-     * Note that this method will also check all parent helpers to see if there is any handler attached
+     * Note that this method will also check all parent classes to see if there is any handler attached
      * to the named event.
      * @param string|object $class the object or the fully qualified class name specifying the class-level event.
      * @param string $name the event name.
@@ -145,11 +148,18 @@ class Event extends Object
         } else {
             $class = ltrim($class, '\\');
         }
-        do {
+
+        $classes = array_merge(
+            [$class],
+            class_parents($class, true),
+            class_implements($class, true)
+        );
+
+        foreach ($classes as $class) {
             if (!empty(self::$_events[$name][$class])) {
                 return true;
             }
-        } while (($class = get_parent_class($class)) !== false);
+        }
 
         return false;
     }
@@ -157,7 +167,7 @@ class Event extends Object
     /**
      * Triggers a class-level event.
      * This method will cause invocation of event handlers that are attached to the named event
-     * for the specified class and all its parent helpers.
+     * for the specified class and all its parent classes.
      * @param string|object $class the object or the fully qualified class name specifying the class-level event.
      * @param string $name the event name.
      * @param Event $event the event parameter. If not set, a default [[Event]] object will be created.
@@ -181,7 +191,14 @@ class Event extends Object
         } else {
             $class = ltrim($class, '\\');
         }
-        do {
+
+        $classes = array_merge(
+            [$class],
+            class_parents($class, true),
+            class_implements($class, true)
+        );
+
+        foreach ($classes as $class) {
             if (!empty(self::$_events[$name][$class])) {
                 foreach (self::$_events[$name][$class] as $handler) {
                     $event->data = $handler[1];
@@ -191,6 +208,6 @@ class Event extends Object
                     }
                 }
             }
-        } while (($class = get_parent_class($class)) !== false);
+        }
     }
 }

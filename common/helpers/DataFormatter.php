@@ -54,14 +54,5 @@ class DataFormatter
         }
         return implode('_', $ret);
     }
-
-    /*public static function varDump($data)
-    {
-
-        echo '<!doctype html><html lang="en"><head> <meta charset="utf-8"> <title>Var Dump</title>
-                <link rel="stylesheet" href="http://meyerweb.com/eric/tools/css/reset/reset.css"></head><body> <pre>';
-        var_dump($data);
-        echo '</pre> <style> pre {margin: 20px;}</style></body></html>';
-        die();
-    }*/
+    
 }

@@ -2,6 +2,10 @@
 
 namespace app\models;
 
+use yii\behaviors\TimestampBehavior;
+use yii\db\Expression;
+
+
 /**
  * Class Thread
  * @package app\models
@@ -52,4 +56,26 @@ class Thread extends ActiveRecordExtended
             ->viaTable('threads_tags', ['thread_id' => 'id']);
     }
 
+    public function save($runValidation = true, $attributeNames = null)
+    {
+        if ($this->isNewRecord) {
+            $command =  \Yii::$app->db->createCommand("CALL mystored(
+            :board_id, :is_sticked, :is_locked, :is_op_mark_enabled, :is_chat, :post_data_id, :updated_at)");
+            $command->execute();
+        } else {
+            return parent::save($runValidation, $attributeNames);
+        }
+    }
+
+    //TODO: Проверить что бехавор работает
+    public function behaviors()
+    {
+        return [
+            [
+                'class' => TimestampBehavior::className(),
+                'updatedAtAttribute' => 'updated_at',
+                'value' => new Expression('NOW()'),
+            ]
+        ];
+    }
 }

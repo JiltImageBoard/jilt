@@ -21,8 +21,5 @@ DELETE /boards/test
 
 #### Example Result
 ```javascript
-{
-  "errorCode" : 0,
-  "errorMessage" : ""
-}
+//TODO: Example Result (void?)
 ```

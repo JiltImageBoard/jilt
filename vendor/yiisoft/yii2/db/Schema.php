@@ -15,7 +15,7 @@ use yii\caching\Cache;
 use yii\caching\TagDependency;
 
 /**
- * Schema is the base class for concrete DBMS-specific schema helpers.
+ * Schema is the base class for concrete DBMS-specific schema classes.
  *
  * Schema represents the database schema information that is DBMS specific.
  *
@@ -104,7 +104,7 @@ abstract class Schema extends Object
     /**
      * Loads the metadata for the specified table.
      * @param string $name table name
-     * @return TableSchema DBMS-dependent table metadata, null if the table does not exist.
+     * @return null|TableSchema DBMS-dependent table metadata, null if the table does not exist.
      */
     abstract protected function loadTableSchema($name);
 
@@ -112,7 +112,7 @@ abstract class Schema extends Object
      * Obtains the metadata for the named table.
      * @param string $name table name. The table name may contain schema name if any. Do not quote the table name.
      * @param boolean $refresh whether to reload the table schema even if it is found in the cache.
-     * @return TableSchema table metadata. Null if the named table does not exist.
+     * @return null|TableSchema table metadata. Null if the named table does not exist.
      */
     public function getTableSchema($name, $refresh = false)
     {
@@ -300,7 +300,7 @@ abstract class Schema extends Object
 
     /**
      * Creates a query builder for the database.
-     * This method may be overridden by child helpers to create a DBMS-specific query builder.
+     * This method may be overridden by child classes to create a DBMS-specific query builder.
      * @return QueryBuilder query builder instance
      */
     public function createQueryBuilder()
@@ -311,7 +311,7 @@ abstract class Schema extends Object
     /**
      * Create a column schema builder instance giving the type and value precision.
      *
-     * This method may be overridden by child helpers to create a DBMS-specific column schema builder.
+     * This method may be overridden by child classes to create a DBMS-specific column schema builder.
      *
      * @param string $type type of the column. See [[ColumnSchemaBuilder::$type]].
      * @param integer|string|array $length length or precision of the column. See [[ColumnSchemaBuilder::$length]].
@@ -325,7 +325,7 @@ abstract class Schema extends Object
 
     /**
      * Returns all schema names in the database, including the default one but not system schemas.
-     * This method should be overridden by child helpers in order to support this feature
+     * This method should be overridden by child classes in order to support this feature
      * because the default implementation simply throws an exception.
      * @return array all schema names in the database, except system schemas
      * @throws NotSupportedException if this method is called
@@ -338,7 +338,7 @@ abstract class Schema extends Object
 
     /**
      * Returns all table names in the database.
-     * This method should be overridden by child helpers in order to support this feature
+     * This method should be overridden by child classes in order to support this feature
      * because the default implementation simply throws an exception.
      * @param string $schema the schema of the tables. Defaults to empty string, meaning the current or default schema.
      * @return array all table names in the database. The names have NO schema name prefix.
@@ -353,14 +353,14 @@ abstract class Schema extends Object
      * Returns all unique indexes for the given table.
      * Each array element is of the following structure:
      *
-     * ~~~
+     * ```php
      * [
      *  'IndexName1' => ['col1' [, ...]],
      *  'IndexName2' => ['col2' [, ...]],
      * ]
-     * ~~~
+     * ```
      *
-     * This method should be overridden by child helpers in order to support this feature
+     * This method should be overridden by child classes in order to support this feature
      * because the default implementation simply throws an exception
      * @param TableSchema $table the table metadata
      * @return array all unique indexes for the given table.
@@ -593,9 +593,9 @@ abstract class Schema extends Object
         ];
         if (isset($typeMap[$column->type])) {
             if ($column->type === 'bigint') {
-                return PHP_INT_SIZE == 8 && !$column->unsigned ? 'integer' : 'string';
+                return PHP_INT_SIZE === 8 && !$column->unsigned ? 'integer' : 'string';
             } elseif ($column->type === 'integer') {
-                return PHP_INT_SIZE == 4 && $column->unsigned ? 'string' : 'integer';
+                return PHP_INT_SIZE === 4 && $column->unsigned ? 'string' : 'integer';
             } else {
                 return $typeMap[$column->type];
             }

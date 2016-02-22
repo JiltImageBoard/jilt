@@ -13,7 +13,7 @@ use yii\db\ActiveRecordInterface;
 use yii\web\NotFoundHttpException;
 
 /**
- * Action is the base class for action helpers that implement RESTful API.
+ * Action is the base class for action classes that implement RESTful API.
  *
  * @author Qiang Xue <qiang.xue@gmail.com>
  * @since 2.0

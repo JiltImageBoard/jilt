@@ -23,6 +23,10 @@
 | `int`    | default: 500       | thread_max_posts     | Max count of posts that thread on that board can contain
 | `string` | default: 'Anon'    | default_name         | Default name
 | `bool`   | default: false     | is_closed            | Is board closed
+| `array`  | yes                | fileFormats          | File formats ids
+| `array`  | yes                | wordFilters          | Wordfilters ids
+| `array`  | yes                | fileRatings          | File ratings ids
+| `array`  | yes                | markupTypes          | Markup types ids
 
 #### Example Request
 ```javascript
@@ -36,14 +40,25 @@ POST /boards/
 #### Example Result
 ```
 HTTP/1.1 201 OK
-[{
-	"name": "test2",
-	"description": "test3"
-}, {
-	"name": "test3",
-	"description": "test3"
-},{
+{
 	"name": "test",
-	"description": "Test board"
-}]
+	"description": "Test board",
+	"created_at": "2016-02-22 09:32:41",
+	"updated_at": "2016-02-22 09:32:41",
+	"min_file_size": 1,
+	"max_file_size": 1,
+	"min_image_resolution": "1",
+	"max_image_resolution": "1",
+	"max_message_length": 1,
+	"max_threads_on_page": 1,
+	"max_board_pages": 1,
+	"thread_max_posts": 1,
+	"default_name": "Anon",
+	"is_closed": 0,
+	"is_deleted": 0,
+	"fileFormats": [1],
+	"wordFilters": [1],
+	"fileRatings": [1],
+	"markupTypes": [1]
+}
 ```

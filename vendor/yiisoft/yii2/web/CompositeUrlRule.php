@@ -11,7 +11,7 @@ use Yii;
 use yii\base\Object;
 
 /**
- * CompositeUrlRule is the base class for URL rule helpers that consist of multiple simpler rules.
+ * CompositeUrlRule is the base class for URL rule classes that consist of multiple simpler rules.
  *
  * @author Qiang Xue <qiang.xue@gmail.com>
  * @since 2.0

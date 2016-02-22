@@ -11,7 +11,7 @@ use Yii;
 use yii\di\ServiceLocator;
 
 /**
- * Module is the base class for module and application helpers.
+ * Module is the base class for module and application classes.
  *
  * A module represents a sub-application which contains MVC elements by itself, such as
  * models, views, controllers, etc.
@@ -25,7 +25,7 @@ use yii\di\ServiceLocator;
  * with '@') and the array values are the corresponding paths or aliases. See [[setAliases()]] for an example.
  * This property is write-only.
  * @property string $basePath The root directory of the module.
- * @property string $controllerPath The directory that contains the controller helpers. This property is
+ * @property string $controllerPath The directory that contains the controller classes. This property is
  * read-only.
  * @property string $layoutPath The root directory of layout files. Defaults to "[[viewPath]]/layouts".
  * @property array $modules The modules (indexed by their IDs).
@@ -74,7 +74,7 @@ class Module extends ServiceLocator
      * the controller's fully qualified class name, and the rest of the name-value pairs
      * in the array are used to initialize the corresponding controller properties. For example,
      *
-     * ~~~
+     * ```php
      * [
      *   'account' => 'app\controllers\UserController',
      *   'article' => [
@@ -82,12 +82,12 @@ class Module extends ServiceLocator
      *      'pageTitle' => 'something new',
      *   ],
      * ]
-     * ~~~
+     * ```
      */
     public $controllerMap = [];
     /**
-     * @var string the namespace that controller helpers are in.
-     * This namespace will be used to load controller helpers by prepending it to the controller
+     * @var string the namespace that controller classes are in.
+     * This namespace will be used to load controller classes by prepending it to the controller
      * class name.
      *
      * If not set, it will use the `controllers` sub-namespace under the namespace of this module.
@@ -95,7 +95,7 @@ class Module extends ServiceLocator
      * controller namespace would be "foo\bar\controllers".
      *
      * See also the [guide section on autoloading](guide:concept-autoloading) to learn more about
-     * defining namespaces and how helpers are loaded.
+     * defining namespaces and how classes are loaded.
      */
     public $controllerNamespace;
     /**
@@ -226,10 +226,10 @@ class Module extends ServiceLocator
     }
 
     /**
-     * Returns the directory that contains the controller helpers according to [[controllerNamespace]].
+     * Returns the directory that contains the controller classes according to [[controllerNamespace]].
      * Note that in order for this method to return a value, you must define
      * an alias for the root namespace of [[controllerNamespace]].
-     * @return string the directory that contains the controller helpers.
+     * @return string the directory that contains the controller classes.
      * @throws InvalidParamException if there is no alias defined for the root namespace of [[controllerNamespace]].
      */
     public function getControllerPath()
@@ -243,11 +243,10 @@ class Module extends ServiceLocator
      */
     public function getViewPath()
     {
-        if ($this->_viewPath !== null) {
-            return $this->_viewPath;
-        } else {
-            return $this->_viewPath = $this->getBasePath() . DIRECTORY_SEPARATOR . 'views';
+        if ($this->_viewPath === null) {
+            $this->_viewPath = $this->getBasePath() . DIRECTORY_SEPARATOR . 'views';
         }
+        return $this->_viewPath;
     }
 
     /**
@@ -266,11 +265,11 @@ class Module extends ServiceLocator
      */
     public function getLayoutPath()
     {
-        if ($this->_layoutPath !== null) {
-            return $this->_layoutPath;
-        } else {
-            return $this->_layoutPath = $this->getViewPath() . DIRECTORY_SEPARATOR . 'layouts';
+        if ($this->_layoutPath === null) {
+            $this->_layoutPath = $this->getViewPath() . DIRECTORY_SEPARATOR . 'layouts';
         }
+
+        return $this->_layoutPath;
     }
 
     /**
@@ -294,12 +293,12 @@ class Module extends ServiceLocator
      * (must start with '@') and the array values are the corresponding paths or aliases.
      * For example,
      *
-     * ~~~
+     * ```php
      * [
      *     '@models' => '@app/models', // an existing alias
      *     '@backend' => __DIR__ . '/../backend',  // a directory
      * ]
-     * ~~~
+     * ```
      */
     public function setAliases($aliases)
     {
@@ -415,7 +414,7 @@ class Module extends ServiceLocator
      *
      * The following is an example for registering two sub-modules:
      *
-     * ~~~
+     * ```php
      * [
      *     'comment' => [
      *         'class' => 'app\modules\comment\CommentModule',
@@ -423,7 +422,7 @@ class Module extends ServiceLocator
      *     ],
      *     'booking' => ['class' => 'app\modules\booking\BookingModule'],
      * ]
-     * ~~~
+     * ```
      *
      * @param array $modules modules (id => module configuration or instances)
      */

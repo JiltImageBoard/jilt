@@ -14,7 +14,7 @@ use yii\web\IdentityInterface;
 use yii\web\UnauthorizedHttpException;
 
 /**
- * AuthInterface is the interface that should be implemented by auth method helpers.
+ * AuthInterface is the interface that should be implemented by auth method classes.
  *
  * @author Qiang Xue <qiang.xue@gmail.com>
  * @since 2.0

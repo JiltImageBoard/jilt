@@ -8,10 +8,10 @@
 namespace yii\db;
 
 /**
- * ActiveQueryInterface defines the common interface to be implemented by active record query helpers.
+ * ActiveQueryInterface defines the common interface to be implemented by active record query classes.
  *
  * That are methods for either normal queries that return active records but also relational queries
- * in which the query represents a relation between two active record helpers and will return related
+ * in which the query represents a relation between two active record classes and will return related
  * records only.
  *
  * A class implementing this interface should also use [[ActiveQueryTrait]] and [[ActiveRelationTrait]].
@@ -35,14 +35,14 @@ interface ActiveQueryInterface extends QueryInterface
      * This can also be a callable (e.g. anonymous function) that returns the index value based on the given
      * row or model data. The signature of the callable should be:
      *
-     * ~~~
+     * ```php
      * // $model is an AR instance when `asArray` is false,
      * // or an array of column values when `asArray` is true.
      * function ($model)
      * {
      *     // return the index value corresponding to $model
      * }
-     * ~~~
+     * ```
      *
      * @return $this the query object itself
      */
@@ -61,19 +61,19 @@ interface ActiveQueryInterface extends QueryInterface
      *
      * The following are some usage examples:
      *
-     * ~~~
+     * ```php
      * // find customers together with their orders and country
      * Customer::find()->with('orders', 'country')->all();
      * // find customers together with their orders and the orders' shipping address
      * Customer::find()->with('orders.address')->all();
      * // find customers together with their country and orders of status 1
      * Customer::find()->with([
-     *     'orders' => function ($query) {
+     *     'orders' => function (\yii\db\ActiveQuery $query) {
      *         $query->andWhere('status = 1');
      *     },
      *     'country',
      * ])->all();
-     * ~~~
+     * ```
      *
      * @return $this the query object itself
      */

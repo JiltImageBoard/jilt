@@ -22,18 +22,26 @@ GET /api/boards/test
 ```
 HTTP/1.1 200 OK
 {
-	"id": 1,
-	"description": "A test board",
+	"name": "test",
+	"description": "Test board",
+	"created_at": "2016-02-17 13:24:21",
+	"updated_at": "2016-02-21 15:08:03",
 	"min_file_size": 1,
-	"max_file_size": 20971520,
-	"min_image_resolution": "1x1",
-	"max_image_resolution": "5000x5000",
-	"max_message_length": 30000,
-	"max_threads_on_page": 15,
-	"max_board_pages": 100,
-	"thread_max_posts": 500,
+	"max_file_size": 1,
+	"min_image_resolution": "1",
+	"max_image_resolution": "1",
+	"max_message_length": 1,
+	"max_threads_on_page": 1,
+	"max_board_pages": 1,
+	"thread_max_posts": 1,
 	"default_name": "Anon",
-	"is_closed": 0
+	"is_closed": 0,
+	"is_deleted": 0,
+	"fileFormats": [1, 2],
+	"wordFilters": [1],
+	"fileRatings": [1],
+	"markupTypes": [1],
+	"threads": [3, 4]
 }
 ```
 

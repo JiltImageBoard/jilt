@@ -17,17 +17,21 @@
 | type     | required           | name                 | description
 |----------|--------------------|----------------------|-------------
 | `string` | yes                | name                 | Name of new board
-| `string` | yes                | description          | Description of a new board
-| `int`    | yes                | min_file_size        | Min file size in bytes
-| `int`    | yes                | max_file_size        | Max file size in bytes
-| `string` | yes                | min_image_resolution | Min image resolution in format {width}x{height}
-| `string` | yes                | max_image_resolution | Max image resolution in format {width}x{height}
-| `int`    | yes                | max_message_length   | Max count of chars for message
-| `int`    | yes                | max_threads_on_page  | Max number of threads that board page can contain
-| `int`    | yes                | max_board_pages      | Max number of pages that board can contain
-| `string` | yes                | thread_max_posts     | Max count of posts that thread on that board can contain
-| `string` | yes                | default_name         | Default name
-| `bool`   | yes                | is_closed            | Is board closed
+| `string` | optional           | description          | Description of a new board
+| `int`    | default: 1         | min_file_size        | Min file size in bytes
+| `int`    | default: 20971520  | max_file_size        | Max file size in bytes
+| `string` | default: 1x1       | min_image_resolution | Min image resolution in format {width}x{height}
+| `string` | default: 5000x5000 | max_image_resolution | Max image resolution in format {width}x{height}
+| `int`    | default: 30000     | max_message_length   | Max count of chars for message
+| `int`    | default: 15        | max_threads_on_page  | Max number of threads that board page can contain
+| `int`    | default: 100       | max_board_pages      | Max number of pages that board can contain
+| `int`    | default: 500       | thread_max_posts     | Max count of posts that thread on that board can contain
+| `string` | default: 'Anon'    | default_name         | Default name
+| `bool`   | default: false     | is_closed            | Is board closed
+| `array`  | yes                | fileFormats          | File formats ids
+| `array`  | yes                | wordFilters          | Wordfilters ids
+| `array`  | yes                | fileRatings          | File ratings ids
+| `array`  | yes                | markupTypes          | Markup types ids
 
 
 #### Example Request
@@ -45,13 +49,14 @@ PUT /boards/test/
   "max_board_pages": 100,
   "thread_max_posts": 500,
   "default_name": "Anon",
-  "is_closed": false
+  "is_closed": false,
+  "fileFormats": [1],
+  "wordFilters": [1],
+  "fileRatings": [1],
+  "markupTypes": [1]
 }
 ```
 #### Example Result
 ```javascript
-{
-  "errorCode": 0,
-  "errorMessage": ""
-}
+//TODO: Example Result
 ```

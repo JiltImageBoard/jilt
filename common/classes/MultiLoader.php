@@ -5,8 +5,8 @@ namespace app\common\classes;
 class MultiLoader {
 
     /**
-     * Load data into models
-     * @param array $data can be any associative array
+     * Loads data into models
+     * @param array $data can be any associative array, each array item should be loaded into some model
      * @param array $models Array with model objects
      * @return bool
      */
@@ -23,6 +23,7 @@ class MultiLoader {
             }
 
             if (!$keyValueLoaded) {
+                print_r($data);
                 return false;
             }
         }

@@ -17,6 +17,8 @@ namespace app\models;
  * @property bool $isDeleted
  * @property \DateTime $createdAt
  * @property \DateTime $updatedAt
+ * relations
+ * @property \app\models\Message $message
  */
 class PostData extends ActiveRecordExtended
 {

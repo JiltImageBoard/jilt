@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Update Board/title>
+    <script src="https://code.jquery.com/jquery-2.2.0.min.js"></script>
+</head>
+<body>
+<script>
+    $(function() {
+        //hang on event of form with id=myform
+        $("#test").submit(function(e) {
+
+            //prevent Default functionality
+            e.preventDefault();
+
+            //get the action-url of the form
+            var actionurl = e.currentTarget.action;
+
+            //do your own request an handle the results
+            $.ajax({
+                url: actionurl,
+                type: 'put',
+                dataType: 'json',
+                data: $("#test").serialize(),
+                success: function(data) {
+                    console.log(data);
+                }
+            });
+
+        });
+
+    });
+</script>
+<form id="test" action="/boards/test" method="PUT" accept-charset="UTF-8">
+    name:  <input type="text" name="name" value=""><br>
+    description: <input type="text" name="description" value=""><br>
+    max_board_pages: <input type="text" name="maxBoardPages" value="1"><br>
+    max_threads_on_page: <input type="text" name="maxThreadsOnPage" value="1"><br>
+    min_file_size: <input type="text" name="minFileSize" value="1"><br>
+    max_file_size: <input type="text" name="maxFileSize" value="1"><br>
+    min_image_resolution: <input type="text" name="minImageResolution" value="1"><br>
+    max_image_resolution: <input type="text" name="maxImageResolution" value="1"><br>
+    max_message_length: <input type="text" name="maxMessageLength" value="1"><br>
+    thread_max_posts: <input type="text" name="threadMaxPosts" value="1"><br>
+    <br>
+    FileFormats_1: <input type="text" name="fileFormats[]" value="1"><br>
+    FileFormats_2: <input type="text" name="fileFormats[]" value="1"><br>
+    FileFormats_3: <input type="text" name="fileFormats[]" value="1"><br>
+
+    <br>
+    fileRatings_1: <input type="text" name="fileRatings[]" value="1"><br>
+    fileRatings_2: <input type="text" name="fileRatings[]" value="1"><br>
+    fileRatings_3: <input type="text" name="fileRatings[]" value="1"><br>
+
+    <br>
+    markupTypes_1: <input type="text" name="markupTypes[]" value="1"><br>
+    markupTypes_2: <input type="text" name="markupTypes[]" value="1"><br>
+    markupTypes_3: <input type="text" name="markupTypes[]" value="1"><br>
+
+    <br>
+    WordFilters_1: <input type="text" name="wordFilters[]" value="1"><br>
+    WordFilters_2: <input type="text" name="wordFilters[]" value="1"><br>
+    WordFilters_3: <input type="text" name="wordFilters[]" value="1"><br>
+
+    <input type="submit" value="Submit">
+</form>
+</body>
+</html>

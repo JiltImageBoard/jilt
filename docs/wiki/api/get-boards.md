@@ -18,12 +18,9 @@ GET /api/boards/
 ```
 HTTP/1.1 200 OK
 [{
-	"name": "test2",
-	"description": "test3"
+	"name": "test1",
+	"description": "test1"
 }, {
-	"name": "test3",
-	"description": "test3"
-},{
 	"name": "test",
 	"description": "Test board"
 }]

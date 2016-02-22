@@ -33,6 +33,10 @@ $config = [
             'charset' => 'UTF-8',
         ]
     ],
+    'controller' => [
+        'class' => 'yii\web\Controller',
+        'enableCsrfValidation' => false,
+    ],
     'params' => $params,
     'defaultRoute' => 'board/get-all',
 ];

@@ -11,7 +11,7 @@ use yii\base\Component;
 use yii\helpers\StringHelper;
 
 /**
- * Cache is the base class for cache helpers supporting different cache storage implementations.
+ * Cache is the base class for cache classes supporting different cache storage implementations.
  *
  * A data item can be stored in the cache by calling [[set()]] and be retrieved back
  * later (in the same or different request) by [[get()]]. In both operations,
@@ -37,7 +37,7 @@ use yii\helpers\StringHelper;
  * echo $cache['foo'];
  * ```
  *
- * Derived helpers should implement the following methods which do the actual cache storage operations:
+ * Derived classes should implement the following methods which do the actual cache storage operations:
  *
  * - [[getValue()]]: retrieve the value with a key (if any) from cache
  * - [[setValue()]]: store the value with a key into cache
@@ -141,12 +141,30 @@ abstract class Cache extends Component implements \ArrayAccess
      * Some caches (such as memcache, apc) allow retrieving multiple cached values at the same time,
      * which may improve the performance. In case a cache does not support this feature natively,
      * this method will try to simulate it.
+     *
      * @param string[] $keys list of string keys identifying the cached values
      * @return array list of cached values corresponding to the specified keys. The array
      * is returned in terms of (key, value) pairs.
      * If a value is not cached or expired, the corresponding array value will be false.
+     * @deprecated This method is an alias for [[multiGet()]] and will be removed in 2.1.0.
      */
     public function mget($keys)
+    {
+        return $this->multiGet($keys);
+    }
+
+    /**
+     * Retrieves multiple values from cache with the specified keys.
+     * Some caches (such as memcache, apc) allow retrieving multiple cached values at the same time,
+     * which may improve the performance. In case a cache does not support this feature natively,
+     * this method will try to simulate it.
+     * @param string[] $keys list of string keys identifying the cached values
+     * @return array list of cached values corresponding to the specified keys. The array
+     * is returned in terms of (key, value) pairs.
+     * If a value is not cached or expired, the corresponding array value will be false.
+     * @since 2.0.7
+     */
+    public function multiGet($keys)
     {
         $keyMap = [];
         foreach ($keys as $key) {
@@ -213,8 +231,27 @@ abstract class Cache extends Component implements \ArrayAccess
      * the corresponding values in the cache will be invalidated when it is fetched via [[get()]].
      * This parameter is ignored if [[serializer]] is false.
      * @return boolean whether the items are successfully stored into cache
+     * @deprecated This method is an alias for [[multiSet()]] and will be removed in 2.1.0.
      */
     public function mset($items, $duration = 0, $dependency = null)
+    {
+        return $this->multiSet($items, $duration, $dependency);
+    }
+
+    /**
+     * Stores multiple items in cache. Each item contains a value identified by a key.
+     * If the cache already contains such a key, the existing value and
+     * expiration time will be replaced with the new ones, respectively.
+     *
+     * @param array $items the items to be cached, as key-value pairs.
+     * @param integer $duration default number of seconds in which the cached values will expire. 0 means never expire.
+     * @param Dependency $dependency dependency of the cached items. If the dependency changes,
+     * the corresponding values in the cache will be invalidated when it is fetched via [[get()]].
+     * This parameter is ignored if [[serializer]] is false.
+     * @return boolean whether the items are successfully stored into cache
+     * @since 2.0.7
+     */
+    public function multiSet($items, $duration = 0, $dependency = null)
     {
         if ($dependency !== null && $this->serializer !== false) {
             $dependency->evaluateDependency($this);
@@ -245,8 +282,26 @@ abstract class Cache extends Component implements \ArrayAccess
      * the corresponding values in the cache will be invalidated when it is fetched via [[get()]].
      * This parameter is ignored if [[serializer]] is false.
      * @return boolean whether the items are successfully stored into cache
+     * @deprecated This method is an alias for [[multiAdd()]] and will be removed in 2.1.0.
      */
     public function madd($items, $duration = 0, $dependency = null)
+    {
+        return $this->multiAdd($items, $duration, $dependency);
+    }
+
+    /**
+     * Stores multiple items in cache. Each item contains a value identified by a key.
+     * If the cache already contains such a key, the existing value and expiration time will be preserved.
+     *
+     * @param array $items the items to be cached, as key-value pairs.
+     * @param integer $duration default number of seconds in which the cached values will expire. 0 means never expire.
+     * @param Dependency $dependency dependency of the cached items. If the dependency changes,
+     * the corresponding values in the cache will be invalidated when it is fetched via [[get()]].
+     * This parameter is ignored if [[serializer]] is false.
+     * @return boolean whether the items are successfully stored into cache
+     * @since 2.0.7
+     */
+    public function multiAdd($items, $duration = 0, $dependency = null)
     {
         if ($dependency !== null && $this->serializer !== false) {
             $dependency->evaluateDependency($this);
@@ -319,7 +374,7 @@ abstract class Cache extends Component implements \ArrayAccess
 
     /**
      * Retrieves a value from cache with a specified key.
-     * This method should be implemented by child helpers to retrieve the data
+     * This method should be implemented by child classes to retrieve the data
      * from specific cache storage.
      * @param string $key a unique key identifying the cached value
      * @return string|boolean the value stored in cache, false if the value is not in the cache or expired.
@@ -328,7 +383,7 @@ abstract class Cache extends Component implements \ArrayAccess
 
     /**
      * Stores a value identified by a key in cache.
-     * This method should be implemented by child helpers to store the data
+     * This method should be implemented by child classes to store the data
      * in specific cache storage.
      * @param string $key the key identifying the value to be cached
      * @param string $value the value to be cached
@@ -339,7 +394,7 @@ abstract class Cache extends Component implements \ArrayAccess
 
     /**
      * Stores a value identified by a key into cache if the cache does not contain this key.
-     * This method should be implemented by child helpers to store the data
+     * This method should be implemented by child classes to store the data
      * in specific cache storage.
      * @param string $key the key identifying the value to be cached
      * @param string $value the value to be cached
@@ -350,7 +405,7 @@ abstract class Cache extends Component implements \ArrayAccess
 
     /**
      * Deletes a value with the specified key from cache
-     * This method should be implemented by child helpers to delete the data from actual cache storage.
+     * This method should be implemented by child classes to delete the data from actual cache storage.
      * @param string $key the key of the value to be deleted
      * @return boolean if no error happens during deletion
      */
@@ -358,7 +413,7 @@ abstract class Cache extends Component implements \ArrayAccess
 
     /**
      * Deletes all values from cache.
-     * Child helpers may implement this method to realize the flush operation.
+     * Child classes may implement this method to realize the flush operation.
      * @return boolean whether the flush operation was successful.
      */
     abstract protected function flushValues();

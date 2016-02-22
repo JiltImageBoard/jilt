@@ -14,7 +14,7 @@ use yii\helpers\Inflector;
 use yii\helpers\StringHelper;
 
 /**
- * ActiveRecord is the base class for helpers representing relational data in terms of objects.
+ * ActiveRecord is the base class for classes representing relational data in terms of objects.
  *
  * Active Record implements the [Active Record design pattern](http://en.wikipedia.org/wiki/Active_record).
  * The premise behind Active Record is that an individual [[ActiveRecord]] object is associated with a specific
@@ -45,7 +45,7 @@ use yii\helpers\StringHelper;
  *
  * The `tableName` method only has to return the name of the database table associated with the class.
  *
- * > Tip: You may also use the [Gii code generator](guide:start-gii) to generate ActiveRecord helpers from your
+ * > Tip: You may also use the [Gii code generator](guide:start-gii) to generate ActiveRecord classes from your
  * > database tables.
  *
  * Class instances are obtained in one of two ways:
@@ -291,12 +291,15 @@ class ActiveRecord extends BaseActiveRecord
      */
     public static function getTableSchema()
     {
-        $schema = static::getDb()->getSchema()->getTableSchema(static::tableName());
-        if ($schema !== null) {
-            return $schema;
-        } else {
-            throw new InvalidConfigException("The table does not exist: " . static::tableName());
+        $tableSchema = static::getDb()
+            ->getSchema()
+            ->getTableSchema(static::tableName());
+
+        if ($tableSchema === null) {
+            throw new InvalidConfigException('The table does not exist: ' . static::tableName());
         }
+
+        return $tableSchema;
     }
 
     /**

@@ -12,7 +12,7 @@ use yii\base\ArrayAccessTrait;
 use yii\base\InvalidConfigException;
 
 /**
- * BaseActiveFixture is the base class for fixture helpers that support accessing fixture data as ActiveRecord objects.
+ * BaseActiveFixture is the base class for fixture classes that support accessing fixture data as ActiveRecord objects.
  *
  * @author Qiang Xue <qiang.xue@gmail.com>
  * @since 2.0

@@ -14,7 +14,7 @@ return [
         'DELETE boards/<name:\w+>' => 'board/delete',
 
         /*Threads*/
-        'GET boards/<name:\w+/threads/<threadNum:\d+>' => 'thread/get',
+        'GET boards/<name:\w+>/threads/<threadNum:\d+>' => 'thread/get',
         'POST boards/<name:\w+>/threads' => 'thread/create',
         'PUT boards/<name:\w+>/threads/<threadNum:\d+>' => 'thread/update',
         'DELETE boards/<name:\w+>/threads/<threadNum:\d+>' => 'thread/delete',

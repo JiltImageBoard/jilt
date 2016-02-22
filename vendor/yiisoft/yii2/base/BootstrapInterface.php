@@ -8,11 +8,11 @@
 namespace yii\base;
 
 /**
- * BootstrapInterface is the interface that should be implemented by helpers who want to participate in the application bootstrap process.
+ * BootstrapInterface is the interface that should be implemented by classes who want to participate in the application bootstrap process.
  *
  * The main method [[bootstrap()]] will be invoked by an application at the beginning of its `init()` method.
  *
- * Bootstrapping helpers can be registered in two approaches.
+ * Bootstrapping classes can be registered in two approaches.
  *
  * The first approach is mainly used by extensions and is managed by the Composer installation process.
  * You mainly need to list the bootstrapping class of your extension in the `composer.json` file like following,

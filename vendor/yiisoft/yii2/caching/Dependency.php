@@ -8,9 +8,9 @@
 namespace yii\caching;
 
 /**
- * Dependency is the base class for cache dependency helpers.
+ * Dependency is the base class for cache dependency classes.
  *
- * Child helpers should override its [[generateDependencyData()]] for generating
+ * Child classes should override its [[generateDependencyData()]] for generating
  * the actual dependency data.
  *
  * @author Qiang Xue <qiang.xue@gmail.com>
@@ -98,7 +98,7 @@ abstract class Dependency extends \yii\base\Object
 
     /**
      * Generates the data needed to determine if dependency has been changed.
-     * Derived helpers should override this method to generate the actual dependency data.
+     * Derived classes should override this method to generate the actual dependency data.
      * @param Cache $cache the cache component that is currently evaluating this dependency
      * @return mixed the data needed to determine if dependency has been changed.
      */

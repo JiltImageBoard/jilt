@@ -11,11 +11,11 @@ use Yii;
 use yii\base\Component;
 
 /**
- * MessageSource is the base class for message translation repository helpers.
+ * MessageSource is the base class for message translation repository classes.
  *
  * A message source stores message translations in some persistent storage.
  *
- * Child helpers should override [[loadMessages()]] to provide translated messages.
+ * Child classes should override [[loadMessages()]] to provide translated messages.
  *
  * @author Qiang Xue <qiang.xue@gmail.com>
  * @since 2.0

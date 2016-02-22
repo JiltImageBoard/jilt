@@ -3,12 +3,8 @@
 namespace app\controllers;
 
 use app\models\Board;
-use app\models\BoardSettings;
-use app\models\FileFormat;
+use app\models\BoardCounter;
 use yii\web\Controller;
-use yii\base\Model;
-use app\common\classes\MultiLoader;
-use app\common\helpers\DataFormatter;
 
 /**
  * Class BoardController
@@ -16,7 +12,7 @@ use app\common\helpers\DataFormatter;
  */
 class BoardController extends Controller
 {
-
+    
     /**
      * Creates board
      * @return array|\yii\web\Response
@@ -25,25 +21,24 @@ class BoardController extends Controller
     {
         //TODO: Check authorization.
         $board = new Board();
-        $boardSettings = new BoardSettings();
-        $models = [$board, $boardSettings];
 
-        if (MultiLoader::load(\Yii::$app->request->post(), $models) && Model::validateMultiple($models)) {
-            if ($boardSettings->save()) {
-                $board->settingsId = $boardSettings->id;
-                if ($board->save()) {
-                    return $this->redirect('boards');
-                    //TODO: Разобраться почему со статус кодом 201 не отправляются борды. Возможно придется использовать $this->actionGetAll(true)
-                }
+        if ($board->load(\Yii::$app->request->post()) && $board->validate()) {
+            if ($board->save()) {
+                $boardCounter = new BoardCounter();
+                $boardCounter->boardId = $board->id;
+                $boardCounter->save();
+
+                \Yii::$app->response->setStatusCode(201);
+                return $this->actionGet($board->name);
             }
         }
-
-        return DataFormatter::collectErrors($models);
+        
+        return $board->errors;
     }
 
     /**
      * Returns all exist boards
-     * @return array
+     * @return array|\yii\web\Response
      */
     public function actionGetAll()
     {
@@ -51,101 +46,104 @@ class BoardController extends Controller
         foreach (Board::find()->all() as $board) {
             $boards[] = [
                 'name' => $board->name,
-                'description' => $board->settings->description
+                'description' => $board->description
             ];
         }
 
         return $boards;
     }
 
-
     /**
      * Returns N threads from board
      * @param $name
-     * @param int $threadNum
-     * @return string
+     * @param int $pageNum
+     * @return array|\yii\web\Response|bool
      */
-    public function actionGetPage($name, $threadNum = 0)
+    //TODO: Метод должен возвращать треды с определенной страницы, но $pageNum не участвует в выборке
+    public function actionGetPage($name, $pageNum = 0)
     {
-        $threadsRaw = Board::find()
-            ->with('threads')
-            ->where('boards.name = :boardName', [':boardName' => $name])
-            ->one()
-            ->threads;
-        $threads = [];
+        $board = Board::find()
+            ->joinWith([
+                'threads' => function ($query) {
+                    $query->orderBy('updated_at');
+                },
+                'threads.postData'
+            ])
+            ->where(['boards.name' => $name])
+            ->one();
+        if ($board) {
+            $threadsJson = [];
 
-        //TODO: Ограничить по максимальному количеству тредов на странице из настроек борды
-        foreach ($threadsRaw as $thread) {
-            $threads[] = [
-                'boardName' => $thread->board->name,
-                'number' => $thread->number,
-                'isSticked' => $thread->isSticked,
-                'isLocked' => $thread->isLocked,
-                'isChat' => $thread->isChat,
-                'isOpMarkEnabled' => $thread->isOpMarkEnabled,
-                'name' => $thread->postData->name,
-                'subject' => $thread->postData->subject,
-                'message' => $thread->postData->message->text,
-                'files' => [], //TODO: Реализовать файлы
-                'isModPost' => $thread->postData->isModPost,
-                'createdAt' => $thread->postData->createdAt,
-                'updatedAt' => $thread->postData->updatedAt
-
-
-            ];
+            foreach ($board->threads as $thread) {
+                $threadsJson[] = [
+                    'boardName' => $thread->board->name,
+                    'number' => $thread->number,
+                    'isSticked' => $thread->isSticked,
+                    'isLocked' => $thread->isLocked,
+                    'isChat' => $thread->isChat,
+                    'isOpMarkEnabled' => $thread->isOpMarkEnabled,
+                    'name' => $thread->postData->name,
+                    'subject' => $thread->postData->subject,
+                    'message' => $thread->postData->message->text,
+                    'files' => [], //TODO: Реализовать файлы
+                    'isModPost' => $thread->postData->isModPost,
+                    'createdAt' => $thread->postData->createdAt,
+                    'updatedAt' => $thread->postData->updatedAt
+                ];
+            }
+            return $threadsJson;
         }
-        return $threads;
+
+        return null;
     }
 
     /**
-     * Gets board settings
+     * Gets board info
      * @param $name
-     * @return array
+     * @return array|\yii\web\Response
      */
     public function actionGet($name)
     {
         $board = Board::find()->where(['name' => $name])->limit(1)->one();
-        if (!empty($board->settings)) {
-            return $board->settings;
+
+        if ($board) {
+            return $board->toArray('counter');
         }
-        //TODO: Оформить ошибку
-        return 'error';
+
+        \Yii::$app->response->setStatusCode(404);
+        return 'Board was not found';
     }
 
     /**
      * Updates board settings
      * @param $name
-     * @return string
+     * @return array|\yii\web\Response
      */
     public function actionUpdate($name)
     {
         $board = Board::find()->where(['name' => $name])->limit(1)->one();
-        $boardSettings = $board->settings;
-        $models = [$board, $boardSettings];
 
-        if (MultiLoader::load(\Yii::$app->request->post(), $models) && Model::validateMultiple($models)) {
-            if ($boardSettings->save()) {
-                if ($board->save()) {
-                    //return $this->redirect('boards');
-                    return 'success';
-                } else {
-                    return $board->errors;
-                }
+        if ($board->load(\Yii::$app->request->post()) && $board->validate()) {
+            if ($board->save()) {
+                return $this->actionGet($board->name);
             }
         }
 
+        return $board->errors;
     }
 
     /**
      * Deletes board
      * @param $name
-     * @return string
      */
     public function actionDelete($name)
     {
-        return 'board/delete' . $name;
+        $board = Board::find()->where(['name' => $name])->limit(1)->one();
+
+        if ($board) {
+            $board->isDeleted = true;
+            $board->save();
+        }
+        \Yii::$app->response->setStatusCode(204);
     }
-
-
-
 }

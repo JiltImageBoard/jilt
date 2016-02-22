@@ -8,13 +8,13 @@
 namespace yii\base;
 
 /**
- * Arrayable is the interface that should be implemented by helpers who want to support customizable representation of their instances.
+ * Arrayable is the interface that should be implemented by classes who want to support customizable representation of their instances.
  *
  * For example, if a class implements Arrayable, by calling [[toArray()]], an instance of this class
  * can be turned into an array (including all its embedded objects) which can then be further transformed easily
  * into other formats, such as JSON, XML.
  *
- * The methods [[fields()]] and [[extraFields()]] allow the implementing helpers to customize how and which of their data
+ * The methods [[fields()]] and [[extraFields()]] allow the implementing classes to customize how and which of their data
  * should be formatted and put into the result of [[toArray()]].
  *
  * @author Qiang Xue <qiang.xue@gmail.com>

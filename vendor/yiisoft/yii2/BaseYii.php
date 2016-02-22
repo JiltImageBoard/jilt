@@ -79,7 +79,7 @@ class BaseYii
     public static $aliases = ['@yii' => __DIR__];
     /**
      * @var Container the dependency injection (DI) container used by [[createObject()]].
-     * You may use [[Container::set()]] to set up the needed dependencies of helpers and
+     * You may use [[Container::set()]] to set up the needed dependencies of classes and
      * their initial property values.
      * @see createObject()
      * @see Container
@@ -93,7 +93,7 @@ class BaseYii
      */
     public static function getVersion()
     {
-        return '2.0.6';
+        return '2.0.7';
     }
 
     /**
@@ -257,12 +257,12 @@ class BaseYii
      *    to include the file associated with the corresponding path alias
      *    (e.g. `@yii/base/Component.php`);
      *
-     * This autoloader allows loading helpers that follow the [PSR-4 standard](http://www.php-fig.org/psr/psr-4/)
+     * This autoloader allows loading classes that follow the [PSR-4 standard](http://www.php-fig.org/psr/psr-4/)
      * and have its top-level namespace or sub-namespaces defined as path aliases.
      *
-     * Example: When aliases `@yii` and `@yii/bootstrap` are defined, helpers in the `yii\bootstrap` namespace
+     * Example: When aliases `@yii` and `@yii/bootstrap` are defined, classes in the `yii\bootstrap` namespace
      * will be loaded using the `@yii/bootstrap` alias which points to the directory where bootstrap extension
-     * files are installed and all helpers from other `yii` namespaces will be loaded from the yii framework directory.
+     * files are installed and all classes from other `yii` namespaces will be loaded from the yii framework directory.
      *
      * Also the [guide section on autoloading](guide:concept-autoloading).
      *
@@ -347,7 +347,7 @@ class BaseYii
         } elseif (is_array($type)) {
             throw new InvalidConfigException('Object configuration must be an array containing a "class" element.');
         } else {
-            throw new InvalidConfigException("Unsupported configuration type: " . gettype($type));
+            throw new InvalidConfigException('Unsupported configuration type: ' . gettype($type));
         }
     }
 
@@ -429,14 +429,14 @@ class BaseYii
      * This has to be matched with a call to [[endProfile]] with the same category name.
      * The begin- and end- calls must also be properly nested. For example,
      *
-     * ~~~
+     * ```php
      * \Yii::beginProfile('block1');
      * // some code to be profiled
      *     \Yii::beginProfile('block2');
      *     // some other code to be profiled
      *     \Yii::endProfile('block2');
      * \Yii::endProfile('block1');
-     * ~~~
+     * ```
      * @param string $token token for the code block
      * @param string $category the category of this log message
      * @see endProfile()
@@ -464,7 +464,10 @@ class BaseYii
      */
     public static function powered()
     {
-        return 'Powered by <a href="http://www.yiiframework.com/" rel="external">Yii Framework</a>';
+        return \Yii::t('yii', 'Powered by {yii}', [
+            'yii' => '<a href="http://www.yiiframework.com/" rel="external">' . \Yii::t('yii',
+                    'Yii Framework') . '</a>'
+        ]);
     }
 
     /**

@@ -8,7 +8,7 @@
 namespace yii\web;
 
 /**
- * Interface for helpers that parse the raw request body into a parameters array.
+ * Interface for classes that parse the raw request body into a parameters array.
  *
  * @author Dan Schmidt <danschmidt5189@gmail.com>
  * @since 2.0
