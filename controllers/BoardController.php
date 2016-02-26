@@ -74,6 +74,7 @@ class BoardController extends Controller
         if ($board) {
             $threadsJson = [];
 
+            // TODO: pagination not implemented lol
             foreach ($board->threads as $thread) {
                 $threadsJson[] = [
                     'boardName' => $thread->board->name,
