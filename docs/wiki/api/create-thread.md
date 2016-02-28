@@ -17,7 +17,7 @@
 | type     | required | name                 | description
 |----------|----------|----------------------|-------------
 | `string` | optional | name                 | Poster name
-| `string` | optional | message              | Thread message
+| `string` | optional | text                 | Thread message text
 | `string` | optional | subject              | Thread subject
 | `array`  | optional | images               | Thread images
 | `bool`   | optional | is_chat              | Is chat
