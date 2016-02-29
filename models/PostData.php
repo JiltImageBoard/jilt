@@ -1,6 +1,7 @@
 <?php
 
 namespace app\models;
+use yii\web\UploadedFile;
 
 /**
  * Class PostData
@@ -18,10 +19,24 @@ namespace app\models;
  * @property \DateTime $createdAt
  * @property \DateTime $updatedAt
  * relations
- * @property \app\models\Message $message
+ * @property PostMessage $message
+ * @property FileInfo[] $fileInfos
  */
 class PostData extends ActiveRecordExtended
 {
+    /**
+     * @var UploadedFile[] $files
+     */
+    public $files;
+
+    public function rules()
+    {
+        // TODO: we should get rule values from board config
+        return [
+            [['files'], 'file', 'skipOnEmpty' => true, 'extensions' => 'png, jpg, htm', 'maxFiles' => 4]
+        ];
+    }
+
     /**
      * @return string
      */
@@ -30,11 +45,30 @@ class PostData extends ActiveRecordExtended
         return 'post_data';
     }
 
-    /**
-     * @return \yii\db\ActiveQuery
-     */
     public function getMessage()
     {
         return $this->hasOne(PostMessage::className(), ['id' => 'message_id']);
+    }
+
+    public function getFileInfos()
+    {
+        return $this->hasMany(FileInfo::className(), ['id' => 'files_info_id'])
+            ->viaTable('post_data_files_info', ['post_data_id' => 'id']);
+    }
+
+    /**
+     * @return bool
+     */
+    public function upload()
+    {
+        if ($this->validate()) {
+            foreach ($this->files as $file) {
+
+            }
+
+            return true;
+        }
+
+        return false;
     }
 }

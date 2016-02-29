@@ -2,7 +2,11 @@
 
 namespace app\controllers;
 
+use app\models\PostData;
+use app\models\PostMessage;
+use app\models\Thread;
 use yii\web\Controller;
+use yii\web\UploadedFile;
 
 class ThreadController extends Controller
 {
@@ -17,9 +21,17 @@ class ThreadController extends Controller
         return $threadNum;
     }
 
-    public function actionCreate()
+    /**
+     * @param string $name
+     */
+    public function actionCreate($name)
     {
-
+        // models involved: PostMessage, PostData, Thread
+        $models = [new PostMessage(), new PostMessage(), new PostData(), new Thread()];
+        $testData = new PostData();
+        $testData->files = UploadedFile::getInstancesByName('files');
+        var_dump($testData->upload());
+        //print_r(UploadedFile::getInstances())
     }
 
     /**

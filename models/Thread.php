@@ -60,7 +60,7 @@ class Thread extends ActiveRecordExtended
     {
         if ($this->isNewRecord) {
             $command =  \Yii::$app->db->createCommand("CALL mystored(
-            :board_id, :is_sticked, :is_locked, :is_op_mark_enabled, :is_chat, :post_data_id, :updated_at)");
+            :board_id, :is_sticked, :is_locked, :is_op_mark_enabled, :is_chat, :post_data_id)");
             $command->execute();
         } else {
             return parent::save($runValidation, $attributeNames);
