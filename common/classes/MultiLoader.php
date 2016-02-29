@@ -2,7 +2,8 @@
 
 namespace app\common\classes;
 
-class MultiLoader {
+class MultiLoader 
+{
 
     /**
      * Loads data into models
