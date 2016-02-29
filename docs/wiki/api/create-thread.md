@@ -19,7 +19,7 @@
 | `string` | optional | name                 | Poster name
 | `string` | optional | text                 | Thread message text
 | `string` | optional | subject              | Thread subject
-| `array`  | optional | images               | Thread images
+| `array`  | optional | files                | Thread files
 | `bool`   | optional | is_chat              | Is chat
 
 #### Example Request
