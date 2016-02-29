@@ -27,7 +27,7 @@
 POST /boards/test/threads
 {
   "name": "Anon",
-  "message": "Example message",
+  "text": "Example message",
   "subject": "Example subject"
 }
 ```
