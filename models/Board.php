@@ -170,7 +170,7 @@ class Board extends ActiveRecordExtended implements DeletableInterface
         ];
     }
 
-    public function getDeletedRows(Array $carry) 
+    public function getDeletedRows(Array &$carry) 
     {
         $boards = $this->find()->where(['is_deleted' => '1'])->all();
         
@@ -189,8 +189,6 @@ class Board extends ActiveRecordExtended implements DeletableInterface
                 }
             }
         }
-        
-        return $carry;
     }
 
 }

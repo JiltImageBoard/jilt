@@ -21,6 +21,6 @@ class TestController extends Controller
 {
     public function actionRun()
     {
-        return (new Post())->getDeletedRows([]);
+        return Cleanup::clean();
     }
 }

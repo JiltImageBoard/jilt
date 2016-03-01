@@ -29,7 +29,7 @@ class Post extends ActiveRecordExtended implements DeletableInterface
         return $this->hasOne(PostData::className(), ['id' => 'post_data_id']);
     }
 
-    public function getDeletedRows(Array $carry)
+    public function getDeletedRows(Array &$carry)
     {
         $posts = $this->find()->where(['is_deleted' => '1'])->all();
 
@@ -40,7 +40,6 @@ class Post extends ActiveRecordExtended implements DeletableInterface
         foreach ($posts as $post) {
             $carry['postsIds'][] = $post->id;
         }
-        return $carry;
     }
     
 }
