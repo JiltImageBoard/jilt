@@ -32,6 +32,7 @@ class PostData extends ActiveRecordExtended
     public function rules()
     {
         // TODO: we should get rule values from board config
+        // TODO: webm files not loading
         return [
             [['files'], 'file', 'skipOnEmpty' => true, 'extensions' => 'png, jpg, htm', 'maxFiles' => 4]
         ];
@@ -62,11 +63,31 @@ class PostData extends ActiveRecordExtended
     public function upload()
     {
         if ($this->validate()) {
-            foreach ($this->files as $file) {
+                foreach ($this->files as $file) {
+                    $checkSum = md5_file($file->tempName);
 
-            }
+                    if (!FileInfo::find()->where(['hash' => $checkSum])->one()) {
 
-            return true;
+                        $newId = FileInfo::find()->select('id')->max('id') + 1;
+                        $filePath = $file->baseName . '_' . $newId . '.' . $file->extension;
+
+                        if ($file->saveAs($filePath)) {
+                            $fileFormat = FileFormat::find()->where(['file_format' => $file->extension])->one();
+                            $newFileInfo = new FileInfo();
+                            $newFileInfo->filePath = $filePath;
+                            $newFileInfo->originalName = $file->baseName;
+                            $newFileInfo->hash = $checkSum;
+                            $newFileInfo->fileFormatId = $fileFormat->id;
+
+                            $newFileInfo->save();
+                        } else {
+                            // TODO: error loading file json response
+                            return 'error loading file';
+                        }
+                    }
+                }
+
+                return true;
         }
 
         return false;
