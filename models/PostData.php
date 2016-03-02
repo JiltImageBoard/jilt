@@ -25,9 +25,9 @@ use yii\web\UploadedFile;
 class PostData extends ActiveRecordExtended
 {
     /**
-     * @var UploadedFile[] $files
+     * @var UploadedFile[] $filesToUpload
      */
-    public $files;
+    public $filesToUpload;
 
     public function rules()
     {
@@ -57,39 +57,25 @@ class PostData extends ActiveRecordExtended
             ->viaTable('post_data_files_info', ['post_data_id' => 'id']);
     }
 
-    /**
-     * @return bool
-     */
-    public function upload()
+    public function save($runValidation = true, $attributeNames = null)
     {
-        if ($this->validate()) {
-                foreach ($this->files as $file) {
-                    $checkSum = md5_file($file->tempName);
+        $this->uploadFiles();
+        return parent::save($runValidation, $attributeNames);
+    }
 
-                    if (!FileInfo::find()->where(['hash' => $checkSum])->one()) {
-
-                        $newId = FileInfo::find()->select('id')->max('id') + 1;
-                        $filePath = $file->baseName . '_' . $newId . '.' . $file->extension;
-
-                        if ($file->saveAs($filePath)) {
-                            $fileFormat = FileFormat::find()->where(['file_format' => $file->extension])->one();
-                            $newFileInfo = new FileInfo();
-                            $newFileInfo->filePath = $filePath;
-                            $newFileInfo->originalName = $file->baseName;
-                            $newFileInfo->hash = $checkSum;
-                            $newFileInfo->fileFormatId = $fileFormat->id;
-
-                            $newFileInfo->save();
-                        } else {
-                            // TODO: error loading file json response
-                            return 'error loading file';
-                        }
-                    }
-                }
-
-                return true;
+    private function uploadFiles() {
+        $fileIds = [];
+        foreach ($this->filesToUpload as $file) {
+            /**
+             * @var FileFormat $fileFormat
+             * @var FileInfo $fileClass
+             */
+            $fileFormat = FileFormat::find()->where(['file_format' => $file->extension])->one();
+            $FileClassName = 'File' . ucfirst($fileFormat->fileType);
+            $fileClass = new $FileClassName();
+            if ($fileClass->upload())
+                $relatedIds[] = $fileClass->id;
         }
-
-        return false;
+        $this->addLazyRelation($fileClass::className(), 'fileInfos', $fileIds);
     }
 }

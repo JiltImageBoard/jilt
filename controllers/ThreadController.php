@@ -30,7 +30,6 @@ class ThreadController extends Controller
         $models = [new PostMessage(), new PostMessage(), new PostData(), new Thread()];
         $testData = new PostData();
         $testData->files = UploadedFile::getInstancesByName('files');
-        var_dump($testData->upload());
         //print_r(UploadedFile::getInstances())
     }
 
