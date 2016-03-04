@@ -28,12 +28,12 @@ use yii\db\Expression;
  * @property bool $isDeleted
  * 
  * relations
- * @property \app\models\FileFormat[] $fileFormats
- * @property \app\models\WordFilter[] $wordFilters
- * @property \app\models\FileRating[] $fileRatings
- * @property \app\models\MarkupType[] $markupType
- * @property-read \app\models\Thread[] $threads
- * @property-read \app\models\BoardCounter $counter
+ * @property FileFormat[] $fileFormats
+ * @property WordFilter[] $wordFilters
+ * @property FileRating[] $fileRatings
+ * @property MarkupType[] $markupType
+ * @property-read Thread[] $threads
+ * @property-read BoardCounter $counter
  */
 class Board extends ActiveRecordExtended
 {

@@ -2,6 +2,7 @@
 
 namespace app\models;
 use app\common\helpers\ArrayHelper;
+use app\common\RelationData;
 use yii\base\Exception;
 use yii\db\ActiveRecord;
 use app\common\helpers\DataFormatter;
@@ -12,6 +13,10 @@ use app\common\helpers\DataFormatter;
  */
 class ActiveRecordExtended extends ActiveRecord
 {
+    /**
+     * @var RelationData[] $relationData
+     */
+    protected $relationData = null;
     protected $delegatedFields = [];
 
     /**
@@ -104,6 +109,32 @@ class ActiveRecordExtended extends ActiveRecord
     }
 
     /**
+     * Loads data into models
+     * @param array $data can be any associative array, each array item should be loaded into some model
+     * @param array $models Array with model objects
+     * @return bool
+     */
+    public static function loadMultiple($data, $models)
+    {
+        foreach ($data as $key => $value) {
+            $keyValueLoaded = false;
+            foreach ($models as $model) {
+                if ($model->hasKey($key)) {
+                    $model->$key = $value;
+                    $keyValueLoaded = true;
+                    break;
+                }
+            }
+
+            if (!$keyValueLoaded) {
+                print_r($data);
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
      * Links related models specified in lazyRelations array by many-to-many relation type
      * @param bool $runValidation
      * @param null $attributeNames
@@ -167,11 +198,15 @@ class ActiveRecordExtended extends ActiveRecord
      */
     public function getRelationData()
     {
+        if (!is_null($this->relationData))
+            return $this->relationData;
+
+        print_r('saving relation data');
+
         $ARMethods = get_class_methods('\yii\db\ActiveRecord');
         $modelMethods = get_class_methods('\yii\base\Model');
         $reflection = new \ReflectionClass($this);
-        $i = 0;
-        $stack = [];
+        $relationData = [];
         /* @var $method \ReflectionMethod */
         foreach ($reflection->getMethods() as $method) {
             if (in_array($method->name, $ARMethods) || in_array($method->name, $modelMethods)) {
@@ -204,18 +239,22 @@ class ActiveRecordExtended extends ActiveRecord
             try {
                 $rel = call_user_func(array($this, $method->name));
                 if ($rel instanceof \yii\db\ActiveQuery) {
-                    $stack[$i]['name'] = lcfirst(str_replace('get', '', $method->name));
-                    $stack[$i]['method'] = $method->name;
-                    $stack[$i]['isMultiple'] = $rel->multiple;
-                    $stack[$i]['modelClass'] = $rel->modelClass;
-                    $stack[$i]['link'] = $rel->link;
-                    $stack[$i]['via'] = $rel->via;
-                    $i++;
+                    $relationData[] = new \RelationData(
+                        lcfirst(str_replace('get', '', $method->name)),
+                        $method->name,
+                        $rel->multiple,
+                        $rel->modelClass,
+                        $rel->link,
+                        $rel->via
+                    );
                 }
             } catch (\yii\base\ErrorException $exc) {
+                // TODO: implement some error output maybe?
             }
         }
-        return $stack;
+
+        $this->relationData = $relationData;
+        return $relationData;
     }
 
 
@@ -271,5 +310,29 @@ class ActiveRecordExtended extends ActiveRecord
                 }
             }
         }
+    }
+
+    /**
+     * TODO: make atomic
+     * @param ActiveRecordExtended[] $models
+     * @return bool
+     */
+    public static function saveAndLink($models) {
+        foreach ($models as $model) {
+            if (!$model->save()) return false;
+        }
+
+        for ($i = 0; i < count($models) - 1; $i++) {
+            for ($j = $i + 1; $j < count($models); $j++) {
+                foreach ($models[i]->relationData as $relationDataItem) {
+                    if ($relationDataItem->modelClass == $models[j]->className()) {
+                        $models[i]->link($relationDataItem->name, $models[j]);
+                        break;
+                    }
+                }
+            }
+        }
+
+        return true;
     }
 }

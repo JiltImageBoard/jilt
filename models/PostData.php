@@ -19,7 +19,7 @@ use yii\web\UploadedFile;
  * @property \DateTime $createdAt
  * @property \DateTime $updatedAt
  * relations
- * @property PostMessage $message
+ * @property PostMessage $postMessage
  * @property FileInfo[] $fileInfos
  */
 class PostData extends ActiveRecordExtended
@@ -32,7 +32,7 @@ class PostData extends ActiveRecordExtended
     public function rules()
     {
         // TODO: we should get rule values from board config
-        // TODO: webm files not loading
+        // TODO: webm files not loading for some reason
         return [
             [['files'], 'file', 'skipOnEmpty' => true, 'extensions' => 'png, jpg, htm', 'maxFiles' => 4]
         ];
@@ -46,7 +46,7 @@ class PostData extends ActiveRecordExtended
         return 'post_data';
     }
 
-    public function getMessage()
+    public function getPostMessage()
     {
         return $this->hasOne(PostMessage::className(), ['id' => 'message_id']);
     }
@@ -76,6 +76,7 @@ class PostData extends ActiveRecordExtended
             if ($fileClass->upload())
                 $relatedIds[] = $fileClass->id;
         }
-        $this->addLazyRelation($fileClass::className(), 'fileInfos', $fileIds);
+
+        $this->addLazyRelation(FileInfo::className(), 'fileInfos', $fileIds);
     }
 }

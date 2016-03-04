@@ -24,7 +24,7 @@ class DataFormatter
     {
         return array_reduce($objects, function($carry, $item) {
             return (isset($item->errors) && is_array($item->errors)) ?
-                $carry = array_merge($carry, $item->errors) : [];
+                $carry += $item->errors : [];
         }, []);
     }
 
