@@ -2,7 +2,7 @@
 
 namespace app\models;
 use app\common\helpers\ArrayHelper;
-use app\common\RelationData;
+use app\common\classes\RelationData;
 use yii\base\Exception;
 use yii\db\ActiveRecord;
 use app\common\helpers\DataFormatter;
@@ -239,7 +239,7 @@ class ActiveRecordExtended extends ActiveRecord
             try {
                 $rel = call_user_func(array($this, $method->name));
                 if ($rel instanceof \yii\db\ActiveQuery) {
-                    $relationData[] = new \RelationData(
+                    $relationData[] = new RelationData(
                         lcfirst(str_replace('get', '', $method->name)),
                         $method->name,
                         $rel->multiple,
