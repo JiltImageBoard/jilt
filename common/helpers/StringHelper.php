@@ -23,4 +23,9 @@ class StringHelper
     {
         return str_replace('_', '', lcfirst(ucwords($str, '_')));
     }
+
+    public static function startsWith($str, $part)
+    {
+        return strpos($str, $part) === 0;
+    }
 }

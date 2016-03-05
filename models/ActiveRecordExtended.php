@@ -3,7 +3,9 @@
 namespace app\models;
 use app\common\helpers\ArrayHelper;
 use app\common\classes\RelationData;
+use yii\base\ErrorException;
 use yii\base\Exception;
+use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
 use app\common\helpers\DataFormatter;
 use app\common\helpers\StringHelper;
@@ -215,44 +217,26 @@ class ActiveRecordExtended extends ActiveRecord
             if (in_array($method->name, $ARMethods) || in_array($method->name, $modelMethods)) {
                 continue;
             }
-            if ($method->name === 'bindModels') {
-                continue;
-            }
-            if ($method->name === 'attachBehaviorInternal') {
-                continue;
-            }
-            if ($method->name === 'loadAll') {
-                continue;
-            }
-            if ($method->name === 'saveAll') {
-                continue;
-            }
-            if ($method->name === 'initRelationDataArray') {
-                continue;
-            }
-            if ($method->name === 'getAttributesWithRelatedAsPost') {
-                continue;
-            }
-            if ($method->name === 'getAttributesWithRelated') {
-                continue;
-            }
-            if ($method->name === 'deleteWithRelated') {
-                continue;
-            }
-            try {
-                $rel = call_user_func(array($this, $method->name));
-                if ($rel instanceof \yii\db\ActiveQuery) {
-                    $relationDataArray[] = new RelationData(
-                        lcfirst(str_replace('get', '', $method->name)),
-                        $method->name,
-                        $rel->multiple,
-                        $rel->modelClass,
-                        $rel->link,
-                        $rel->via
-                    );
+
+            if (StringHelper::startsWith($method->name, 'get')) {
+                if ($method->name === 'getAttributesWithRelatedAsPost') continue;
+                if ($method->name === 'getAttributesWithRelated') continue;
+
+                try {
+                    $rel = call_user_func(array($this, $method->name));
+                    if ($rel instanceof ActiveQuery) {
+                        $relationDataArray[] = new RelationData(
+                            lcfirst(str_replace('get', '', $method->name)),
+                            $method->name,
+                            $rel->multiple,
+                            $rel->modelClass,
+                            $rel->link,
+                            $rel->via
+                        );
+                    }
+                } catch (ErrorException $exc) {
+                    // TODO: implement some error output maybe?
                 }
-            } catch (\yii\base\ErrorException $exc) {
-                // TODO: implement some error output maybe?
             }
         }
 
