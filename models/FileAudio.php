@@ -3,7 +3,7 @@
 namespace app\models;
 
 /**
- * Class FileVideo
+ * Class FileAudio
  * @package app\models
  * @property string $filePath
  * @property string $originalName
