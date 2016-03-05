@@ -2,6 +2,7 @@
 
 namespace app\models;
 use app\common\helpers\ArrayHelper;
+use app\common\RelationData;
 use yii\base\Exception;
 use yii\db\ActiveRecord;
 use app\common\helpers\DataFormatter;
@@ -13,12 +14,25 @@ use app\common\helpers\DataFormatter;
 class ActiveRecordExtended extends ActiveRecord
 {
     /**
+     * @var RelationData[] $relationData
+     */
+    protected $relationData = null;
+    protected $delegatedFields = [];
+
+    /**
      * @var array[]
      */
     protected $lazyRelations = [];
 
     public function __get($key)
     {
+        $this->accessDelegatedField($key, function ($field) use (&$delegatedField) {
+            $delegatedField = $field;
+        });
+
+        if (isset($delegatedField))
+            return $delegatedField;
+
         if ($key = $this->hasKey($key)){
             return parent::__get($key);
         }
@@ -26,6 +40,12 @@ class ActiveRecordExtended extends ActiveRecord
 
     public function __set($key, $value)
     {
+        $this->accessDelegatedField($key, function (&$field) use ($value, &$isDelegated) {
+            $field = $value;
+        });
+
+        if (isset($isDelegated)) return;
+
         if ($key = $this->hasKey($key)) {
             parent::__set($key, $value);
         }
@@ -33,6 +53,12 @@ class ActiveRecordExtended extends ActiveRecord
 
     public function __unset($key)
     {
+        $this->accessDelegatedField($key, function () use (&$isDelegated) {
+            return false;
+        });
+
+        if (isset($isDelegated)) return;
+
         if ($key = $this->hasKey($key)){
             parent::__unset($key);
         }
@@ -40,6 +66,10 @@ class ActiveRecordExtended extends ActiveRecord
 
     public function hasKey($key)
     {
+        $this->accessDelegatedField($key, function () use (&$isDelegated) {});
+
+        if (isset($isDelegated)) return $key;
+
         if ($this->hasAttribute($key) || $this->hasProperty($key)) {
             return $key;
         } else {
@@ -76,6 +106,32 @@ class ActiveRecordExtended extends ActiveRecord
         }
 
         return $loadResult;
+    }
+
+    /**
+     * Loads data into models
+     * @param array $data can be any associative array, each array item should be loaded into some model
+     * @param array $models Array with model objects
+     * @return bool
+     */
+    public static function loadMultiple($data, $models)
+    {
+        foreach ($data as $key => $value) {
+            $keyValueLoaded = false;
+            foreach ($models as $model) {
+                if ($model->hasKey($key)) {
+                    $model->$key = $value;
+                    $keyValueLoaded = true;
+                    break;
+                }
+            }
+
+            if (!$keyValueLoaded) {
+                print_r($data);
+                return false;
+            }
+        }
+        return true;
     }
 
     /**
@@ -137,16 +193,20 @@ class ActiveRecordExtended extends ActiveRecord
 
     /**
      * Gets all relations with this model
-     * TODO: calls methods for retrieve return type, it's not optimal
+     * TODO: should be reworked. Calls methods for retrieve return type, it's not optimal
      * @return array
      */
     public function getRelationData()
     {
+        if (!is_null($this->relationData))
+            return $this->relationData;
+
+        print_r('saving relation data');
+
         $ARMethods = get_class_methods('\yii\db\ActiveRecord');
         $modelMethods = get_class_methods('\yii\base\Model');
         $reflection = new \ReflectionClass($this);
-        $i = 0;
-        $stack = [];
+        $relationData = [];
         /* @var $method \ReflectionMethod */
         foreach ($reflection->getMethods() as $method) {
             if (in_array($method->name, $ARMethods) || in_array($method->name, $modelMethods)) {
@@ -179,18 +239,22 @@ class ActiveRecordExtended extends ActiveRecord
             try {
                 $rel = call_user_func(array($this, $method->name));
                 if ($rel instanceof \yii\db\ActiveQuery) {
-                    $stack[$i]['name'] = lcfirst(str_replace('get', '', $method->name));
-                    $stack[$i]['method'] = $method->name;
-                    $stack[$i]['isMultiple'] = $rel->multiple;
-                    $stack[$i]['modelClass'] = $rel->modelClass;
-                    $stack[$i]['link'] = $rel->link;
-                    $stack[$i]['via'] = $rel->via;
-                    $i++;
+                    $relationData[] = new \RelationData(
+                        lcfirst(str_replace('get', '', $method->name)),
+                        $method->name,
+                        $rel->multiple,
+                        $rel->modelClass,
+                        $rel->link,
+                        $rel->via
+                    );
                 }
             } catch (\yii\base\ErrorException $exc) {
+                // TODO: implement some error output maybe?
             }
         }
-        return $stack;
+
+        $this->relationData = $relationData;
+        return $relationData;
     }
 
 
@@ -226,5 +290,49 @@ class ActiveRecordExtended extends ActiveRecord
             }
         }
         return $data;
+    }
+
+    /**
+     * Accesses delegated to some relation field and if it there is such relation with field $key,
+     * Callback will be invoked. Field will be unsetted if callback returns false
+     * @param string $key
+     * @param $callback
+     */
+    private function accessDelegatedField($key, $callback)
+    {
+        if (isset($this->delegatedFields[$key])) {
+            $relationName = $this->delegatedFields[$key];
+            $relationModel = $this->$relationName;
+            if (isset($relationModel)) {
+                if ($relationModel->hasKey($key)) {
+                    if ($callback($relationModel[$key]) === false)
+                        unset($relationModel[$key]);
+                }
+            }
+        }
+    }
+
+    /**
+     * TODO: make atomic
+     * @param ActiveRecordExtended[] $models
+     * @return bool
+     */
+    public static function saveAndLink($models) {
+        foreach ($models as $model) {
+            if (!$model->save()) return false;
+        }
+
+        for ($i = 0; i < count($models) - 1; $i++) {
+            for ($j = $i + 1; $j < count($models); $j++) {
+                foreach ($models[i]->relationData as $relationDataItem) {
+                    if ($relationDataItem->modelClass == $models[j]->className()) {
+                        $models[i]->link($relationDataItem->name, $models[j]);
+                        break;
+                    }
+                }
+            }
+        }
+
+        return true;
     }
 }

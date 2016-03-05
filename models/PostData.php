@@ -1,6 +1,7 @@
 <?php
 
 namespace app\models;
+use yii\web\UploadedFile;
 
 /**
  * Class PostData
@@ -18,10 +19,25 @@ namespace app\models;
  * @property \DateTime $createdAt
  * @property \DateTime $updatedAt
  * relations
- * @property \app\models\Message $message
+ * @property PostMessage $postMessage
+ * @property FileInfo[] $fileInfos
  */
 class PostData extends ActiveRecordExtended
 {
+    /**
+     * @var UploadedFile[] $filesToUpload
+     */
+    public $filesToUpload;
+
+    public function rules()
+    {
+        // TODO: we should get rule values from board config
+        // TODO: webm files not loading for some reason
+        return [
+            [['files'], 'file', 'skipOnEmpty' => true, 'extensions' => 'png, jpg, htm', 'maxFiles' => 4]
+        ];
+    }
+
     /**
      * @return string
      */
@@ -30,11 +46,37 @@ class PostData extends ActiveRecordExtended
         return 'post_data';
     }
 
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getMessage()
+    public function getPostMessage()
     {
         return $this->hasOne(PostMessage::className(), ['id' => 'message_id']);
+    }
+
+    public function getFileInfos()
+    {
+        return $this->hasMany(FileInfo::className(), ['id' => 'files_info_id'])
+            ->viaTable('post_data_files_info', ['post_data_id' => 'id']);
+    }
+
+    public function save($runValidation = true, $attributeNames = null)
+    {
+        $this->uploadFiles();
+        return parent::save($runValidation, $attributeNames);
+    }
+
+    private function uploadFiles() {
+        $fileIds = [];
+        foreach ($this->filesToUpload as $file) {
+            /**
+             * @var FileFormat $fileFormat
+             * @var FileInfo $fileClass
+             */
+            $fileFormat = FileFormat::find()->where(['file_format' => $file->extension])->one();
+            $FileClassName = 'File' . ucfirst($fileFormat->fileType);
+            $fileClass = new $FileClassName();
+            if ($fileClass->upload())
+                $relatedIds[] = $fileClass->id;
+        }
+
+        $this->addLazyRelation(FileInfo::className(), 'fileInfos', $fileIds);
     }
 }
