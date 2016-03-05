@@ -11,6 +11,11 @@ namespace app\models;
  */
 class Post extends ActiveRecordExtended
 {
+    public static function tableName()
+    {
+        return 'posts';
+    }
+
     public function getPostData()
     {
         return $this->hasOne(PostData::className(), ['id' => 'post_data_id']);

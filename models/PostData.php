@@ -29,6 +29,14 @@ class PostData extends ActiveRecordExtended
      */
     public $filesToUpload;
 
+    /**
+     * @return string
+     */
+    public static function tableName()
+    {
+        return 'post_data';
+    }
+
     public function rules()
     {
         // TODO: we should get rule values from board config
@@ -36,14 +44,6 @@ class PostData extends ActiveRecordExtended
         return [
             [['files'], 'file', 'skipOnEmpty' => true, 'extensions' => 'png, jpg, htm', 'maxFiles' => 4]
         ];
-    }
-
-    /**
-     * @return string
-     */
-    public static function tableName()
-    {
-        return 'post_data';
     }
 
     public function getPostMessage()
