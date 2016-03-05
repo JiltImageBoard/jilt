@@ -2,7 +2,7 @@
 
 namespace app\models;
 use app\common\helpers\ArrayHelper;
-use app\common\RelationData;
+use app\common\classes\RelationData;
 use yii\base\Exception;
 use yii\db\ActiveRecord;
 use app\common\helpers\DataFormatter;
@@ -14,9 +14,9 @@ use app\common\helpers\DataFormatter;
 class ActiveRecordExtended extends ActiveRecord
 {
     /**
-     * @var RelationData[] $relationData
+     * @var RelationData[] $relationDataArray
      */
-    protected $relationData = null;
+    protected $relationDataArray = null;
     protected $delegatedFields = [];
 
     /**
@@ -196,17 +196,17 @@ class ActiveRecordExtended extends ActiveRecord
      * TODO: should be reworked. Calls methods for retrieve return type, it's not optimal
      * @return array
      */
-    public function getRelationData()
+    public function getRelationDataArray()
     {
-        if (!is_null($this->relationData))
-            return $this->relationData;
+        if (!is_null($this->relationDataArray))
+            return $this->relationDataArray;
 
         print_r('saving relation data');
 
         $ARMethods = get_class_methods('\yii\db\ActiveRecord');
         $modelMethods = get_class_methods('\yii\base\Model');
         $reflection = new \ReflectionClass($this);
-        $relationData = [];
+        $relationDataArray = [];
         /* @var $method \ReflectionMethod */
         foreach ($reflection->getMethods() as $method) {
             if (in_array($method->name, $ARMethods) || in_array($method->name, $modelMethods)) {
@@ -239,7 +239,7 @@ class ActiveRecordExtended extends ActiveRecord
             try {
                 $rel = call_user_func(array($this, $method->name));
                 if ($rel instanceof \yii\db\ActiveQuery) {
-                    $relationData[] = new \RelationData(
+                    $relationDataArray[] = new RelationData(
                         lcfirst(str_replace('get', '', $method->name)),
                         $method->name,
                         $rel->multiple,
@@ -253,8 +253,8 @@ class ActiveRecordExtended extends ActiveRecord
             }
         }
 
-        $this->relationData = $relationData;
-        return $relationData;
+        $this->relationDataArray = $relationDataArray;
+        return $relationDataArray;
     }
 
 
@@ -265,20 +265,19 @@ class ActiveRecordExtended extends ActiveRecord
      */
     public function toArray(...$fieldsToUnset)
     {
-        $relations = $this->getRelationData();
-        $attributes = (array)$this->attributes;
-        
+        $attributes = $this->attributes;
+
         unset($attributes['id']);
         $data = $attributes;
         
         
-        foreach ($relations as $relation) {
-            if ($relation['isMultiple']) {
-                foreach ($this->$relation['name'] as $singleRelation) {
-                    $data[$relation['name']][] = $singleRelation['id'];
+        foreach ($this->relationDataArray as $relationData) {
+            if ($relationData->isMultiple) {
+                foreach ($this->{$relationData->name} as $relationModel) {
+                    $data[$relationData->name][] = $relationModel['id'];
                 }
             } else {
-                $data[$relation['name']] = $this->$relation['name']->id;
+                $data[$relationData->name] = $this->{$relationData->name}->id;
             }
             
             
@@ -324,7 +323,7 @@ class ActiveRecordExtended extends ActiveRecord
 
         for ($i = 0; i < count($models) - 1; $i++) {
             for ($j = $i + 1; $j < count($models); $j++) {
-                foreach ($models[i]->relationData as $relationDataItem) {
+                foreach ($models[i]->relationDataArray as $relationDataItem) {
                     if ($relationDataItem->modelClass == $models[j]->className()) {
                         $models[i]->link($relationDataItem->name, $models[j]);
                         break;
