@@ -6,6 +6,7 @@ use app\common\classes\RelationData;
 use yii\base\Exception;
 use yii\db\ActiveRecord;
 use app\common\helpers\DataFormatter;
+use app\common\helpers\StringHelper;
 
 /**
  * Class ActiveRecordExtended
@@ -18,6 +19,13 @@ class ActiveRecordExtended extends ActiveRecord
      */
     protected $relationDataArray = null;
     protected $delegatedFields = [];
+
+    public function __construct(array $config = [])
+    {
+        parent::__construct($config);
+        $this->relationDataArray = $this->initRelationDataArray();
+    }
+
 
     /**
      * @var array[]
@@ -73,7 +81,7 @@ class ActiveRecordExtended extends ActiveRecord
         if ($this->hasAttribute($key) || $this->hasProperty($key)) {
             return $key;
         } else {
-            $key = DataFormatter::camelCaseToUnderscore($key);
+            $key = StringHelper::camelCaseToUnderscore($key);
             if ($this->hasAttribute($key) || $this->hasProperty($key))
                 return $key;
         }
@@ -196,13 +204,8 @@ class ActiveRecordExtended extends ActiveRecord
      * TODO: should be reworked. Calls methods for retrieve return type, it's not optimal
      * @return array
      */
-    public function getRelationDataArray()
+    public function initRelationDataArray()
     {
-        if (!is_null($this->relationDataArray))
-            return $this->relationDataArray;
-
-        print_r('saving relation data');
-
         $ARMethods = get_class_methods('\yii\db\ActiveRecord');
         $modelMethods = get_class_methods('\yii\base\Model');
         $reflection = new \ReflectionClass($this);
@@ -224,7 +227,7 @@ class ActiveRecordExtended extends ActiveRecord
             if ($method->name === 'saveAll') {
                 continue;
             }
-            if ($method->name === 'getRelationData') {
+            if ($method->name === 'initRelationDataArray') {
                 continue;
             }
             if ($method->name === 'getAttributesWithRelatedAsPost') {
@@ -253,7 +256,6 @@ class ActiveRecordExtended extends ActiveRecord
             }
         }
 
-        $this->relationDataArray = $relationDataArray;
         return $relationDataArray;
     }
 
@@ -268,9 +270,10 @@ class ActiveRecordExtended extends ActiveRecord
         $attributes = $this->attributes;
 
         unset($attributes['id']);
-        $data = $attributes;
-        
-        
+        foreach ($attributes as $key => $value) {
+            $data[StringHelper::underscoreToCamelCase($key)] = $value;
+        }
+
         foreach ($this->relationDataArray as $relationData) {
             if ($relationData->isMultiple) {
                 foreach ($this->{$relationData->name} as $relationModel) {
