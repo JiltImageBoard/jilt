@@ -5,6 +5,7 @@ use app\common\helpers\ArrayHelper;
 use app\common\classes\RelationData;
 use yii\base\ErrorException;
 use yii\base\Exception;
+use yii\base\Model;
 use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
 use app\common\helpers\DataFormatter;
@@ -19,20 +20,18 @@ class ActiveRecordExtended extends ActiveRecord
     /**
      * @var RelationData[] $relationDataArray
      */
-    protected $relationDataArray = null;
+    public $relationDataArray = null;
     protected $delegatedFields = [];
+    /**
+     * @var array[]
+     */
+    protected $lazyRelations = [];
 
     public function __construct(array $config = [])
     {
         parent::__construct($config);
         $this->relationDataArray = $this->initRelationDataArray();
     }
-
-
-    /**
-     * @var array[]
-     */
-    protected $lazyRelations = [];
 
     public function __get($key)
     {
@@ -299,24 +298,83 @@ class ActiveRecordExtended extends ActiveRecord
     }
 
     /**
+     * returns foreign key if model belongs to passed model
+     *
+     * @param ActiveRecordExtended $model
+     * @return RelationData|null
+     */
+    public function belongsTo($model)
+    {
+        foreach ($this->relationDataArray as $relationData) {
+            if ($relationData->modelClass === $model->className()) {
+                $firstVal = reset($relationData->link);
+                $foreignKey = $firstVal !== 'id' ? $firstVal : key($relationData->link);
+                if ($this->hasAttribute($foreignKey))
+                    return $foreignKey;
+                return null;
+            }
+        }
+
+        return null;
+    }
+
+    /**
      * TODO: make atomic
      * @param ActiveRecordExtended[] $models
      * @return bool
      */
-    public static function saveAndLink($models) {
-        foreach ($models as $model) {
-            if (!$model->save()) return false;
-        }
+    public static function saveAndLink($models)
+    {
+        return static::saveMultiple($models) && static::linkManyToMany($models);
+    }
 
+    /**
+     * links all passed models by many to many relation when this is possible
+     * @param ActiveRecordExtended[] $models
+     * @return bool
+     */
+    public static function linkManyToMany($models)
+    {
         for ($i = 0; i < count($models) - 1; $i++) {
             for ($j = $i + 1; $j < count($models); $j++) {
                 foreach ($models[i]->relationDataArray as $relationDataItem) {
-                    if ($relationDataItem->modelClass == $models[j]->className()) {
+                    if (
+                        $relationDataItem->modelClass == $models[j]->className() &&
+                        $relationDataItem->isMultiple === true
+                    ) {
                         $models[i]->link($relationDataItem->name, $models[j]);
                         break;
                     }
                 }
             }
+        }
+
+        return true;
+    }
+
+    /**
+     * saves all passed models in correct order and links them by one to one/many relation.
+     * e.g if $models[$i] requires id of $models[$i + 1], latter will be saved first and it's id will be inserted
+     * to $models[$i]
+     * @param ActiveRecordExtended[] $models
+     * @return bool
+     */
+    public static function saveMultiple($models)
+    {
+        $count = count($models);
+        if ($count > 0) {
+            $matchingModel = $models[0];
+            for ($i = 1; $i < $count; $i++) {
+                if (!is_null($foreignKey = $matchingModel->belongsTo($models[$i]))) {
+                    if (self::saveMultiple(array_slice($models, 1))) {
+                        $matchingModel->$foreignKey = $models[$i]->id;
+                    } else {
+                        return false;
+                    }
+                }
+            }
+
+            return $matchingModel->save();
         }
 
         return true;
