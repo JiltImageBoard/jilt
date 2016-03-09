@@ -5,6 +5,7 @@ namespace app\controllers;
 use app\common\classes\MultiLoader;
 use app\common\helpers\DataFormatter;
 use app\models\ActiveRecordExtended;
+use app\models\Board;
 use app\models\Post;
 use app\models\PostData;
 use app\models\PostMessage;
@@ -33,20 +34,26 @@ class ThreadController extends Controller
      */
     public function actionCreate($name)
     {
-        // models involved: PostMessage, PostData, Thread
-        $postData = new PostData();
-        $models = [new PostMessage(), &$postData, new Thread()];
-        if (
-            ActiveRecordExtended::loadMultiple(\Yii::$app->request->post(), $models) &&
-            Model::validateMultiple($models)
-        ) {
-            $postData->filesToUpload = UploadedFile::getInstancesByName('files');
-            if (ActiveRecordExtended::saveAndLink($models)) {
-                return 'yayyy';
+        if ($board = Board::find()->where(['name' => $name])->limit(1)->one()) {
+            $postData = new PostData();
+            $thread = new Thread();
+            $models = [new PostMessage(), &$postData, &$thread];
+            if (
+                ActiveRecordExtended::loadMultiple(\Yii::$app->request->post(), $models) &&
+                Model::validateMultiple($models)
+            ) {
+                $postData->filesToUpload = UploadedFile::getInstancesByName('files');
+                $thread->boardId = $board->id;
+                if (ActiveRecordExtended::saveAndLink($models)) {
+                    return 'yayyy(ne yay)';
+                }
             }
+
+            return DataFormatter::collectErrors($models);
         }
 
-        return DataFormatter::collectErrors($models);
+        \Yii::$app->response->setStatusCode(404);
+        return 'Board was not found';
     }
 
     /**

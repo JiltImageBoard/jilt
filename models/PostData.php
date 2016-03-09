@@ -76,7 +76,7 @@ class PostData extends ActiveRecordExtended
             if ($fileClass->upload())
                 $relatedIds[] = $fileClass->id;
         }
-
+ 
         $this->addLazyRelation(FileInfo::className(), 'fileInfos', $fileIds);
     }
 }

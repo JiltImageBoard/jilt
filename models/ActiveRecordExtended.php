@@ -335,14 +335,14 @@ class ActiveRecordExtended extends ActiveRecord
      */
     public static function linkManyToMany($models)
     {
-        for ($i = 0; i < count($models) - 1; $i++) {
+        for ($i = 0; $i < count($models) - 1; $i++) {
             for ($j = $i + 1; $j < count($models); $j++) {
-                foreach ($models[i]->relationDataArray as $relationDataItem) {
+                foreach ($models[$i]->relationDataArray as $relationDataItem) {
                     if (
-                        $relationDataItem->modelClass == $models[j]->className() &&
+                        $relationDataItem->modelClass == $models[$j]->className() &&
                         $relationDataItem->isMultiple === true
                     ) {
-                        $models[i]->link($relationDataItem->name, $models[j]);
+                        $models[i]->link($relationDataItem->name, $models[$j]);
                         break;
                     }
                 }
@@ -361,22 +361,29 @@ class ActiveRecordExtended extends ActiveRecord
      */
     public static function saveMultiple($models)
     {
-        $count = count($models);
-        if ($count > 0) {
-            $matchingModel = $models[0];
-            for ($i = 1; $i < $count; $i++) {
-                if (!is_null($foreignKey = $matchingModel->belongsTo($models[$i]))) {
-                    if (self::saveMultiple(array_slice($models, 1))) {
-                        $matchingModel->$foreignKey = $models[$i]->id;
-                    } else {
-                        return false;
-                    }
-                }
-            }
-
-            return $matchingModel->save();
-        }
+        for ($i = 0; $i < count($models); $i++)
+            $models[$i]->saveOrdered($models);
 
         return true;
+    }
+
+    /**
+     * @param ActiveRecordExtended[] $models
+     * @return bool
+     */
+    public function saveOrdered($models)
+    {
+        for ($i = 0; $i < count($models); $i++) {
+            if ($models[$i] === $this) continue;
+
+            if (!is_null($foreignKey = $this->belongsTo($models[$i]))) {
+                if ($models[$i]->isNewRecord)
+                    if (!$models[$i]->saveOrdered($models))
+                        return false;
+                $this->$foreignKey = $models[$i]->id;
+            }
+        }
+
+        return $this->save();
     }
 }
