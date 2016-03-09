@@ -67,26 +67,22 @@ class Cleanup
         /**
          * Deletes post_message's related to threads and posts
          */
-        $deleted['post_messages'] = 0;
-        $deleted['post_messages'] = PostMessage::deleteAll(['in', 'id', $itemsToDelete['postMessageIds']]);
+        $deleted['post_messages'] = PostMessage::deleteAll(['in', 'id', array_unique($itemsToDelete['postMessageIds'])]);
 
         /**
          * Deletes threads and posts because of FK
          */
-        $deleted['threads'] = 0;
-        $deleted['threads'] = Thread::deleteAll(['in', 'id', $itemsToDelete['threadsIds']]);
+        $deleted['threads'] = Thread::deleteAll(['in', 'id', array_unique($itemsToDelete['threadsIds'])]);
 
         /**
          * Deleted posts and threads related to post_data
          */
-        $deleted['post_data'] = 0;
-        $deleted['post_data'] = PostData::deleteAll(['in', 'id', $itemsToDelete['postDataIds']]);
+        $deleted['post_data'] = PostData::deleteAll(['in', 'id', array_unique($itemsToDelete['postDataIds'])]);
 
         /**
          * Deleted boards
          */
-        $deleted['boards'] = 0;
-        $deleted['boards'] = Board::deleteAll(['in', 'id', $itemsToDelete['boardsIds']]);
+        $deleted['boards'] = Board::deleteAll(['in', 'id', array_unique($itemsToDelete['boardsIds'])]);
 
 
         $deleted['posts'] = $deleted['post_data'] - $deleted['threads'];
@@ -97,4 +93,4 @@ class Cleanup
 
         return $deleted;
     }
-}   
+}
