@@ -22,8 +22,8 @@
 
 
 #### Example Request
-```javascript
-PUT /control-panel/users/5
+`PUT /control-panel/users/5`
+```JSON
 {
   "username": "admin_edited",
   "password": "admin_edited",
@@ -32,9 +32,11 @@ PUT /control-panel/users/5
 ```
 
 #### Example Result
-```javascript
+```JSON
 {
-  "errorCode": 0,
-  "errorMessage": ""
+	"username": "admin_edited",
+	"email": "admin_edited@example.com",
+	"created_at": "2016-03-10 14:10:21",
+	"updated_at": "2016-03-10 15:13:54"
 }
 ```

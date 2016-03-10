@@ -29,18 +29,18 @@ return [
         'DELETE boards/<name:\w+>/threads/<threadNum:\d+>/posts/<createNum:\d+>' => 'post/delete',
 
         /*Authentication*/
-        'POST login' => 'auth/login',
-        'POST logout' => 'auth/logout',
-        'POST /resetPassword' => 'auth/resetPassword',
+        'POST control-panel/login' => 'auth/login',
+        'POST control-panel/logout' => 'auth/logout',
+        'POST control-panel/reset-password' => 'auth/resetPassword',
 
         /*Users*/
-        'GET users' => 'user/index',
-        'POST users' => 'user/create',
-        'GET users/<id:\d+>' => 'user/get',
-        'PUT users/<id:\d+>' => 'user/update',
-        'DELETE users/<id:\d+>' => 'user/delete',
-        'GET users/<id:\d+>/cp-rights' => 'user/getCpRights',
-        'PUT users/<id:\d+>/cp-rights' => 'user/updateCpRights',
+        'POST control-panel/users' => 'user/create',
+        'GET control-panel/users' => 'user/get-all',
+        'GET control-panel/users/<id:\d+>' => 'user/get',
+        'PUT control-panel/users/<id:\d+>' => 'user/update',
+        'DELETE control-panel/users/<id:\d+>' => 'user/delete',
+        'GET control-panel/users/<id:\d+>/cp-rights' => 'user/get-cp-rights',
+        'PUT control-panel/users/<id:\d+>/cp-rights' => 'user/update-cp-rights',
 
         /*Board and chat rights*/
         'GET users/<id:\d+>/rights' => 'user/getRights',

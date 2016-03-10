@@ -112,6 +112,7 @@ class BoardController extends Controller
         }
 
         \Yii::$app->response->setStatusCode(404);
+        //TODO: Нормальная ошибка
         return 'Board was not found';
     }
 

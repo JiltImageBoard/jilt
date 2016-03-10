@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Update User</title>
+    <script src="https://code.jquery.com/jquery-2.2.0.min.js"></script>
+    <script>
+        $(function() {
+            //hang on event of form with id=myform
+            $("#test").submit(function(e) {
+
+                //prevent Default functionality
+                e.preventDefault();
+
+                //get the action-url of the form
+                var actionurl = e.currentTarget.action;
+
+                //do your own request an handle the results
+                $.ajax({
+                    url: actionurl,
+                    type: 'put',
+                    dataType: 'json',
+                    data: $("#test").serialize(),
+                    success: function(data) {
+                        console.log(data);
+                    }
+                });
+
+            });
+
+        });
+        console.log('test');
+    </script>
+    
+</head>
+<body>
+<form id="test" action="/control-panel/users/2" method="post" accept-charset="UTF-8" enctype="application/x-www-form-urlencoded">
+    username:  <input type="text" name="username" value=""><br>
+    password:  <input type="password" name="password" value=""><br>
+    email:  <input type="email" name="email" value=""><br>
+    <input type="submit" value="Submit">
+</form>
+</body>
+</html>

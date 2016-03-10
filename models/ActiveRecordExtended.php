@@ -1,9 +1,9 @@
 <?php
 
 namespace app\models;
+use app\common\classes\Errors;
 use app\common\helpers\ArrayHelper;
-use app\common\RelationData;
-use yii\base\Exception;
+use app\common\classes\RelationData;
 use yii\db\ActiveRecord;
 use app\common\helpers\DataFormatter;
 
@@ -100,7 +100,7 @@ class ActiveRecordExtended extends ActiveRecord
             if ($this->hasKey($key)) {
                 $this->$key = $value;
             } else {
-                $this->addError($key, 'Unknown model key');
+                $this->addError(Errors::UnknownModelKey($this->className(), $key));
                 $loadResult = false;
             }
         }
@@ -166,11 +166,11 @@ class ActiveRecordExtended extends ActiveRecord
 
                 $invalidIds = array_diff($ids, $existingModelIds);
                 foreach ($invalidIds as $id) {
-                    $this->addError($relationName, 'Model with id ' . $id . ' was not found');
+                    $this->addError(Errors::ModelNotFound($relationName, $id));
                     $lazyRelationCheck = false;
                 }
             } else {
-                $this->addError($modelClass, 'Class was not found');
+                $this->addError(Errors::ClassNotFound($modelClass));
                 $lazyRelationCheck = false;
                 break;
             }
@@ -187,7 +187,7 @@ class ActiveRecordExtended extends ActiveRecord
             }
         }
 
-        $this->addError('Model linking error', 'Not all models was found');
+        $this->addError(Errors::ModelLinkingError());
         return false;
     }
 
@@ -239,7 +239,8 @@ class ActiveRecordExtended extends ActiveRecord
             try {
                 $rel = call_user_func(array($this, $method->name));
                 if ($rel instanceof \yii\db\ActiveQuery) {
-                    $relationData[] = new \RelationData(
+                    $relationData[] = new RelationData(
+                        //TODO: merge null branch
                         lcfirst(str_replace('get', '', $method->name)),
                         $method->name,
                         $rel->multiple,
@@ -322,11 +323,11 @@ class ActiveRecordExtended extends ActiveRecord
             if (!$model->save()) return false;
         }
 
-        for ($i = 0; i < count($models) - 1; $i++) {
+        for ($i = 0; $i < count($models) - 1; $i++) {
             for ($j = $i + 1; $j < count($models); $j++) {
-                foreach ($models[i]->relationData as $relationDataItem) {
-                    if ($relationDataItem->modelClass == $models[j]->className()) {
-                        $models[i]->link($relationDataItem->name, $models[j]);
+                foreach ($models[$i]->relationData as $relationDataItem) {
+                    if ($relationDataItem->modelClass == $models[$j]->className()) {
+                        $models[$i]->link($relationDataItem->name, $models[$j]);
                         break;
                     }
                 }
@@ -334,5 +335,15 @@ class ActiveRecordExtended extends ActiveRecord
         }
 
         return true;
+    }
+
+    /**
+     * @param array|Errors $error
+     * return void
+     */
+    public function addError(array $error)
+    {
+        list($attribute, $error) = $error;
+        parent::addError($attribute, $error);
     }
 }

@@ -15,7 +15,7 @@ $config = [
             'class' => 'yii\caching\FileCache',
         ],
         'errorHandler' => [
-            'errorAction' => 'error/banned',
+            'errorAction' => 'error/test',
         ],
         'log' => [
             'traceLevel' => YII_DEBUG ? 3 : 0,
