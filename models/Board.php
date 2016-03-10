@@ -2,8 +2,10 @@
 
 namespace app\models;
 
+use app\common\interfaces\DeletableInterface;
 use yii\behaviors\TimestampBehavior;
 use yii\db\Expression;
+use app\common\interfaces;
 
 /**
  * Class Board
@@ -28,14 +30,14 @@ use yii\db\Expression;
  * @property bool $isDeleted
  * 
  * relations
- * @property FileFormat[] $fileFormats
- * @property WordFilter[] $wordFilters
- * @property FileRating[] $fileRatings
- * @property MarkupType[] $markupType
- * @property-read Thread[] $threads
- * @property-read BoardCounter $counter
+ * @property \app\models\FileFormat[] $fileFormats
+ * @property \app\models\WordFilter[] $wordFilters
+ * @property \app\models\FileRating[] $fileRatings
+ * @property \app\models\MarkupType[] $markupTypes
+ * @property-read \app\models\Thread[] $threads
+ * @property-read \app\models\BoardCounter $counter
  */
-class Board extends ActiveRecordExtended
+class Board extends ActiveRecordExtended implements DeletableInterface
 {
 
     public static function tableName()
@@ -109,6 +111,11 @@ class Board extends ActiveRecordExtended
         return $this->hasOne(BoardCounter::className(), ['board_id' => 'id']);
     }
     
+    public function prepareToDelete()
+    {
+        
+    }
+    
     public function rules()
     {
         return [
@@ -162,6 +169,27 @@ class Board extends ActiveRecordExtended
             ]
         ];
     }
-    
+
+    public function getDeletedRows(Array &$carry) 
+    {
+        $boards = $this->find()->where(['is_deleted' => '1'])->all();
+        
+        if (empty($boards)) {
+            return $carry;
+        }
+        
+        foreach ($boards as $board) {
+            $carry['boardsIds'][] = $board->id;
+            
+            foreach ($board->threads as $thread) {
+                $carry['threadsIds'][] = $thread->id;
+                
+                foreach ($thread->posts as $post) {
+                    $carry['postsIds'][] = $post->id;
+                }
+            }
+        }
+    }
+
 }
 

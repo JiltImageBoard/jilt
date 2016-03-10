@@ -2,22 +2,44 @@
 
 namespace app\models;
 
+use app\common\interfaces\DeletableInterface;
+
 /**
  * Class Post
  * @package app\models
- * relations
- * @property PostData $postData
- * @property Thread $thread
+ *
+ * @property int $id
+ * @property int $postDataId
+ * 
+ * @property \app\models\PostData $postData
  */
-class Post extends ActiveRecordExtended
+
+class Post extends ActiveRecordExtended implements DeletableInterface
 {
+    public static function tableName()
+    {
+        return 'posts';
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
     public function getPostData()
     {
         return $this->hasOne(PostData::className(), ['id' => 'post_data_id']);
     }
-
-    public function getThread()
+    
+    public function getDeletedRows(Array &$carry)
     {
-        return $this->hasOne(Thread::className(), ['id' => 'thread_id']);
+        $posts = $this->find()->where(['is_deleted' => '1'])->all();
+
+        if (empty($posts)) {
+            return $carry;
+        }
+        
+        foreach ($posts as $post) {
+            $carry['postsIds'][] = $post->id;
+        }
     }
+    
 }

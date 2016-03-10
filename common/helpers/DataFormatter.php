@@ -4,6 +4,7 @@ namespace app\common\helpers;
 
 class DataFormatter
 {
+    
     /**
      * @param array $objects
      * @return array
