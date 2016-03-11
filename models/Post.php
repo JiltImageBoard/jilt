@@ -10,7 +10,7 @@ use app\common\interfaces\DeletableInterface;
  *
  * @property int $id
  * @property int $postDataId
- * 
+ *
  * @property \app\models\PostData $postData
  */
 
@@ -21,14 +21,11 @@ class Post extends ActiveRecordExtended implements DeletableInterface
         return 'posts';
     }
 
-    /**
-     * @return \yii\db\ActiveQuery
-     */
     public function getPostData()
     {
         return $this->hasOne(PostData::className(), ['id' => 'post_data_id']);
     }
-    
+
     public function getDeletedRows(Array &$carry)
     {
         $posts = $this->find()->where(['is_deleted' => '1'])->all();
@@ -36,10 +33,10 @@ class Post extends ActiveRecordExtended implements DeletableInterface
         if (empty($posts)) {
             return $carry;
         }
-        
+
         foreach ($posts as $post) {
             $carry['postsIds'][] = $post->id;
         }
     }
-    
+
 }

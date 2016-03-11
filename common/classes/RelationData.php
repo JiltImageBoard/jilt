@@ -16,7 +16,7 @@ class RelationData
         $this->name = $name;
         $this->method = $method;
         $this->isMultiple = $isMultiple;
-        $this->method = $modelsClass;
+        $this->modelClass = $modelsClass;
         $this->link = $link;
         $this->via = $via;
     }
