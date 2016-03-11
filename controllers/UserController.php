@@ -62,10 +62,17 @@ class UserController extends Controller
         return $user->errors;
     }
 
+
+    /**
+     * @param $id
+     * @return void|array
+     * @throws \Exception
+     */
     public function actionDelete($id)
     {
         if (!User::find()->where(['id' => $id])->limit(1)->one()->delete()) {
-            //add error
+            \Yii::$app->response->setStatusCode(404);
+            return Errors::ModelNotFound(User::className(), $id);
         }
         \Yii::$app->response->setStatusCode(204);
     }

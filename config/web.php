@@ -12,7 +12,14 @@ $config = [
             'enableCsrfValidation' => false,
         ],
         'cache' => [
-            'class' => 'yii\caching\FileCache',
+            'class' => 'yii\caching\MemCache',
+            'useMemcached' => true,
+            'servers' => [
+                [
+                    'host' => '127.0.0.1',
+                    'port' => 11211,
+                ],
+            ],
         ],
         'errorHandler' => [
             'errorAction' => 'error/test',
@@ -31,6 +38,10 @@ $config = [
         'response' => [
             'format' => yii\web\Response::FORMAT_JSON,
             'charset' => 'UTF-8',
+        ],
+        'session' => [
+            'class' => 'yii\web\CacheSession',
+            'cache' => 'cache',
         ]
     ],
     'controller' => [

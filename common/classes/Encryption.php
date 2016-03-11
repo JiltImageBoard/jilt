@@ -19,4 +19,12 @@ class Encryption
     {
         return hash('sha512', $str);
     }
+    
+    public static function getCsrfToken($user)
+    {
+        $session = \yii::$app->session;
+        $session->open();
+
+        return hash('sha512', \yii::$app->params['salt'] . $session->id . $user->salt);
+    }
 }
