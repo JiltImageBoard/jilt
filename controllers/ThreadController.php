@@ -37,13 +37,14 @@ class ThreadController extends Controller
         if ($board = Board::find()->where(['name' => $name])->limit(1)->one()) {
             $postData = new PostData();
             $thread = new Thread();
-            $models = [new PostMessage(), &$postData, &$thread];
+            $postData->filesToUpload = UploadedFile::getInstancesByName('files');
+            $thread->boardId = $board->id;
+            
+            $models = [&$thread, new PostMessage(), &$postData];
             if (
                 ActiveRecordExtended::loadMultiple(\Yii::$app->request->post(), $models) &&
                 Model::validateMultiple($models)
             ) {
-                $postData->filesToUpload = UploadedFile::getInstancesByName('files');
-                $thread->boardId = $board->id;
                 if (ActiveRecordExtended::saveAndLink($models)) {
                     return 'yayyy(ne yay)';
                 }

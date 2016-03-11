@@ -26,6 +26,12 @@ use yii\db\Expression;
  */
 class Thread extends ActiveRecordExtended
 {
+    public function __construct($boardId)
+    {
+        parent::__construct($config);
+    }
+
+
     /**
      * @return string
      */
