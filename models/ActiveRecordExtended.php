@@ -90,18 +90,6 @@ class ActiveRecordExtended extends ActiveRecord
         return null;
     }
 
-    protected function addLazyRelation($modelName, $relationName, $relatedIds)
-    {
-        $relatedIds = ArrayHelper::getNumericSubset($relatedIds);
-
-        if (isset($this->lazyRelations[$modelName])) {
-            $this->lazyRelations[$modelName]['ids'] = array_merge($this->lazyRelations[$modelName], $relatedIds);
-        } else {
-            $this->lazyRelations[$modelName]['ids'] = $relatedIds;
-            $this->lazyRelations[$modelName]['relationName'] = $relationName;
-        }
-    }
-
     public function load($data, $formName = null)
     {
         $loadResult = true;
@@ -115,32 +103,6 @@ class ActiveRecordExtended extends ActiveRecord
         }
 
         return $loadResult;
-    }
-
-    /**
-     * Loads data into models
-     * @param array $data can be any associative array, each array item should be loaded into some model
-     * @param array $models Array with model objects
-     * @return bool
-     */
-    public static function loadMultiple($data, $models)
-    {
-        foreach ($data as $key => $value) {
-            $keyValueLoaded = false;
-            foreach ($models as $model) {
-                if ($model->hasKey($key)) {
-                    $model->$key = $value;
-                    $keyValueLoaded = true;
-                    break;
-                }
-            }
-
-            if (!$keyValueLoaded) {
-                print_r($data);
-                return false;
-            }
-        }
-        return true;
     }
 
     /**
@@ -205,6 +167,99 @@ class ActiveRecordExtended extends ActiveRecord
     }
 
     /**
+     * Returns all model fields and relations id's. 
+     * @param array $fieldsToUnset Fields which shouldn't be printed
+     * @return array
+     */
+    public function toArray(...$fieldsToUnset)
+    {
+        $attributes = $this->attributes;
+
+        unset($attributes['id']);
+        foreach ($attributes as $key => $value) {
+            $data[StringHelper::underscoreToCamelCase($key)] = $value;
+        }
+
+        foreach ($this->relationDataArray as $relationData) {
+            if ($relationData->isMultiple) {
+                foreach ($this->{$relationData->name} as $relationModel) {
+                    $data[$relationData->name][] = $relationModel['id'];
+                }
+            } else {
+                $data[$relationData->name] = $this->{$relationData->name}->id;
+            }
+            
+            
+        }
+        
+        foreach ($fieldsToUnset as $field) {
+            if (array_key_exists($field, $data)) {
+                unset($data[$field]);
+            }
+        }
+        return $data;
+    }
+
+    /**
+     * Loads data into models
+     * @param array $data can be any associative array, each array item should be loaded into some model
+     * @param array $models Array with model objects
+     * @return bool
+     */
+    public static function loadMultiple($data, $models)
+    {
+        foreach ($data as $key => $value) {
+            $keyValueLoaded = false;
+            foreach ($models as $model) {
+                if ($model->hasKey($key)) {
+                    $model->$key = $value;
+                    $keyValueLoaded = true;
+                    break;
+                }
+            }
+
+            if (!$keyValueLoaded) {
+                print_r($data);
+                return false;
+            }
+        }
+        return true;
+    }
+
+    protected function addLazyRelation($modelName, $relationName, $relatedIds)
+    {
+        $relatedIds = ArrayHelper::getNumericSubset($relatedIds);
+
+        if (isset($this->lazyRelations[$modelName])) {
+            $this->lazyRelations[$modelName]['ids'] = array_merge($this->lazyRelations[$modelName], $relatedIds);
+        } else {
+            $this->lazyRelations[$modelName]['ids'] = $relatedIds;
+            $this->lazyRelations[$modelName]['relationName'] = $relationName;
+        }
+    }
+
+
+    /**
+     * Accesses delegated to some relation field and if it there is such relation with field $key,
+     * Callback will be invoked. Field will be unsetted if callback returns false
+     * @param string $key
+     * @param $callback
+     */
+    private function accessDelegatedField($key, $callback)
+    {
+        if (isset($this->delegatedFields[$key])) {
+            $relationName = $this->delegatedFields[$key];
+            $relationModel = $this->$relationName;
+            if (isset($relationModel)) {
+                if ($relationModel->hasKey($key)) {
+                    if ($callback($relationModel[$key]) === false)
+                        unset($relationModel[$key]);
+                }
+            }
+        }
+    }
+
+    /**
      * Gets all relations with this model
      * TODO: should be reworked. Calls methods for retrieve return type, it's not optimal
      * @return array
@@ -246,60 +301,6 @@ class ActiveRecordExtended extends ActiveRecord
         return $relationDataArray;
     }
 
-
-    /**
-     * Returns all model fields and relations id's. 
-     * @param array $fieldsToUnset Fields which shouldn't be printed
-     * @return array
-     */
-    public function toArray(...$fieldsToUnset)
-    {
-        $attributes = $this->attributes;
-
-        unset($attributes['id']);
-        foreach ($attributes as $key => $value) {
-            $data[StringHelper::underscoreToCamelCase($key)] = $value;
-        }
-
-        foreach ($this->relationDataArray as $relationData) {
-            if ($relationData->isMultiple) {
-                foreach ($this->{$relationData->name} as $relationModel) {
-                    $data[$relationData->name][] = $relationModel['id'];
-                }
-            } else {
-                $data[$relationData->name] = $this->{$relationData->name}->id;
-            }
-            
-            
-        }
-        
-        foreach ($fieldsToUnset as $field) {
-            if (array_key_exists($field, $data)) {
-                unset($data[$field]);
-            }
-        }
-        return $data;
-    }
-
-    /**
-     * Accesses delegated to some relation field and if it there is such relation with field $key,
-     * Callback will be invoked. Field will be unsetted if callback returns false
-     * @param string $key
-     * @param $callback
-     */
-    private function accessDelegatedField($key, $callback)
-    {
-        if (isset($this->delegatedFields[$key])) {
-            $relationName = $this->delegatedFields[$key];
-            $relationModel = $this->$relationName;
-            if (isset($relationModel)) {
-                if ($relationModel->hasKey($key)) {
-                    if ($callback($relationModel[$key]) === false)
-                        unset($relationModel[$key]);
-                }
-            }
-        }
-    }
 
     /**
      * returns foreign key if model belongs to passed model
@@ -365,8 +366,8 @@ class ActiveRecordExtended extends ActiveRecord
      */
     public static function saveMultiple($models)
     {
-        for ($i = 0; $i < count($models); $i++)
-            $models[$i]->saveOrdered($models);
+        foreach ($models as $model)
+            $model->saveOrdered($models);
 
         return true;
     }
@@ -377,13 +378,13 @@ class ActiveRecordExtended extends ActiveRecord
      */
     public function saveOrdered($models)
     {
-        for ($i = 0; $i < count($models); $i++) {
-            if ($models[$i] === $this || !$this->isNewRecord) continue;
+        foreach ($models as $model) {
+            if ($model === $this || !$this->isNewRecord) continue;
 
-            if (!is_null($foreignKey = $this->belongsTo($models[$i]))) {
-                if (!$models[$i]->saveOrdered($models))
+            if (!is_null($foreignKey = $this->belongsTo($model))) {
+                if (!$model->saveOrdered($models))
                     return false;
-                $this->$foreignKey = $models[$i]->id;
+                $this->$foreignKey = $model->id;
             }
         }
 
