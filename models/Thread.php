@@ -28,12 +28,6 @@ use app\common\interfaces\DeletableInterface;
  */
 class Thread extends ActiveRecordExtended implements DeletableInterface
 {
-    public function __construct($boardId)
-    {
-        parent::__construct($config);
-    }
-
-
     /**
      * @return string
      */

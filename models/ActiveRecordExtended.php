@@ -347,7 +347,7 @@ class ActiveRecordExtended extends ActiveRecord
                         $relationDataItem->modelClass == $models[$j]->className() &&
                         $relationDataItem->isMultiple === true
                     ) {
-                        $models[i]->link($relationDataItem->name, $models[$j]);
+                        $models[$i]->link($relationDataItem->name, $models[$j]);
                         break;
                     }
                 }
