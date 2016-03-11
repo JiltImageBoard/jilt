@@ -105,9 +105,7 @@ class BoardController extends Controller
      */
     public function actionGet($name)
     {
-        $board = Board::find()->where(['name' => $name])->limit(1)->one();
-
-        if ($board) {
+        if ($board = Board::find()->where(['name' => $name])->limit(1)->one()) {
             return $board->toArray('counter');
         }
 

@@ -28,6 +28,12 @@ use app\common\interfaces\DeletableInterface;
  */
 class Thread extends ActiveRecordExtended implements DeletableInterface
 {
+    public function __construct($boardId)
+    {
+        parent::__construct($config);
+    }
+
+
     /**
      * @return string
      */
@@ -60,10 +66,16 @@ class Thread extends ActiveRecordExtended implements DeletableInterface
     public function save($runValidation = true, $attributeNames = null)
     {
         if ($this->isNewRecord) {
-            $command =  \Yii::$app->db->createCommand("CALL mystored(
+            $command =  \Yii::$app->db->createCommand("CALL create_thread(
             :board_id, :is_sticked, :is_locked, :is_op_mark_enabled, :is_chat, :post_data_id)");
+            // TODO: implement default values for procedure maybe?
             $command->bindValues([
-                ':board_id'
+                ':board_id' => $this->boardId,
+                ':is_sticked' => false,
+                ':is_locked' => false,
+                ':is_op_mark_enabled' => false,
+                'is_chat' => $this->isChat,
+                'post_data_id' => $this->postDataId
             ]);
             $command->execute();
         } else {

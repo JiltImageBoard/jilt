@@ -29,6 +29,14 @@ class PostData extends ActiveRecordExtended
      */
     public $filesToUpload;
 
+    /**
+     * @return string
+     */
+    public static function tableName()
+    {
+        return 'post_data';
+    }
+
     public function rules()
     {
         // TODO: we should get rule values from board config
@@ -36,14 +44,6 @@ class PostData extends ActiveRecordExtended
         return [
             [['files'], 'file', 'skipOnEmpty' => true, 'extensions' => 'png, jpg, htm', 'maxFiles' => 4]
         ];
-    }
-
-    /**
-     * @return string
-     */
-    public static function tableName()
-    {
-        return 'post_data';
     }
 
     public function getPostMessage()
@@ -64,6 +64,7 @@ class PostData extends ActiveRecordExtended
     }
 
     private function uploadFiles() {
+        return;
         $fileIds = [];
         foreach ($this->filesToUpload as $file) {
             /**
@@ -76,7 +77,7 @@ class PostData extends ActiveRecordExtended
             if ($fileClass->upload())
                 $relatedIds[] = $fileClass->id;
         }
-
+ 
         $this->addLazyRelation(FileInfo::className(), 'fileInfos', $fileIds);
     }
 }
