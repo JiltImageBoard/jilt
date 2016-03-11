@@ -1,8 +1,8 @@
 #### Resource URL
-`GET /api/boards/{name}/threads/{thread_id}`
+`GET /api/boards/{name}/threads/{thread_num}`
 
 #### Description
-  Gets thread by id and board name
+  Gets thread by num and board name
 
 #### Resource information:
   Requires authentication: no  
@@ -12,7 +12,7 @@
 | type     | required | name                 | description
 |----------|----------|----------------------|-------------
 | `string` | required | name                 | Name of board
-| `string` | required | thread_id            | Thread id
+| `string` | required | thread_num           | Thread num
 
 
 #### Example Request

@@ -4,6 +4,7 @@ namespace app\models;
 
 use yii\behaviors\TimestampBehavior;
 use yii\db\Expression;
+use app\common\interfaces\DeletableInterface;
 
 
 /**
@@ -17,14 +18,15 @@ use yii\db\Expression;
  * @property bool $isLocked
  * @property bool $isOpMarkEnabled
  * @property bool $isChat
- * @property bool $postDataId
- * @property \DateTime $createdAt
+ * @property bool $isDeleted
+ * @property int $postDataId
  * @property \DateTime $updatedAt
- * relations
- * @property Board $board
+ * 
+ * @property \app\models\Board $board
  * @property \app\models\PostData $postData
+ * @property \app\models\Post $posts
  */
-class Thread extends ActiveRecordExtended
+class Thread extends ActiveRecordExtended implements DeletableInterface
 {
     public function __construct($boardId)
     {
@@ -55,7 +57,7 @@ class Thread extends ActiveRecordExtended
         return $this->hasMany(Tag::className(), ['id' => 'tag_id'])
             ->viaTable('threads_tags', ['thread_id' => 'id']);
     }
-
+    
     public function getPosts()
     {
         return $this->hasMany(Post::className(), ['thread_id' => 'id']);
@@ -91,5 +93,23 @@ class Thread extends ActiveRecordExtended
                 'value' => new Expression('NOW()'),
             ]
         ];
+    }
+    
+    public function getDeletedRows(Array &$carry)
+    {
+        $threads = $this->find()->where(['is_deleted' => '1'])->all();
+
+        if (empty($threads)) {
+            return $carry;
+        }
+        
+        foreach ($threads as $thread) {
+            $carry['threadsIds'][] = $thread->id;
+
+            foreach ($thread->posts as $post) {
+                $carry['postsIds'][] = $post->id;
+            }
+        }
+        
     }
 }

@@ -4,6 +4,7 @@ namespace app\common\helpers;
 
 class ArrayHelper
 {
+    
     public static function removeItems($array, ...$items)
     {
         return array_merge(array_diff($array, $items));

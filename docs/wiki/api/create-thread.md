@@ -17,9 +17,9 @@
 | type     | required | name                 | description
 |----------|----------|----------------------|-------------
 | `string` | optional | name                 | Poster name
-| `string` | optional | message              | Thread message
+| `string` | optional | text                 | Thread message text
 | `string` | optional | subject              | Thread subject
-| `array`  | optional | images               | Thread images
+| `array`  | optional | files                | Thread files
 | `bool`   | optional | is_chat              | Is chat
 
 #### Example Request
@@ -27,7 +27,7 @@
 POST /boards/test/threads
 {
   "name": "Anon",
-  "message": "Example message",
+  "text": "Example message",
   "subject": "Example subject"
 }
 ```
