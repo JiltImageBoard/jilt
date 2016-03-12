@@ -2,7 +2,6 @@
 
 namespace app\controllers;
 
-use app\common\classes\Encryption;
 use app\common\classes\Errors;
 use app\common\filters\AuthFilter;
 use app\models\User;
@@ -13,12 +12,12 @@ class UserController extends Controller
 
     public function actionCreate()
     {
+        //TODO: Check CSRF
         //TODO: Check rights
-        
+
         $user = new User();
         if($user->load(\yii::$app->request->post()) && $user->validate()) {
-            $user->salt = Encryption::getRandomString();
-            $user->password = Encryption::hashPassword($user->password);
+            $user->password = \yii::$app->getSecurity()->generatePasswordHash($user->password);
             $user->save();
             
             \Yii::$app->response->setStatusCode(201);
@@ -54,6 +53,7 @@ class UserController extends Controller
     
     public function actionUpdate($id)
     {
+        //TODO: Check CSRF
         //TODO: Check rights
         
         /**
@@ -64,10 +64,11 @@ class UserController extends Controller
         if (!$user) {
             return Errors::ModelNotFound(User::className(), $id);
         }
-        
-        if ($user->checkPassword(Encryption::hashPassword(\yii::$app->request->post('password')), $user->password)) {
+
+        if (\yii::$app->getSecurity()->validatePassword(\yii::$app->request->post('password'), $user->password)) {
+            $user->scenario = User::SCENARIO_UPDATE;
             if ($user->load(\yii::$app->request->post()) && $user->validate()) {
-                $user->password = Encryption::hashPassword($user->password);
+                $user->password = \yii::$app->getSecurity()->generatePasswordHash(\yii::$app->request->post('new_password'));
                 $user->save();
                 return $this->actionGet($user->id);
             }
@@ -83,6 +84,7 @@ class UserController extends Controller
      */
     public function actionDelete($id)
     {
+        //TODO: Check CSRF
         //TODO: Check rights
         
         if (!User::find()->where(['id' => $id])->limit(1)->one()->delete()) {
@@ -100,8 +102,8 @@ class UserController extends Controller
 
     public function actionUpdateCpRights($id)
     {
+        //TODO: Check CSRF
         //TODO: Check rights
-        
     }
 
     public function behaviors()

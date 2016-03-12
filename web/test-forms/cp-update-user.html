@@ -19,7 +19,7 @@
                 $.ajax({
                     url: actionurl,
                     type: 'put',
-                    dataType: 'json',
+//                    dataType: 'json',
                     data: $("#test").serialize(),
                     success: function(data) {
                         console.log(data);
@@ -29,14 +29,14 @@
             });
 
         });
-        console.log('test');
     </script>
     
 </head>
 <body>
-<form id="test" action="/control-panel/users/2" method="post" accept-charset="UTF-8" enctype="application/x-www-form-urlencoded">
+<form id="test" action="/control-panel/users/14" method="post" accept-charset="UTF-8" enctype="application/x-www-form-urlencoded">
     username:  <input type="text" name="username" value=""><br>
     password:  <input type="password" name="password" value=""><br>
+    new_password: <input type="password" name="new_password" value=""><br>
     email:  <input type="email" name="email" value=""><br>
     <input type="submit" value="Submit">
 </form>

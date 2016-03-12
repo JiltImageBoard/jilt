@@ -95,6 +95,8 @@ class ActiveRecordExtended extends ActiveRecord
         foreach ($data as $key => $value) {
             if ($this->hasKey($key)) {
                 $this->$key = $value;
+            } elseif(in_array($key, $this->safeAttributes())) {
+                $this->$key = $value;
             } else {
                 $this->addError(Errors::UnknownModelKey($this->className(),$key));
                 $loadResult = false;
@@ -167,13 +169,18 @@ class ActiveRecordExtended extends ActiveRecord
     }
 
     /**
-     * @param array|Errors $error
+     * @param array|Errors $error|string
+     * @param string|null $message
      * return void
      */
-    public function addError(array $error)
+    public function addError ($error, $message = null)
     {
-        list($attribute, $error) = $error;
-        parent::addError($attribute, $error);
+        if ($message != null) {
+            parent::addError($error, $message);
+        } else {
+            list($attribute, $error) = $error;
+            parent::addError($attribute, $error);
+        }
     }
 
     /**

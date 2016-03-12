@@ -13,13 +13,15 @@ use yii\db\Expression;
  * @property string $username
  * @property string $email
  * @property string $password
- * @property string $salt
  * @property \DateTime $created_at
  * @property \DateTime $updated_at
  *
  */
 class User extends ActiveRecordExtended
 {
+    
+    const SCENARIO_UPDATE = 'update';
+    
     public static function tableName()
     {
         return 'cp_users';
@@ -46,12 +48,6 @@ class User extends ActiveRecordExtended
         return $user = static::find()->where('username = :username', [':username' => $username])->one();
     }
     
-    public function checkPassword($password, $userPassword)
-    {
-        return $password === $userPassword;
-    }
-    
-    
     public function checkRights()
     {
         return false;
@@ -60,12 +56,15 @@ class User extends ActiveRecordExtended
     public function rules()
     {
         return [
-            ['username', 'required'],
+            [['username', 'password'], 'required'],
             ['username', 'unique'],
             ['username', 'string', 'length' => [1, 255]],
-
-            ['password', 'required'],
+            
             ['password', 'string', 'length' => [1, 255]],
+            
+//            Должен валидироваться, но в данный момент new_password - safe аттрибут
+//            ['new_password', 'required'/*, 'on' => self::SCENARIO_UPDATE*/],
+//            ['new_password', 'string', 'length' => [1, 255]],
 
             ['email', 'required'],
             ['email', 'unique'],
@@ -83,5 +82,13 @@ class User extends ActiveRecordExtended
                 'value' => new Expression('NOW()'),
             ]
         ];
+    }
+
+    public function scenarios()
+	{
+        $scenarios = parent::scenarios();
+        $scenarios['default'] = ['username', 'password', 'email'];
+        $scenarios[self::SCENARIO_UPDATE] = ['username','password', 'new_password', 'email'];
+        return $scenarios;
     }
 }
