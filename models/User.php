@@ -16,6 +16,7 @@ use yii\db\Expression;
  * @property string $salt
  * @property \DateTime $created_at
  * @property \DateTime $updated_at
+ *
  */
 class User extends ActiveRecordExtended
 {
@@ -26,19 +27,36 @@ class User extends ActiveRecordExtended
 
     public function getCpRights()
     {
-
+        return false;
     }
 
     public function getBoardRights()
     {
-
+        return false;
     }
 
     public function getChatRights()
     {
-
+        return false;
     }
 
+    public static function getUserBySession()
+    {
+        $username = \yii::$app->session->get('username');
+        return $user = static::find()->where('username = :username', [':username' => $username])->one();
+    }
+    
+    public function checkPassword($password, $userPassword)
+    {
+        return $password === $userPassword;
+    }
+    
+    
+    public function checkRights()
+    {
+        return false;
+    }
+    
     public function rules()
     {
         return [

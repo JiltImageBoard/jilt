@@ -4,6 +4,7 @@ namespace app\controllers;
 
 use app\common\classes\Encryption;
 use app\common\classes\Errors;
+use app\common\filters\AuthFilter;
 use app\models\User;
 use yii\web\Controller;
 
@@ -12,6 +13,8 @@ class UserController extends Controller
 
     public function actionCreate()
     {
+        //TODO: Check rights
+        
         $user = new User();
         if($user->load(\yii::$app->request->post()) && $user->validate()) {
             $user->salt = Encryption::getRandomString();
@@ -28,6 +31,9 @@ class UserController extends Controller
     {
         $users = [];
         foreach (User::find()->all() as $user) {
+            /**
+             * @var User $user
+             */
             $users[] = [
                 'id' => $user->id,
                 'username' => $user->username,
@@ -42,22 +48,29 @@ class UserController extends Controller
     
     public function actionGet($id)
     {
+        //TODO: Check rights user get only self related info
         return User::findOne($id)->toArray('password', 'salt');
     }
     
     public function actionUpdate($id)
     {
+        //TODO: Check rights
+        
+        /**
+         * @var User $user
+         */
         $user = User::find()->where(['id' => $id])->limit(1)->one();
         
         if (!$user) {
             return Errors::ModelNotFound(User::className(), $id);
         }
         
-        //TODO: Нужно проверять пароль на совпадение со старым. В этом методе или сделать отдельный?
-        if($user->load(\yii::$app->request->post()) && $user->validate()) {
-            $user->password = Encryption::hashPassword($user->password);
-            $user->save();
-            return $this->actionGet($user->id);
+        if ($user->checkPassword(Encryption::hashPassword(\yii::$app->request->post('password')), $user->password)) {
+            if ($user->load(\yii::$app->request->post()) && $user->validate()) {
+                $user->password = Encryption::hashPassword($user->password);
+                $user->save();
+                return $this->actionGet($user->id);
+            }
         }
         return $user->errors;
     }
@@ -70,6 +83,8 @@ class UserController extends Controller
      */
     public function actionDelete($id)
     {
+        //TODO: Check rights
+        
         if (!User::find()->where(['id' => $id])->limit(1)->one()->delete()) {
             \Yii::$app->response->setStatusCode(404);
             return Errors::ModelNotFound(User::className(), $id);
@@ -79,11 +94,22 @@ class UserController extends Controller
     
     public function actionGetCpRights($id)
     {
+        //TODO: Check rights
         
     }
 
     public function actionUpdateCpRights($id)
     {
+        //TODO: Check rights
+        
+    }
 
+    public function behaviors()
+    {
+        return [
+            'customFilter' => [
+                'class' => AuthFilter::className(),
+            ]
+        ];
     }
 }

@@ -6,20 +6,26 @@ namespace app\common\classes;
 class Encryption
 {
     /**
-     * This method is insecure to generate passwords
-     * random_bytes() added in PHP7, but jilt doesn't fully supports PHP 7
      * return string
      */
     public static function getRandomString()
     {
-        return str_shuffle(md5(uniqid(mt_rand(), true)));
+        return \Yii::$app->security->generateRandomString();
     }
-    
+
+    /**
+     * @param $str
+     * @return string
+     */
     public static function hashPassword($str)
     {
         return hash('sha512', $str);
     }
-    
+
+    /**
+     * @param \app\models\User $user
+     * @return string
+     */
     public static function getCsrfToken($user)
     {
         $session = \yii::$app->session;

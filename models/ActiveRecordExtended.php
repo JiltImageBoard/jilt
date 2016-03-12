@@ -1,14 +1,13 @@
 <?php
 
 namespace app\models;
+use app\common\classes\Errors;
 use app\common\helpers\ArrayHelper;
 use app\common\classes\RelationData;
 use yii\base\ErrorException;
-use yii\base\Exception;
 use yii\base\Model;
 use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
-use app\common\helpers\DataFormatter;
 use app\common\helpers\StringHelper;
 
 /**
@@ -97,7 +96,7 @@ class ActiveRecordExtended extends ActiveRecord
             if ($this->hasKey($key)) {
                 $this->$key = $value;
             } else {
-                $this->addError($key, 'Unknown model key');
+                $this->addError(Errors::UnknownModelKey($this->className(),$key));
                 $loadResult = false;
             }
         }
@@ -125,6 +124,7 @@ class ActiveRecordExtended extends ActiveRecord
 
                 /**
                  * @var ActiveRecord[] $models
+                 * @var ActiveRecord $modelClass
                  */
                 $models = $modelClass::find()->where(['id' => $ids])->all();
                 $existingModelIds = [];
@@ -141,11 +141,11 @@ class ActiveRecordExtended extends ActiveRecord
                     $invalidIds = array_diff($ids, $existingModelIds);
                 } catch (ErrorException $e) {}
                 foreach ($invalidIds as $id) {
-                    $this->addError($relationName, 'Model with id ' . $id . ' was not found');
+                    $this->addError(Errors::ModelNotFound($relationName, $id));
                     $lazyRelationCheck = false;
                 }
             } else {
-                $this->addError($modelClass, 'Class was not found');
+                $this->addError(Errors::ClassNotFound($modelClass));
                 $lazyRelationCheck = false;
                 break;
             }
@@ -162,8 +162,18 @@ class ActiveRecordExtended extends ActiveRecord
             }
         }
 
-        $this->addError('Model linking error', 'Not all models was found');
+        $this->addError(Errors::ModelLinkingError());
         return false;
+    }
+
+    /**
+     * @param array|Errors $error
+     * return void
+     */
+    public function addError(array $error)
+    {
+        list($attribute, $error) = $error;
+        parent::addError($attribute, $error);
     }
 
     /**
@@ -174,6 +184,7 @@ class ActiveRecordExtended extends ActiveRecord
     public function toArray(...$fieldsToUnset)
     {
         $attributes = $this->attributes;
+        $data = [];
 
         unset($attributes['id']);
         foreach ($attributes as $key => $value) {
@@ -211,6 +222,9 @@ class ActiveRecordExtended extends ActiveRecord
         foreach ($data as $key => $value) {
             $keyValueLoaded = false;
             foreach ($models as $model) {
+                /**
+                 * @var ActiveRecordExtended $model
+                 */
                 if ($model->hasKey($key)) {
                     $model->$key = $value;
                     $keyValueLoaded = true;
@@ -272,6 +286,7 @@ class ActiveRecordExtended extends ActiveRecord
         $relationDataArray = [];
         /* @var $method \ReflectionMethod */
         foreach ($reflection->getMethods() as $method) {
+            if ($method->isStatic()) continue; //костыль?
             if (in_array($method->name, $ARMethods) || in_array($method->name, $modelMethods)) {
                 continue;
             }

@@ -25,4 +25,14 @@ class Errors
     {
         return ['Model linking error', 'Not all models was found'];
     }
+    
+    public static function WrongCredentials()
+    {
+        return ['Login error', 'Wrong username or password'];
+    }
+    
+    public static function NotAuthorized()
+    {
+        return ['Auth error', 'Not authorized'];
+    }
 }

@@ -21,8 +21,12 @@ $config = [
                 ],
             ],
         ],
+        'session' => [
+            'class' => 'yii\web\CacheSession',
+            'cache' => 'cache',
+        ],
         'errorHandler' => [
-            'errorAction' => 'error/test',
+            'errorAction' => 'error/not-found',
         ],
         'log' => [
             'traceLevel' => YII_DEBUG ? 3 : 0,
@@ -39,10 +43,6 @@ $config = [
             'format' => yii\web\Response::FORMAT_JSON,
             'charset' => 'UTF-8',
         ],
-        'session' => [
-            'class' => 'yii\web\CacheSession',
-            'cache' => 'cache',
-        ]
     ],
     'controller' => [
         'class' => 'yii\web\Controller',

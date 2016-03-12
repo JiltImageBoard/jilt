@@ -5,58 +5,60 @@ return [
     'enablePrettyUrl' => true,
     'showScriptName' => false,
     'rules' => [
-        /*Boards*/
+        /* Boards */
         'POST boards/?' => 'board/create',
         'GET boards/?' => 'board/get-all',
-        'GET boards/<name:\w+>/pages/<pageNum:\d+>' => 'board/get-page',
-        'GET boards/<name:\w+>' => 'board/get',
-        'PUT boards/<name:\w+>' => 'board/update',
-        'DELETE boards/<name:\w+>' => 'board/delete',
+        'GET boards/<name:\w+>/pages/<pageNum:\d+>/?' => 'board/get-page',
+        'GET boards/<name:\w+>/?' => 'board/get',
+        'PUT boards/<name:\w+>/?' => 'board/update',
+        'DELETE boards/<name:\w+>/?' => 'board/delete',
 
-        /*Threads*/
-        'GET boards/<name:\w+>/threads/<threadNum:\d+>' => 'thread/get',
-        'POST boards/<name:\w+>/threads' => 'thread/create',
-        'PUT boards/<name:\w+>/threads/<threadNum:\d+>' => 'thread/update',
-        'DELETE boards/<name:\w+>/threads/<threadNum:\d+>' => 'thread/delete',
+        /* Threads */
+        'GET boards/<name:\w+>/threads/<threadNum:\d+>/?' => 'thread/get',
+        'POST boards/<name:\w+>/threads/?' => 'thread/create',
+        'PUT boards/<name:\w+>/threads/<threadNum:\d+>/?' => 'thread/update',
+        'DELETE boards/<name:\w+>/threads/<threadNum:\d+>/?' => 'thread/delete',
 
-        /*Chats*/
-        'GET boards/<name:\w+>/threads/<threadNum:\d+>/pages/<pageNum:\d+>' => 'thread/getPage',
+        /* Chats */
+        'GET boards/<name:\w+>/threads/<threadNum:\d+>/pages/<pageNum:\d+>/?' => 'thread/getPage',
 
-        /*Posts*/
-        'GET boards/<name:\w+>/threads/<threadNum:\d+>/posts/<createNum:\d+>' => 'post/get',
-        'POST boards/<name:\w+>/threads/<threadNum:\d+>/posts' => 'post/create',
-        'PUT boards/<name:\w+>/threads/<threadNum:\d+>/posts/<createNum:\d+>' => 'post/update',
-        'DELETE boards/<name:\w+>/threads/<threadNum:\d+>/posts/<createNum:\d+>' => 'post/delete',
+        /* Posts */
+        'GET boards/<name:\w+>/threads/<threadNum:\d+>/posts/<createNum:\d+>/?' => 'post/get',
+        'POST boards/<name:\w+>/threads/<threadNum:\d+>/posts/?' => 'post/create',
+        'PUT boards/<name:\w+>/threads/<threadNum:\d+>/posts/<createNum:\d+>/?' => 'post/update',
+        'DELETE boards/<name:\w+>/threads/<threadNum:\d+>/posts/<createNum:\d+>/?' => 'post/delete',
 
-        /*Authentication*/
-        'POST control-panel/login' => 'auth/login',
-        'POST control-panel/logout' => 'auth/logout',
-        'POST control-panel/reset-password' => 'auth/resetPassword',
+        /* Authentication */
+        'POST control-panel/login/?' => 'auth/login',
+        'POST control-panel/logout/?' => 'auth/logout',
+        'GET control-panel/logout/?' => 'auth/logout', /* временно? */ 
+        'POST control-panel/reset-password/?' => 'auth/reset-password',
+        'GET  control-panel/csrf-token/?' => 'auth/get-csrf-token',
 
-        /*Users*/
-        'POST control-panel/users' => 'user/create',
-        'GET control-panel/users' => 'user/get-all',
-        'GET control-panel/users/<id:\d+>' => 'user/get',
-        'PUT control-panel/users/<id:\d+>' => 'user/update',
-        'DELETE control-panel/users/<id:\d+>' => 'user/delete',
-        'GET control-panel/users/<id:\d+>/cp-rights' => 'user/get-cp-rights',
-        'PUT control-panel/users/<id:\d+>/cp-rights' => 'user/update-cp-rights',
+        /* Users */
+        'POST control-panel/users/?' => 'user/create',
+        'GET control-panel/users/?' => 'user/get-all',
+        'GET control-panel/users/<id:\d+>/?' => 'user/get',
+        'PUT control-panel/users/<id:\d+>/?' => 'user/update',
+        'DELETE control-panel/users/<id:\d+>/?' => 'user/delete',
+        'GET control-panel/users/<id:\d+>/cp-rights/?' => 'user/get-cp-rights',
+        'PUT control-panel/users/<id:\d+>/cp-rights/?' => 'user/update-cp-rights',
 
-        /*Board and chat rights*/
-        'GET users/<id:\d+>/rights' => 'user/getRights',
-        'PUT users/<id:\d+>/rights' => 'user/updateRights',
+        /* Board and chat rights */
+        'GET users/<id:\d+>/rights/?' => 'user/getRights',
+        'PUT users/<id:\d+>/rights/?' => 'user/updateRights',
 
-        /*Bans*/
-        'GET bans' => 'ban/index',
-        'POST bans' => 'ban/create',
-        'GET bans/<id:\d+>' => 'ban/get',
-        'PUT bans/<id:\d+>' => 'ban/update',
-        'DELETE bans/<id:\d+>' => 'ban/delete',
+        /* Bans */
+        'GET bans/?' => 'ban/index',
+        'POST bans/?' => 'ban/create',
+        'GET bans/<id:\d+>/?' => 'ban/get',
+        'PUT bans/<id:\d+>/?' => 'ban/update',
+        'DELETE bans/<id:\d+>/?' => 'ban/delete',
 
-        /*Tests*/
-        '/test' => 'test/run',
+        /* Tests */
+        '/test/?' => 'test/run',
 
         /* Error handler */
-        '<controller:[\S\s]+>' => 'error/resource-not-found'
+        '<controller:[\S\s]+>' => 'error/not-found'
     ]
 ];
