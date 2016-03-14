@@ -4,7 +4,7 @@ namespace app\common\filters;
 
 use Yii;
 use yii\base\ActionFilter;
-use yii\web\ForbiddenHttpException;
+use yii\web\UnauthorizedHttpException;
 
 class AuthFilter extends ActionFilter
 {
@@ -15,7 +15,7 @@ class AuthFilter extends ActionFilter
     {
         if (!(bool)\yii::$app->session->get('authorized')) {
             //TODO: Сделать кастомный эксепшн? У этого формат не очень подходящий
-            throw new ForbiddenHttpException();
+            throw new UnauthorizedHttpException();
         }
         return true;
     }

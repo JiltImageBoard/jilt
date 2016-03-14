@@ -29,17 +29,17 @@ class User extends ActiveRecordExtended
 
     public function getCpRights()
     {
-        return false;
+        return $this->hasOne(UserCpRights::className(), ['user_id' => 'id']);
     }
 
     public function getBoardRights()
     {
-        return false;
+        return $this->hasOne(UserBoardRights::className(), ['user_id' => 'id']);
     }
 
     public function getChatRights()
     {
-        return false;
+        return $this->hasOne(UserChatRights::className(), ['user_id' => 'id']);
     }
 
     public static function getUserBySession()

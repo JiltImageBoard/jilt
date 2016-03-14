@@ -4,6 +4,7 @@ namespace app\controllers;
 
 use app\common\classes\Errors;
 use app\common\filters\AuthFilter;
+use app\common\filters\CsrfFilter;
 use app\models\User;
 use yii\web\Controller;
 
@@ -66,8 +67,12 @@ class AuthController extends Controller
             [
                 'class' => AuthFilter::className(),
                 'only' => ['logout', 'reset-password', 'get-csrf-token'],
-                'except' => ['login']
             ],
+            [
+                'class' => CsrfFilter::className(),
+                'only' => ['logout', 'reset-password'],
+                'csrfToken' => \yii::$app->request->post('csrf')
+            ]
         ];
     }
 }

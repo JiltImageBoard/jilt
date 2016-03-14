@@ -2,16 +2,15 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Login</title>
-
+    <title>Logout</title>
+    
     <script src="https://code.jquery.com/jquery-2.2.0.min.js"></script>
     <script src="logger.js"></script>
 </head>
 <body>
 
-<form id="testForm"  action="/control-panel/login" method="post" accept-charset="UTF-8" enctype="application/x-www-form-urlencoded">
-    username:  <input type="text" name="username" value=""><br>
-    password:  <input type="password" name="password" value=""><br>
+<form id="testForm" action="/control-panel/logout" method="post" accept-charset="UTF-8" enctype="application/x-www-form-urlencoded">
+    csrf:  <input type="text" name="csrf" value=""><br>
     <input type="submit" value="Submit">
 </form>
 

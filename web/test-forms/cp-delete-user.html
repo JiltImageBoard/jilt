@@ -2,16 +2,22 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Login</title>
+    <title>Delete User</title>
 
     <script src="https://code.jquery.com/jquery-2.2.0.min.js"></script>
     <script src="logger.js"></script>
+    <script src="updater.js"></script>
 </head>
 <body>
 
-<form id="testForm"  action="/control-panel/login" method="post" accept-charset="UTF-8" enctype="application/x-www-form-urlencoded">
-    username:  <input type="text" name="username" value=""><br>
-    password:  <input type="password" name="password" value=""><br>
+<div class="url-watcher">
+    Form action url:<br>
+    <input type="text" id="url" value="">
+    <br><br>
+</div>
+
+<form id="testForm" action="/control-panel/users/" method="post" accept-charset="UTF-8" enctype="application/x-www-form-urlencoded">
+    csrf:  <input type="text" name="csrf" value=""><br>
     <input type="submit" value="Submit">
 </form>
 
