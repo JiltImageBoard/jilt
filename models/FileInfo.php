@@ -2,10 +2,13 @@
 
 namespace app\models;
 
+use yii\web\UploadedFile;
+
 /**
  * Class FileInfo
  * @package app\models
  * @property int $id
+ * @property int $fileFormatsId
  * @property string $filePath
  * @property string $originalName
  * @property string $hash
@@ -39,12 +42,17 @@ class FileInfo extends ActiveRecordExtended
         return $this->hasOne(FileFormat::className(), ['id' => 'file_formats_id']);
     }
 
-    public function upload()
+    /**
+     * @param UploadedFile $file
+     * @return FileInfo|bool
+     */
+    public static function saveFile($file)
     {
-        /*$checkSum = md5_file($file->tempName);
+        $checkSum = md5_file($file->tempName);
 
-        if (!FileInfo::find()->where(['hash' => $checkSum])->one()) {
+        $fileWithSameHash = FileInfo::find()->where(['hash' => $checkSum])->one();
 
+        if (!$fileWithSameHash) {
             $newId = FileInfo::find()->select('id')->max('id') + 1;
             $filePath = $file->baseName . '_' . $newId . '.' . $file->extension;
 
@@ -54,13 +62,16 @@ class FileInfo extends ActiveRecordExtended
                 $newFileInfo->filePath = $filePath;
                 $newFileInfo->originalName = $file->baseName;
                 $newFileInfo->hash = $checkSum;
-                $newFileInfo->fileFormatId = $fileFormat->id;
+                $newFileInfo->fileFormatsId = $fileFormat->id;
+                $newFileInfo->size = $file->size;
 
-                $newFileInfo->save();
+                if ($newFileInfo->save())
+                    return $newFileInfo;
             } else {
-                // TODO: error loading file json response
-                return 'error loading file';
+                return false;
             }
-        }*/
+        } else {
+            return $fileWithSameHash;
+        }
     }
 }

@@ -131,15 +131,18 @@ class ActiveRecordExtended extends ActiveRecord
                 foreach ($models as $model) {
                     if ($model) {
                         $relatedModels[$relationName][] = $model;
-                        array_push($existingModelIds, $model->getPrimaryKey());
+                        $existingModelIds[] = $model->getPrimaryKey();
                     }
                 }
 
                 $invalidIds = [];
                 try {
-                    print_r($this->lazyRelations);
                     $invalidIds = array_diff($ids, $existingModelIds);
-                } catch (ErrorException $e) {}
+                } catch (ErrorException $e) {
+                    echo "<pre>";
+                    print_r($relationInfo);
+                    echo "</pre>";
+                }
                 foreach ($invalidIds as $id) {
                     $this->addError($relationName, 'Model with id ' . $id . ' was not found');
                     $lazyRelationCheck = false;
