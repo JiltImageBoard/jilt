@@ -81,8 +81,8 @@ class PostData extends ActiveRecordExtended
         $this->files = [];
  
         $this->addLazyRelation(FileInfo::className(), 'fileInfos', $fileIds);
-        print_r("kek!" . PHP_EOL);
+        /*print_r("kek!" . PHP_EOL);
         print_r($this->lazyRelations);
-        print_r("/kek!" . PHP_EOL);
+        print_r("/kek!" . PHP_EOL);*/
     }
 }

@@ -135,14 +135,8 @@ class ActiveRecordExtended extends ActiveRecord
                     }
                 }
 
-                $invalidIds = [];
-                try {
-                    $invalidIds = array_diff($ids, $existingModelIds);
-                } catch (ErrorException $e) {
-                    echo "<pre>";
-                    print_r($relationInfo);
-                    echo "</pre>";
-                }
+                $invalidIds = array_diff($ids, $existingModelIds);
+
                 foreach ($invalidIds as $id) {
                     $this->addError($relationName, 'Model with id ' . $id . ' was not found');
                     $lazyRelationCheck = false;
@@ -381,6 +375,8 @@ class ActiveRecordExtended extends ActiveRecord
      */
     public function saveOrdered($models)
     {
+        if (!$this->isNewRecord) return true;
+
         foreach ($models as $model) {
             if ($model === $this || !$this->isNewRecord) continue;
 
