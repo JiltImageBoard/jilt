@@ -2,7 +2,7 @@
 
 namespace app\controllers;
 
-use app\common\classes\Errors;
+use app\common\classes\ErrorMessage;
 use app\common\filters\AuthFilter;
 use app\common\filters\CsrfFilter;
 use app\models\User;
@@ -23,26 +23,24 @@ class AuthController extends Controller
         
         if (!$user) {
             \yii::$app->response->setStatusCode(401);
-            return Errors::WrongCredentials();
+            return ErrorMessage::WrongCredentials();
         }
         
         if (\yii::$app->getSecurity()->validatePassword($password, $user->password)) {
             $session = \yii::$app->session;
-            $session->set('authorized', 'true');
+            $session->set('authorized', true);
             $session->set('username', $user->username);
             $session->set('password', $user->password);
             \yii::$app->response->setStatusCode(200);
         } else {
             \yii::$app->response->setStatusCode(400);
-            return Errors::WrongCredentials();
+            return ErrorMessage::WrongCredentials();
         }
         
     }
 
     public function actionLogout()
     {
-        //TODO: Check CSRF
-        
         \yii::$app->session->open();
         \yii::$app->session->destroy();
         \yii::$app->response->setStatusCode(204);
@@ -50,7 +48,7 @@ class AuthController extends Controller
 
     public function actionResetPassword()
     {
-        //TODO: Check CSRF
+        //TODO: Need email sending
         return 'reset pass';
     }
     

@@ -1,7 +1,7 @@
 <?php
 
 namespace app\models;
-use app\common\classes\Errors;
+use app\common\classes\ErrorMessage;
 use app\common\helpers\ArrayHelper;
 use app\common\classes\RelationData;
 use yii\base\ErrorException;
@@ -98,7 +98,7 @@ class ActiveRecordExtended extends ActiveRecord
             } elseif(in_array($key, $this->safeAttributes())) {
                 $this->$key = $value;
             } else {
-                $this->addError(Errors::UnknownModelKey($this->className(),$key));
+                $this->addError(ErrorMessage::UnknownModelKey($this->className(),$key));
                 $loadResult = false;
             }
         }
@@ -143,11 +143,11 @@ class ActiveRecordExtended extends ActiveRecord
                     $invalidIds = array_diff($ids, $existingModelIds);
                 } catch (ErrorException $e) {}
                 foreach ($invalidIds as $id) {
-                    $this->addError(Errors::ModelNotFound($relationName, $id));
+                    $this->addError(ErrorMessage::ModelNotFound($relationName, $id));
                     $lazyRelationCheck = false;
                 }
             } else {
-                $this->addError(Errors::ClassNotFound($modelClass));
+                $this->addError(ErrorMessage::ClassNotFound($modelClass));
                 $lazyRelationCheck = false;
                 break;
             }
@@ -164,12 +164,12 @@ class ActiveRecordExtended extends ActiveRecord
             }
         }
 
-        $this->addError(Errors::ModelLinkingError());
+        $this->addError(ErrorMessage::ModelLinkingError());
         return false;
     }
 
     /**
-     * @param array|Errors $error|string
+     * @param array|ErrorMessage $error|string
      * @param string|null $message
      * return void
      */
@@ -192,8 +192,7 @@ class ActiveRecordExtended extends ActiveRecord
     {
         $attributes = $this->attributes;
         $data = [];
-
-        unset($attributes['id']);
+        
         foreach ($attributes as $key => $value) {
             $data[StringHelper::underscoreToCamelCase($key)] = $value;
         }

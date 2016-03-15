@@ -106,7 +106,7 @@ class BoardController extends Controller
     public function actionGet($name)
     {
         if ($board = Board::find()->where(['name' => $name])->limit(1)->one()) {
-            return $board->toArray('counter');
+            return $board->toArray('id', 'counter');
         }
 
         \Yii::$app->response->setStatusCode(404);

@@ -3,7 +3,7 @@
 namespace app\common\classes;
 
 
-class Errors
+class ErrorMessage
 {
 
     public static function ModelNotFound($modelName, $id)

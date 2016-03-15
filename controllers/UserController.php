@@ -2,7 +2,7 @@
 
 namespace app\controllers;
 
-use app\common\classes\Errors;
+use app\common\classes\ErrorMessage;
 use app\common\filters\AuthFilter;
 use app\common\filters\CsrfFilter;
 use app\models\User;
@@ -13,7 +13,6 @@ class UserController extends Controller
 
     public function actionCreate()
     {
-        //TODO: Check CSRF
         //TODO: Check rights
 
         $user = new User();
@@ -34,16 +33,11 @@ class UserController extends Controller
             /**
              * @var User $user
              */
-            $users[] = [
-                'id' => $user->id,
-                'username' => $user->username,
-                'email' => $user->email,
-                'created_at' => $user->created_at,
-                'updated_at' => $user->updated_at
-            ];
+            $users[] = $user->toArray('password', 'cpRights', 'boardRights', 'chatRights');
         }
 
         return $users;
+
     }
     
     public function actionGet($id)
@@ -54,7 +48,6 @@ class UserController extends Controller
     
     public function actionUpdate($id)
     {
-        //TODO: Check CSRF
         //TODO: Check rights
         
         /**
@@ -63,7 +56,7 @@ class UserController extends Controller
         $user = User::find()->where(['id' => $id])->limit(1)->one();
         
         if (!$user) {
-            return Errors::ModelNotFound(User::className(), $id);
+            return ErrorMessage::ModelNotFound(User::className(), $id);
         }
 
         if (\yii::$app->getSecurity()->validatePassword(\yii::$app->request->post('password'), $user->password)) {
@@ -85,12 +78,11 @@ class UserController extends Controller
      */
     public function actionDelete($id)
     {
-        //TODO: Check CSRF
         //TODO: Check rights
         
         if (!User::find()->where(['id' => $id])->limit(1)->one()->delete()) {
             \Yii::$app->response->setStatusCode(404);
-            return Errors::ModelNotFound(User::className(), $id);
+            return ErrorMessage::ModelNotFound(User::className(), $id);
         }
         \Yii::$app->response->setStatusCode(204);
     }
@@ -103,7 +95,6 @@ class UserController extends Controller
 
     public function actionUpdateCpRights($id)
     {
-        //TODO: Check CSRF
         //TODO: Check rights
     }
 

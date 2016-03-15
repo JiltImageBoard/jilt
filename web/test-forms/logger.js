@@ -1,6 +1,7 @@
 
 $(function() {
-    $("#testForm").submit(function(e) {
+    var $form = $("#testForm");
+    $form.submit(function(e) {
 
         e.preventDefault();
 
@@ -9,7 +10,7 @@ $(function() {
 
         $.ajax({
             url: actionurl,
-            type: 'put',
+            type: $form.attr('method'),
             dataType: 'json',
             data: $("#testForm").serialize(),
             success: function(data) {
