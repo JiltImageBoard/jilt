@@ -5,7 +5,7 @@
   Adds new user
 
 #### Resource information:
-  Requires authenticationyes  
+  Requires authentication:yes  
   Response formats: `JSON`
 
 #### Post parameters
@@ -17,8 +17,8 @@
 
 
 #### Example Request
-```javascript
-POST /control-panel/users
+`POST /control-panel/users`
+```JSON
 {
   "username": "admin",
   "password": "admin",
@@ -27,9 +27,11 @@ POST /control-panel/users
 ```
 
 #### Example Result
-```javascript
+```JSON
 {
-  "errorCode": 0,
-  "errorMessage": ""
+	"username": "admin",
+	"email": "admin@example.com",
+	"created_at": "2016-03-10 14:21:13",
+	"updated_at": "2016-03-10 14:21:13"
 }
 ```

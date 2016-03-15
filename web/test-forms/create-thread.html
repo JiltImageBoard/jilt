@@ -3,9 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <title>Create Thread</title>
+
+    <script src="https://code.jquery.com/jquery-2.2.0.min.js"></script>
+    <script src="logger.js"></script>
+    
 </head>
 <body>
-<form action="/boards/test/threads" method="post" accept-charset="UTF-8" enctype="multipart/form-data">
+
+<form id="testForm" action="/boards/test/threads" method="post" accept-charset="UTF-8" enctype="multipart/form-data">
     Name: <br><input type="text" name="name" value="Anon"><br>
     Subj: <br><input type="text" name="subject" value=""><br>
     Text: <br><textarea name="text" cols="40" rows="10"></textarea><br>
@@ -15,9 +20,15 @@
     <input type="file" name="filesToUpload[]"><br>
     <input type="file" name="filesToUpload[]"><br>
     <input type="file" name="filesToUpload[]"><br>
-
-
+    
     <br><input type="submit" value="Submit">
 </form>
+
+<div class="log">
+    <br><br><br><br><br>
+    Response from server:<br>
+    <textarea rows="10" cols="100" id="logArea"></textarea>
+</div>
+
 </body>
 </html>

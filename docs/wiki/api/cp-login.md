@@ -17,16 +17,16 @@
 
 
 #### Example Request
-```javascript
-POST /control-panel/login
+`POST /control-panel/login`
+```JSON
 {
   "username": "admin",
-  "password": "admin",
+  "password": "admin"
 }
 ```
 
 #### Example Result
-```javascript
+```JSON
 {
   "errorCode": 0,
   "errorMessage": ""
