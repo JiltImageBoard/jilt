@@ -70,11 +70,11 @@ class PostData extends ActiveRecordExtended
              * @var FileFormat $fileFormat
              * @var FileInfo $FileClass
              */
-            $fileFormat = FileFormat::find()->where(['file_format' => $file->extension])->one();
+            $fileFormat = FileFormat::find()->where(['extension' => $file->extension])->one();
             $FileClass = 'app\models\File' . ucfirst($fileFormat->fileType);
-            $newfileInfo = $FileClass::saveFile($file);
-            if ($newfileInfo)
-                $fileIds[] = $newfileInfo->id;
+            $newFileInfo = $FileClass::saveFile($file);
+            if ($newFileInfo)
+                $fileIds[] = $newFileInfo->id;
             else
                 $this->addError("files", "Error saving file");
         }

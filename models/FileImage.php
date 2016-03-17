@@ -1,6 +1,7 @@
 <?php
 
 namespace app\models;
+use app\common\classes\Thumb;
 use yii\web\UploadedFile;
 
 /**
@@ -43,28 +44,7 @@ class FileImage extends FileInfo
             $fileImage->filesInfoId = $fileInfo->id;
             $fileImage->save();
 
-            // creating thumb
-            $thumbPath = $file->baseName . '_' . $fileInfo->id . '_thumb' . '.' . $file->extension;
-            $newWidth = $fileImage->width;
-            $newHeight = $fileImage->height;
-            $ratio = $fileImage->width / $fileImage->height;
-            if ($fileImage->width > $fileImage->height) {
-                if ($fileImage->width > static::THUMB_MAX_SIZE) {
-                    $newWidth = static::THUMB_MAX_SIZE;
-                    $newHeight = $newWidth / $ratio;
-                }
-            } else {
-                if ($fileImage->height > static::THUMB_MAX_SIZE) {
-                    $newHeight = static::THUMB_MAX_SIZE;
-                    $newWidth = $newHeight * $ratio;
-                }
-            }
-
-            $thumb = imagecreatetruecolor($newWidth, $newHeight);
-            $source = imagecreatefromjpeg($fileInfo->filePath);
-            imagecopyresized($thumb, $source, 0, 0, 0, 0, $newWidth, $newHeight, $fileImage->width, $fileImage->height);
-
-            return $fileInfo;
+            Thumb::create($fileInfo->filePath);
         }
 
         return false;

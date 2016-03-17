@@ -57,8 +57,9 @@ class FileInfo extends ActiveRecordExtended
             $filePath = $file->baseName . '_' . $newId . '.' . $file->extension;
 
             if ($file->saveAs($filePath)) {
-                $fileFormat = FileFormat::find()->where(['file_format' => $file->extension])->one();
+                $fileFormat = FileFormat::find()->where(['extension' => $file->extension])->one();
                 $newFileInfo = new FileInfo();
+                $newFileInfo->id = $newId;
                 $newFileInfo->filePath = $filePath;
                 $newFileInfo->originalName = $file->baseName;
                 $newFileInfo->hash = $checkSum;
