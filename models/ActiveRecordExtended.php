@@ -18,9 +18,11 @@ class ActiveRecordExtended extends ActiveRecord
 {
     /**
      * @var RelationData[] $relationDataArray
+     * @var [][] $lazyRelatedModels
      */
     public $relationDataArray = null;
     protected $delegatedFields = [];
+    private $lazyRelatedModels = [];
     /**
      * @var array[]
      */
@@ -107,58 +109,64 @@ class ActiveRecordExtended extends ActiveRecord
     }
 
     /**
-     * Links related models specified in lazyRelations array by many-to-many relation type
-     * @param bool $runValidation
-     * @param null $attributeNames
+     * Loading all related models from their id's.
+     * @param bool $insert
      * @return bool
      */
-    public function save($runValidation = true, $attributeNames = null)
+    public function beforeSave($insert)
     {
-        $lazyRelationCheck = true;
-        $relatedModels = [];
+        if (parent::beforeSave($insert)) {
+            $lazyRelatedModels = [];
 
-        foreach ($this->lazyRelations as $modelClass => $relationInfo) {
-            if (!$lazyRelationCheck) break;
+            $lazyRelationCheck = true;
+            foreach ($this->lazyRelations as $modelClass => $relationInfo) {
+                if (class_exists($modelClass)) {
+                    $relationName = $relationInfo['relationName'];
+                    $ids = $relationInfo['ids'];
 
-            if (class_exists($modelClass)) {
-                $relationName = $relationInfo['relationName'];
-                $ids = $relationInfo['ids'];
-
-                /**
-                 * @var ActiveRecord[] $models
-                 * @var ActiveRecord $modelClass
-                 */
-                $models = $modelClass::find()->where(['id' => $ids])->all();
-                $existingModelIds = [];
-                foreach ($models as $model) {
-                    if ($model) {
-                        $relatedModels[$relationName][] = $model;
+                    /**
+                     * @var ActiveRecord[] $models
+                     * @var ActiveRecord $modelClass
+                     */
+                    $models = $modelClass::find()->where(['id' => $ids])->all();
+                    $existingModelIds = [];
+                    foreach ($models as $model) {
+                        $lazyRelatedModels[$relationName][] = $model;
                         $existingModelIds[] = $model->getPrimaryKey();
                     }
-                }
 
-                $invalidIds = array_diff($ids, $existingModelIds);
+                    $invalidIds = array_diff($ids, $existingModelIds);
 
-                foreach ($invalidIds as $id) {
-                    $this->addError(ErrorMessage::ModelNotFound($relationName, $id));
+                    foreach ($invalidIds as $id) {
+                        $this->addError(ErrorMessage::ModelNotFound($relationName, $id));
+                        $lazyRelationCheck = false;
+                    }
+                } else {
+                    $this->addError(ErrorMessage::ClassNotFound($modelClass));
                     $lazyRelationCheck = false;
+                    break;
                 }
+            }
+
+            if ($lazyRelationCheck) {
+                $this->lazyRelatedModels = $lazyRelatedModels;
+                return true;
             } else {
-                $this->addError(ErrorMessage::ClassNotFound($modelClass));
-                $lazyRelationCheck = false;
-                break;
+                return false;
             }
         }
+        return false;
+    }
 
-        if ($lazyRelationCheck) {
-            if (parent::save($runValidation, $attributeNames)) {
-                foreach ($relatedModels as $relationName => $models) {
-                    foreach ($models as $model) {
-                        $this->link($relationName, $model);
-                    }
+    public function afterSave($insert, $changedAttributes)
+    {
+        if (parent::afterSave($insert, $changedAttributes)) {
+            foreach ($this->lazyRelatedModels as $relationName => $models) {
+                foreach ($models as $model) {
+                    $this->link($relationName, $model);
                 }
-                return true;
             }
+            return true;
         }
 
         $this->addError(ErrorMessage::ModelLinkingError());

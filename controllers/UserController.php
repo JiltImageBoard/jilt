@@ -16,7 +16,7 @@ class UserController extends Controller
         //TODO: Check rights
 
         $user = new User();
-        if($user->load(\yii::$app->request->post()) && $user->validate()) {
+        if ($user->load(\yii::$app->request->post()) && $user->validate()) {
             $user->password = \yii::$app->getSecurity()->generatePasswordHash($user->password);
             $user->save();
             
