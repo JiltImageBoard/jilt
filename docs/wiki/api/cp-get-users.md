@@ -9,28 +9,27 @@
   Response formats: `JSON`
 
 #### Example Request
-```javascript
-GET /control-panel/users
-```
+`GET /control-panel/users`
 
 #### Example Result
-```javascript
-{
-	"users": [
-	{
-		"id": "1",
-		"username": "admin",
-		"email": "admin@example.com"
-	},
-	{
-		"id": "2",
-		"username": "admin2",
-		"email": "admin2@example.com"
-	},
-	{
-		"id": "3",
-		"username": "admin3",
-		"email": "admin3@example.com"
-	}]
-}
+```JSON
+[{
+	"id": 2,
+	"username": "test",
+	"email": "test@gmail.com",
+	"created_at": "2016-03-10 14:10:21",
+	"updated_at": "2016-03-10 14:10:21"
+}, {
+	"id": 3,
+	"username": "testtest",
+	"email": "testtest@gmail.com",
+	"created_at": "2016-03-10 14:19:30",
+	"updated_at": "2016-03-10 14:19:30"
+}, {
+	"id": 4,
+	"username": "testtest1",
+	"email": "te23ttest@gmail.com",
+	"created_at": "2016-03-10 14:21:13",
+	"updated_at": "2016-03-10 14:21:13"
+}]
 ```

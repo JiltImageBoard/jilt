@@ -3,9 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <title>Create Board</title>
+
+
+    <script src="https://code.jquery.com/jquery-2.2.0.min.js"></script>
+    <script src="logger.js"></script>
 </head>
 <body>
-<form action="/boards" method="post" accept-charset="UTF-8" enctype="application/x-www-form-urlencoded">
+
+<form id="testForm" action="/boards" method="post" accept-charset="UTF-8" enctype="application/x-www-form-urlencoded">
     name:  <input type="text" name="name" value=""><br>
     description: <input type="text" name="description" value=""><br>
     max_board_pages: <input type="text" name="maxBoardPages" value="1"><br>
@@ -38,5 +43,12 @@
 
     <input type="submit" value="Submit">
 </form>
+
+<div class="log">
+    <br><br><br><br><br>
+    Response from server:<br>
+    <textarea rows="10" cols="100" id="logArea"></textarea>
+</div>
+
 </body>
 </html>
