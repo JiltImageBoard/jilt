@@ -105,13 +105,12 @@ class BoardController extends Controller
      */
     public function actionGet($name)
     {
-        $board = Board::find()->where(['name' => $name])->limit(1)->one();
-
-        if ($board) {
-            return $board->toArray('counter');
+        if ($board = Board::find()->where(['name' => $name])->limit(1)->one()) {
+            return $board->toArray('id', 'counter');
         }
 
         \Yii::$app->response->setStatusCode(404);
+        //TODO: Нормальная ошибка
         return 'Board was not found';
     }
 

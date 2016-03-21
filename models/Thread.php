@@ -4,6 +4,7 @@ namespace app\models;
 
 use yii\behaviors\TimestampBehavior;
 use yii\db\Expression;
+use app\common\interfaces\DeletableInterface;
 
 
 /**
@@ -17,14 +18,15 @@ use yii\db\Expression;
  * @property bool $isLocked
  * @property bool $isOpMarkEnabled
  * @property bool $isChat
- * @property bool $postDataId
- * @property \DateTime $createdAt
+ * @property bool $isDeleted
+ * @property int $postDataId
  * @property \DateTime $updatedAt
- * relations
- * @property Board $board
+ * 
+ * @property \app\models\Board $board
  * @property \app\models\PostData $postData
+ * @property \app\models\Post $posts
  */
-class Thread extends ActiveRecordExtended
+class Thread extends ActiveRecordExtended implements DeletableInterface
 {
     /**
      * @return string
@@ -49,7 +51,7 @@ class Thread extends ActiveRecordExtended
         return $this->hasMany(Tag::className(), ['id' => 'tag_id'])
             ->viaTable('threads_tags', ['thread_id' => 'id']);
     }
-
+    
     public function getPosts()
     {
         return $this->hasMany(Post::className(), ['thread_id' => 'id']);
@@ -58,10 +60,16 @@ class Thread extends ActiveRecordExtended
     public function save($runValidation = true, $attributeNames = null)
     {
         if ($this->isNewRecord) {
-            $command =  \Yii::$app->db->createCommand("CALL mystored(
+            $command =  \Yii::$app->db->createCommand("CALL create_thread(
             :board_id, :is_sticked, :is_locked, :is_op_mark_enabled, :is_chat, :post_data_id)");
+            // TODO: implement default values for procedure maybe?
             $command->bindValues([
-                ':board_id'
+                ':board_id' => $this->boardId,
+                ':is_sticked' => false,
+                ':is_locked' => false,
+                ':is_op_mark_enabled' => false,
+                'is_chat' => $this->isChat,
+                'post_data_id' => $this->postDataId
             ]);
             $command->execute();
         } else {
@@ -79,5 +87,23 @@ class Thread extends ActiveRecordExtended
                 'value' => new Expression('NOW()'),
             ]
         ];
+    }
+    
+    public function getDeletedRows(Array &$carry)
+    {
+        $threads = $this->find()->where(['is_deleted' => '1'])->all();
+
+        if (empty($threads)) {
+            return $carry;
+        }
+        
+        foreach ($threads as $thread) {
+            $carry['threadsIds'][] = $thread->id;
+
+            foreach ($thread->posts as $post) {
+                $carry['postsIds'][] = $post->id;
+            }
+        }
+        
     }
 }

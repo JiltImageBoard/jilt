@@ -1,13 +1,13 @@
 <?php
 
 namespace app\models;
+use app\common\classes\ErrorMessage;
 use app\common\helpers\ArrayHelper;
 use app\common\classes\RelationData;
 use yii\base\ErrorException;
-use yii\base\Exception;
+use yii\base\Model;
 use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
-use app\common\helpers\DataFormatter;
 use app\common\helpers\StringHelper;
 
 /**
@@ -19,20 +19,18 @@ class ActiveRecordExtended extends ActiveRecord
     /**
      * @var RelationData[] $relationDataArray
      */
-    protected $relationDataArray = null;
+    public $relationDataArray = null;
     protected $delegatedFields = [];
+    /**
+     * @var array[]
+     */
+    protected $lazyRelations = [];
 
     public function __construct(array $config = [])
     {
         parent::__construct($config);
         $this->relationDataArray = $this->initRelationDataArray();
     }
-
-
-    /**
-     * @var array[]
-     */
-    protected $lazyRelations = [];
 
     public function __get($key)
     {
@@ -91,57 +89,21 @@ class ActiveRecordExtended extends ActiveRecord
         return null;
     }
 
-    protected function addLazyRelation($modelName, $relationName, $relatedIds)
-    {
-        $relatedIds = ArrayHelper::getNumericSubset($relatedIds);
-
-        if (isset($this->lazyRelations[$modelName])) {
-            $this->lazyRelations[$modelName]['ids'] = array_merge($this->lazyRelations[$modelName], $relatedIds);
-        } else {
-            $this->lazyRelations[$modelName]['ids'] = $relatedIds;
-            $this->lazyRelations[$modelName]['relationName'] = $relationName;
-        }
-    }
-
     public function load($data, $formName = null)
     {
         $loadResult = true;
         foreach ($data as $key => $value) {
             if ($this->hasKey($key)) {
                 $this->$key = $value;
+            } elseif(in_array($key, $this->safeAttributes())) {
+                $this->$key = $value;
             } else {
-                $this->addError($key, 'Unknown model key');
+                $this->addError(ErrorMessage::UnknownModelKey($this->className(),$key));
                 $loadResult = false;
             }
         }
 
         return $loadResult;
-    }
-
-    /**
-     * Loads data into models
-     * @param array $data can be any associative array, each array item should be loaded into some model
-     * @param array $models Array with model objects
-     * @return bool
-     */
-    public static function loadMultiple($data, $models)
-    {
-        foreach ($data as $key => $value) {
-            $keyValueLoaded = false;
-            foreach ($models as $model) {
-                if ($model->hasKey($key)) {
-                    $model->$key = $value;
-                    $keyValueLoaded = true;
-                    break;
-                }
-            }
-
-            if (!$keyValueLoaded) {
-                print_r($data);
-                return false;
-            }
-        }
-        return true;
     }
 
     /**
@@ -164,6 +126,7 @@ class ActiveRecordExtended extends ActiveRecord
 
                 /**
                  * @var ActiveRecord[] $models
+                 * @var ActiveRecord $modelClass
                  */
                 $models = $modelClass::find()->where(['id' => $ids])->all();
                 $existingModelIds = [];
@@ -174,13 +137,17 @@ class ActiveRecordExtended extends ActiveRecord
                     }
                 }
 
-                $invalidIds = array_diff($ids, $existingModelIds);
+                $invalidIds = [];
+                try {
+                    print_r($this->lazyRelations);
+                    $invalidIds = array_diff($ids, $existingModelIds);
+                } catch (ErrorException $e) {}
                 foreach ($invalidIds as $id) {
-                    $this->addError($relationName, 'Model with id ' . $id . ' was not found');
+                    $this->addError(ErrorMessage::ModelNotFound($relationName, $id));
                     $lazyRelationCheck = false;
                 }
             } else {
-                $this->addError($modelClass, 'Class was not found');
+                $this->addError(ErrorMessage::ClassNotFound($modelClass));
                 $lazyRelationCheck = false;
                 break;
             }
@@ -197,8 +164,119 @@ class ActiveRecordExtended extends ActiveRecord
             }
         }
 
-        $this->addError('Model linking error', 'Not all models was found');
+        $this->addError(ErrorMessage::ModelLinkingError());
         return false;
+    }
+
+    /**
+     * @param array|ErrorMessage $error|string
+     * @param string|null $message
+     * return void
+     */
+    public function addError ($error, $message = null)
+    {
+        if ($message != null) {
+            parent::addError($error, $message);
+        } else {
+            list($attribute, $error) = $error;
+            parent::addError($attribute, $error);
+        }
+    }
+
+    /**
+     * Returns all model fields and relations id's.
+     * @param array $fieldsToUnset Fields which shouldn't be printed
+     * @return array
+     */
+    public function toArray(...$fieldsToUnset)
+    {
+        $attributes = $this->attributes;
+        $data = [];
+        
+        foreach ($attributes as $key => $value) {
+            $data[StringHelper::underscoreToCamelCase($key)] = $value;
+        }
+
+        foreach ($this->relationDataArray as $relationData) {
+            if ($relationData->isMultiple) {
+                foreach ($this->{$relationData->name} as $relationModel) {
+                    $data[$relationData->name][] = $relationModel['id'];
+                }
+            } else {
+                $data[$relationData->name] = $this->{$relationData->name}->id;
+            }
+
+
+        }
+
+        foreach ($fieldsToUnset as $field) {
+            if (array_key_exists($field, $data)) {
+                unset($data[$field]);
+            }
+        }
+        return $data;
+    }
+
+    /**
+     * Loads data into models
+     * @param array $data can be any associative array, each array item should be loaded into some model
+     * @param array $models Array with model objects
+     * @return bool
+     */
+    public static function loadMultiple($data, $models)
+    {
+        foreach ($data as $key => $value) {
+            $keyValueLoaded = false;
+            foreach ($models as $model) {
+                /**
+                 * @var ActiveRecordExtended $model
+                 */
+                if ($model->hasKey($key)) {
+                    $model->$key = $value;
+                    $keyValueLoaded = true;
+                    break;
+                }
+            }
+
+            if (!$keyValueLoaded) {
+                print_r($data);
+                return false;
+            }
+        }
+        return true;
+    }
+
+    protected function addLazyRelation($modelName, $relationName, $relatedIds)
+    {
+        $relatedIds = ArrayHelper::getNumericSubset($relatedIds);
+
+        if (isset($this->lazyRelations[$modelName])) {
+            $this->lazyRelations[$modelName]['ids'] = array_merge($this->lazyRelations[$modelName], $relatedIds);
+        } else {
+            $this->lazyRelations[$modelName]['ids'] = $relatedIds;
+            $this->lazyRelations[$modelName]['relationName'] = $relationName;
+        }
+    }
+
+
+    /**
+     * Accesses delegated to some relation field and if it there is such relation with field $key,
+     * Callback will be invoked. Field will be unsetted if callback returns false
+     * @param string $key
+     * @param $callback
+     */
+    private function accessDelegatedField($key, $callback)
+    {
+        if (isset($this->delegatedFields[$key])) {
+            $relationName = $this->delegatedFields[$key];
+            $relationModel = $this->$relationName;
+            if (isset($relationModel)) {
+                if ($relationModel->hasKey($key)) {
+                    if ($callback($relationModel[$key]) === false)
+                        unset($relationModel[$key]);
+                }
+            }
+        }
     }
 
     /**
@@ -214,6 +292,7 @@ class ActiveRecordExtended extends ActiveRecord
         $relationDataArray = [];
         /* @var $method \ReflectionMethod */
         foreach ($reflection->getMethods() as $method) {
+            if ($method->isStatic()) continue; //костыль?
             if (in_array($method->name, $ARMethods) || in_array($method->name, $modelMethods)) {
                 continue;
             }
@@ -245,57 +324,24 @@ class ActiveRecordExtended extends ActiveRecord
 
 
     /**
-     * Returns all model fields and relations id's. 
-     * @param array $fieldsToUnset Fields which shouldn't be printed
-     * @return array
+     * returns foreign key if model belongs to passed model
+     *
+     * @param ActiveRecordExtended $model
+     * @return RelationData|null
      */
-    public function toArray(...$fieldsToUnset)
+    public function belongsTo($model)
     {
-        $attributes = $this->attributes;
-
-        unset($attributes['id']);
-        foreach ($attributes as $key => $value) {
-            $data[StringHelper::underscoreToCamelCase($key)] = $value;
-        }
-
         foreach ($this->relationDataArray as $relationData) {
-            if ($relationData->isMultiple) {
-                foreach ($this->{$relationData->name} as $relationModel) {
-                    $data[$relationData->name][] = $relationModel['id'];
-                }
-            } else {
-                $data[$relationData->name] = $this->{$relationData->name}->id;
-            }
-            
-            
-        }
-        
-        foreach ($fieldsToUnset as $field) {
-            if (array_key_exists($field, $data)) {
-                unset($data[$field]);
+            if ($relationData->modelClass === $model->className()) {
+                $firstVal = reset($relationData->link);
+                $foreignKey = $firstVal !== 'id' ? $firstVal : key($relationData->link);
+                if ($this->hasAttribute($foreignKey))
+                    return $foreignKey;
+                return null;
             }
         }
-        return $data;
-    }
 
-    /**
-     * Accesses delegated to some relation field and if it there is such relation with field $key,
-     * Callback will be invoked. Field will be unsetted if callback returns false
-     * @param string $key
-     * @param $callback
-     */
-    private function accessDelegatedField($key, $callback)
-    {
-        if (isset($this->delegatedFields[$key])) {
-            $relationName = $this->delegatedFields[$key];
-            $relationModel = $this->$relationName;
-            if (isset($relationModel)) {
-                if ($relationModel->hasKey($key)) {
-                    if ($callback($relationModel[$key]) === false)
-                        unset($relationModel[$key]);
-                }
-            }
-        }
+        return null;
     }
 
     /**
@@ -303,16 +349,26 @@ class ActiveRecordExtended extends ActiveRecord
      * @param ActiveRecordExtended[] $models
      * @return bool
      */
-    public static function saveAndLink($models) {
-        foreach ($models as $model) {
-            if (!$model->save()) return false;
-        }
+    public static function saveAndLink($models)
+    {
+        return static::saveMultiple($models) && static::linkManyToMany($models);
+    }
 
-        for ($i = 0; i < count($models) - 1; $i++) {
+    /**
+     * links all passed models by many to many relation when this is possible
+     * @param ActiveRecordExtended[] $models
+     * @return bool
+     */
+    public static function linkManyToMany($models)
+    {
+        for ($i = 0; $i < count($models) - 1; $i++) {
             for ($j = $i + 1; $j < count($models); $j++) {
-                foreach ($models[i]->relationDataArray as $relationDataItem) {
-                    if ($relationDataItem->modelClass == $models[j]->className()) {
-                        $models[i]->link($relationDataItem->name, $models[j]);
+                foreach ($models[$i]->relationDataArray as $relationDataItem) {
+                    if (
+                        $relationDataItem->modelClass == $models[$j]->className() &&
+                        $relationDataItem->isMultiple === true
+                    ) {
+                        $models[$i]->link($relationDataItem->name, $models[$j]);
                         break;
                     }
                 }
@@ -320,5 +376,39 @@ class ActiveRecordExtended extends ActiveRecord
         }
 
         return true;
+    }
+
+    /**
+     * saves all passed models in correct order and links them by one to one/many relation.
+     * e.g if $models[$i] requires id of $models[$i + 1], latter will be saved first and it's id will be inserted
+     * to $models[$i]
+     * @param ActiveRecordExtended[] $models
+     * @return bool
+     */
+    public static function saveMultiple($models)
+    {
+        foreach ($models as $model)
+            $model->saveOrdered($models);
+
+        return true;
+    }
+
+    /**
+     * @param ActiveRecordExtended[] $models
+     * @return bool
+     */
+    public function saveOrdered($models)
+    {
+        foreach ($models as $model) {
+            if ($model === $this || !$this->isNewRecord) continue;
+
+            if (!is_null($foreignKey = $this->belongsTo($model))) {
+                if (!$model->saveOrdered($models))
+                    return false;
+                $this->$foreignKey = $model->id;
+            }
+        }
+
+        return $this->save();
     }
 }
