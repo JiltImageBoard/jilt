@@ -1,15 +1,17 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: elqua
- * Date: 21.03.2016
- * Time: 21:43
- */
 
 namespace app\models;
 
-
-class BoardRights
+/**
+ * Class BoardRights
+ * @package app\models
+ * relations
+ * @property UserBoardRights[] $userBoardRights
+ */
+class BoardRights extends ActiveRecordExtended
 {
-
+    public function getUserBoardRights()
+    {
+        return $this->hasMany(UserBoardRights::tableName(), ['board_rights_id' => 'id']);
+    }
 }

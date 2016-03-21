@@ -1,15 +1,17 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: elqua
- * Date: 21.03.2016
- * Time: 21:47
- */
 
 namespace app\models;
 
-
+/**
+ * Class ChatRights
+ * @package app\models
+ * relations
+ * @property UserChatRights $userChatRights
+ */
 class ChatRights extends ActiveRecordExtended
 {
-
+    public function getUserChatRights()
+    {
+        return $this->hasMany(UserChatRights::tableName(), ['chat_rights_id' => 'id']);
+    }
 }

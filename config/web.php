@@ -44,7 +44,9 @@ $config = [
             'charset' => 'UTF-8',
         ],
         'user' => [
-            'identityClass' => 'app\models\User'
+            'identityClass' => 'app\models\User',
+            'enableSession' => false,
+            'enableAutoLogin' => true
         ]
     ],
     'controller' => [
