@@ -68,6 +68,13 @@ class Thread extends ActiveRecordExtended implements DeletableInterface
             ]
         ];
     }
+
+    public function rules()
+    {
+        return [
+                ['is_chat', 'default', 'value' => '0'],
+            ];
+    }
     
     public function getDeletedRows(Array &$carry)
     {
@@ -85,5 +92,17 @@ class Thread extends ActiveRecordExtended implements DeletableInterface
             }
         }
         
+    }
+    
+    public function afterSave($insert, $changedAttributes)
+    {
+        parent::afterSave($insert, $changedAttributes);
+        if ($insert) {
+            $tagsArray = Tag::parseTags($this->postData->postMessage->text);
+            foreach ($tagsArray as $tag) {
+                $this->link('tags', $tag);
+            }
+            
+        }
     }
 }

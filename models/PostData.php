@@ -64,6 +64,8 @@ class PostData extends ActiveRecordExtended
     }
 
     private function uploadFiles() {
+        return;
+        //TODO: This method returns debug info, this should be removed
         $fileIds = [];
         foreach ($this->filesToUpload as $file) {
             /**

@@ -18,13 +18,19 @@ class Tag extends ActiveRecordExtended
         return 'tags';
     }
     
-    //TODO: Подождать реализации создания тредов
-    public function parseTags($message)
+    public static function parseTags($message)
     {
         $matches = [];
         $regexp = "/((?<=#)[a-zA-Z]{1,50})/";
         if (preg_match_all($regexp, $message, $matches)) {
-            return $matches;
+            $models = [];
+            foreach ($matches[0] as $tagElement) {
+                $tag = new Tag();
+                $tag->name = $tagElement;
+                $tag->save();
+                $models[] = $tag;
+            }
+          return $models;  
         } 
         return false;
     }
