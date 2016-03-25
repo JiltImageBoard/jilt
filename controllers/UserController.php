@@ -6,6 +6,7 @@ use app\common\classes\ErrorMessage;
 use app\common\filters\AuthFilter;
 use app\common\filters\CsrfFilter;
 use app\models\User;
+use yii\filters\AccessControl;
 use yii\web\Controller;
 
 class UserController extends Controller
@@ -98,17 +99,18 @@ class UserController extends Controller
         //TODO: Check rights
     }
 
+
     public function behaviors()
     {
         return [
-            [
+            /*[
                 'class' => AuthFilter::className(),
             ],
             [
                 'class' => CsrfFilter::className(),
                 'only' => ['create', 'update', 'delete', 'update-cp-rights'],
                 'csrfToken' => \yii::$app->request->post('csrf')
-            ]
+            ]*/
         ];
     }
 }

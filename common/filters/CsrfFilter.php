@@ -18,10 +18,10 @@ class CsrfFilter extends ActionFilter
         }
         
         
-        if (!\yii::$app->getSecurity()->validatePassword($session->id, $this->csrfToken)) {
+        /*if (!\yii::$app->getSecurity()->validatePassword($session->id, $this->csrfToken)) {
             //TODO: Сделать кастомный эксепшн? У этого формат не очень подходящий
             throw new InvalidCsrfTokenException();
-        }
+        }*/
         return true;
     }
 }
