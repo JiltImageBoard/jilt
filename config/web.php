@@ -12,10 +12,21 @@ $config = [
             'enableCsrfValidation' => false,
         ],
         'cache' => [
-            'class' => 'yii\caching\FileCache',
+            'class' => 'yii\caching\MemCache',
+            'useMemcached' => true,
+            'servers' => [
+                [
+                    'host' => '127.0.0.1',
+                    'port' => 11211,
+                ],
+            ],
+        ],
+        'session' => [
+            'class' => 'yii\web\CacheSession',
+            'cache' => 'cache',
         ],
         'errorHandler' => [
-            'errorAction' => 'error/banned',
+            'errorAction' => 'error/not-found',
         ],
         'log' => [
             'traceLevel' => YII_DEBUG ? 3 : 0,
@@ -31,7 +42,7 @@ $config = [
         'response' => [
             'format' => yii\web\Response::FORMAT_JSON,
             'charset' => 'UTF-8',
-        ]
+        ],
     ],
     'controller' => [
         'class' => 'yii\web\Controller',

@@ -2,37 +2,21 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Update Board/title>
+    <title>Update Board</title>
+    
     <script src="https://code.jquery.com/jquery-2.2.0.min.js"></script>
+    <script src="logger.js"></script>
+    <script src="updater.js"></script>
 </head>
 <body>
-<script>
-    $(function() {
-        //hang on event of form with id=myform
-        $("#test").submit(function(e) {
 
-            //prevent Default functionality
-            e.preventDefault();
+<div class="url-watcher">
+    Form action url:<br>
+    <input type="text" id="url" value="">
+    <br><br>
+</div>
 
-            //get the action-url of the form
-            var actionurl = e.currentTarget.action;
-
-            //do your own request an handle the results
-            $.ajax({
-                url: actionurl,
-                type: 'put',
-                dataType: 'json',
-                data: $("#test").serialize(),
-                success: function(data) {
-                    console.log(data);
-                }
-            });
-
-        });
-
-    });
-</script>
-<form id="test" action="/boards/test" method="PUT" accept-charset="UTF-8">
+<form id="testForm" action="/boards/test" method="put" accept-charset="UTF-8">
     name:  <input type="text" name="name" value=""><br>
     description: <input type="text" name="description" value=""><br>
     max_board_pages: <input type="text" name="maxBoardPages" value="1"><br>
@@ -65,5 +49,12 @@
 
     <input type="submit" value="Submit">
 </form>
+
+<div class="log">
+    <br><br><br><br><br>
+    Response from server:<br>
+    <textarea rows="10" cols="100" id="logArea"></textarea>
+</div>
+
 </body>
 </html>

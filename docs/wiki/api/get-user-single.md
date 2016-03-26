@@ -15,14 +15,14 @@
 
 
 #### Example Request
-```javascript
-GET /control-panel/users/5
-```
+`GET /control-panel/users/5`
 
 #### Example Result
-```javascript
+```JSON
 {
-  "username": "admin",
-  "email": "admin@example.com"
+	"username": "test",
+	"email": "test@gmail.com",
+	"created_at": "2016-03-10 14:10:21",
+	"updated_at": "2016-03-10 14:10:21"
 }
 ```
