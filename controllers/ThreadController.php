@@ -37,7 +37,7 @@ class ThreadController extends Controller
         if ($board = Board::find()->where(['name' => $name])->limit(1)->one()) {
             $postData = new PostData();
             $thread = new Thread();
-            $postData->filesToUpload = UploadedFile::getInstancesByName('files');
+            $postData->files = UploadedFile::getInstancesByName('files');
             $thread->boardId = $board->id;
             
             $models = [&$thread, new PostMessage(), &$postData];
