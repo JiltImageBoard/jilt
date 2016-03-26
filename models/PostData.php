@@ -25,9 +25,9 @@ use yii\web\UploadedFile;
 class PostData extends ActiveRecordExtended
 {
     /**
-     * @var UploadedFile[] $filesToUpload
+     * @var UploadedFile[] $files
      */
-    public $filesToUpload;
+    public $files;
 
     /**
      * @return string
@@ -59,24 +59,27 @@ class PostData extends ActiveRecordExtended
 
     public function save($runValidation = true, $attributeNames = null)
     {
-        $this->uploadFiles();
+        $this->saveFiles();
         return parent::save($runValidation, $attributeNames);
     }
 
-    private function uploadFiles() {
+    private function saveFiles() {
         $fileIds = [];
-        foreach ($this->filesToUpload as $file) {
+        foreach ($this->files as $file) {
             /**
              * @var FileFormat $fileFormat
-             * @var FileInfo $fileClass
+             * @var FileInfo $FileClass
              */
-            $fileFormat = FileFormat::find()->where(['file_format' => $file->extension])->one();
-            $FileClassName = 'File' . ucfirst($fileFormat->fileType);
-            $fileClass = new $FileClassName();
-            if ($fileClass->upload())
-                $relatedIds[] = $fileClass->id;
+            $fileFormat = FileFormat::find()->where(['extension' => $file->extension])->one();
+            $FileClass = 'app\models\File' . ucfirst($fileFormat->fileType);
+            $newFileInfo = $FileClass::saveFile($file);
+            if ($newFileInfo)
+                $fileIds[] = $newFileInfo->id;
+            else
+                $this->addError("files", "Error saving file");
         }
- 
+        $this->files = [];
+
         $this->addLazyRelation(FileInfo::className(), 'fileInfos', $fileIds);
     }
 }

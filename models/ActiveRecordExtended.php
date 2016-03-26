@@ -133,15 +133,12 @@ class ActiveRecordExtended extends ActiveRecord
                 foreach ($models as $model) {
                     if ($model) {
                         $relatedModels[$relationName][] = $model;
-                        array_push($existingModelIds, $model->getPrimaryKey());
+                        $existingModelIds[] = $model->getPrimaryKey();
                     }
                 }
 
-                $invalidIds = [];
-                try {
-                    print_r($this->lazyRelations);
-                    $invalidIds = array_diff($ids, $existingModelIds);
-                } catch (ErrorException $e) {}
+                $invalidIds = array_diff($ids, $existingModelIds);
+
                 foreach ($invalidIds as $id) {
                     $this->addError(ErrorMessage::ModelNotFound($relationName, $id));
                     $lazyRelationCheck = false;
@@ -399,6 +396,8 @@ class ActiveRecordExtended extends ActiveRecord
      */
     public function saveOrdered($models)
     {
+        if (!$this->isNewRecord) return true;
+
         foreach ($models as $model) {
             if ($model === $this || !$this->isNewRecord) continue;
 

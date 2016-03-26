@@ -6,7 +6,7 @@ namespace app\models;
  * Class FileFormat
  * @package app\models
  * @property int $id
- * @property string $fileFormat
+ * @property string $extension
  * @property int $fileFormatId
  * @property string $fileType
  * relations
