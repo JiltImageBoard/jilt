@@ -1,6 +1,9 @@
 <?php
 
 namespace app\models;
+
+use yii\behaviors\TimestampBehavior;
+use yii\db\Expression;
 use yii\web\UploadedFile;
 
 /**
@@ -63,7 +66,8 @@ class PostData extends ActiveRecordExtended
         return parent::save($runValidation, $attributeNames);
     }
     
-    private function saveFiles() {
+    private function saveFiles() 
+    {
         $fileIds = [];
         foreach ($this->files as $file) {
             /**
@@ -81,5 +85,17 @@ class PostData extends ActiveRecordExtended
         $this->files = [];
 
         $this->addLazyRelation(FileInfo::className(), 'fileInfos', $fileIds);
+    }
+
+    public function behaviors()
+    {
+        return [
+            [ 
+                'class' => TimestampBehavior::className(),
+                'createdAtAttribute' => 'created_at',
+                'updatedAtAttribute' => 'updated_at',
+                'value' => new Expression('NOW()'),
+            ]
+        ];
     }
 }

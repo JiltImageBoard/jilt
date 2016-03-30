@@ -59,7 +59,6 @@ class BoardController extends Controller
      * @param int $pageNum
      * @return array|\yii\web\Response|bool
      */
-    //TODO: Метод должен возвращать треды с определенной страницы, но $pageNum не участвует в выборке
     public function actionGetPage($name, $pageNum = 0)
     {
         $board = Board::find()
@@ -74,7 +73,7 @@ class BoardController extends Controller
         if ($board) {
             $threadsJson = [];
 
-            // TODO: pagination not implemented lol
+            // TODO: pagination not implemented
             foreach ($board->threads as $thread) {
                 $threadsJson[] = [
                     'boardName' => $thread->board->name,
@@ -85,7 +84,7 @@ class BoardController extends Controller
                     'isOpMarkEnabled' => $thread->isOpMarkEnabled,
                     'name' => $thread->postData->name,
                     'subject' => $thread->postData->subject,
-                    'message' => $thread->postData->message->text,
+                    'message' => $thread->postData->postMessage->text,
                     'files' => [], //TODO: Реализовать файлы
                     'isModPost' => $thread->postData->isModPost,
                     'createdAt' => $thread->postData->createdAt,

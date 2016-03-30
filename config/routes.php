@@ -20,13 +20,13 @@ return [
         'DELETE boards/<name:\w+>/threads/<threadNum:\d+>/?' => 'thread/delete',
 
         /* Chats */
-        'GET boards/<name:\w+>/threads/<threadNum:\d+>/pages/<pageNum:\d+>/?' => 'thread/getPage',
+        'GET boards/<name:\w+>/threads/<threadNum:\d+>/pages/<pageNum:\d+>/?' => 'thread/get-page',
 
         /* Posts */
-        'GET boards/<name:\w+>/threads/<threadNum:\d+>/posts/<createNum:\d+>/?' => 'post/get',
+        'GET boards/<name:\w+>/threads/<threadNum:\d+>/posts/<postNum:\d+>/?' => 'post/get',
         'POST boards/<name:\w+>/threads/<threadNum:\d+>/posts/?' => 'post/create',
-        'PUT boards/<name:\w+>/threads/<threadNum:\d+>/posts/<createNum:\d+>/?' => 'post/update',
-        'DELETE boards/<name:\w+>/threads/<threadNum:\d+>/posts/<createNum:\d+>/?' => 'post/delete',
+        'PUT boards/<name:\w+>/threads/<threadNum:\d+>/posts/<postNum:\d+>/?' => 'post/update',
+        'DELETE boards/<name:\w+>/threads/<threadNum:\d+>/posts/<postNum:\d+>/?' => 'post/delete',
 
         /* Authentication */
         'POST control-panel/login/?' => 'auth/login',
