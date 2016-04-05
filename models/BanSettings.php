@@ -8,7 +8,7 @@ namespace app\models;
  * 
  * @property int $id
  * @property int $ip
- * @property int $subnetwork
+ * @property int $subnet
  * @property string $name
  * @property string $session
  * @property string $message

@@ -13,10 +13,10 @@ class BanFilter extends ActionFilter
     public function beforeAction($action)
     {
         $request = \Yii::$app->urlManager->parseRequest(\Yii::$app->request);
-        $board = Board::findOne(['name' => 'test']);
-        $thread = Thread::findOne(124);
+        $board = Board::findOne(['name' => $request[1]['name']]);
+        $thread = isset($request[1]['threadNum']) ? Thread::findOne($request[1]['threadNum']) : null;
         
-        $ban = new Ban($board,$thread);
+        $ban = new Ban($board, $thread);
         return $ban->check();
     }
 }
