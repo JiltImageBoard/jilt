@@ -21,4 +21,20 @@ class ArrayHelper
 
         return $result;
     }
+
+    /**
+     * @param array $array
+     * @param array $keys
+     * @return array
+     */
+    public static function extract($array, $keys)
+    {
+        $result = [];
+        foreach ($keys as $key) {
+            if (!isset($array[$key])) continue;
+            $result[] = $array[$key];
+        }
+
+        return $result;
+    }
 }

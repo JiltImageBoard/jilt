@@ -20,8 +20,8 @@ use yii\web\IdentityInterface;
  * @property \DateTime $created_at
  * @property \DateTime $updated_at
  * relations
- * @property UserBoardRights[] $boardRights
- * @property UserChatRights[] $chatRights
+ * @property BoardRights[] $boardRights
+ * @property ThreadChatRights[] $chatRights
  */
 class User extends ActiveRecordExtended implements IdentityInterface
 {
@@ -33,14 +33,30 @@ class User extends ActiveRecordExtended implements IdentityInterface
         return 'cp_users';
     }
 
-    public function getBoardRights()
+    /**
+     * @param int $boardId
+     * @return BoardRights[]
+     */
+    public function getBoardRights($boardId = null)
     {
-        return $this->hasMany(UserBoardRights::className(), ['user_id' => 'id']);
+        return $this->hasMany(BoardRights::className(), ['id' => 'board_rights_id'])
+            ->viaTable('cp_users_board_rights', ['user_id' => 'id'], function ($query) use ($boardId) {
+                if ($boardId != null && is_numeric($boardId))
+                    $query->andWhere(['board_id' => $boardId]);
+            });
     }
 
-    public function getChatRights()
+    /**
+     * @param int $threadChatId
+     * @return ThreadChatRights[]
+     */
+    public function getThreadChatRights($threadChatId = null)
     {
-        return $this->hasMany(UserChatRights::className(), ['user_id' => 'id']);
+        return $this->hasMany(ThreadChatRights::className(), ['id' => 'thread_chat_id'])
+            ->viaTable('cp_users_chat_rights', ['user_id' => 'id'], function ($query) use ($threadChatId) {
+                if ($threadChatId != null && is_numeric($threadChatId))
+                    $query->andWhere(['thread_chat_id' => $threadChatId]);
+            });
     }
     
     public function rules()

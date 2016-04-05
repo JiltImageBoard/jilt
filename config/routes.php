@@ -23,10 +23,10 @@ return [
         'GET boards/<name:\w+>/threads/<threadNum:\d+>/pages/<pageNum:\d+>/?' => 'thread/getPage',
 
         /* Posts */
-        'GET boards/<name:\w+>/threads/<threadNum:\d+>/posts/<createNum:\d+>/?' => 'post/get',
+        'GET boards/<name:\w+>/threads/<threadNum:\d+>/posts/<postNum:\d+>/?' => 'post/get',
         'POST boards/<name:\w+>/threads/<threadNum:\d+>/posts/?' => 'post/create',
-        'PUT boards/<name:\w+>/threads/<threadNum:\d+>/posts/<createNum:\d+>/?' => 'post/update',
-        'DELETE boards/<name:\w+>/threads/<threadNum:\d+>/posts/<createNum:\d+>/?' => 'post/delete',
+        'PUT boards/<name:\w+>/threads/<threadNum:\d+>/posts/<postNum:\d+>/?' => 'post/update',
+        'DELETE boards/<name:\w+>/threads/<threadNum:\d+>/posts/<postNum:\d+>/?' => 'post/delete',
 
         /* Authentication */
         'POST control-panel/login/?' => 'auth/login',
@@ -45,8 +45,8 @@ return [
         'PUT control-panel/users/<id:\d+>/cp-rights/?' => 'user/update-cp-rights',
 
         /* Board and chat rights */
-        'GET users/<id:\d+>/rights/?' => 'user/getRights',
-        'PUT users/<id:\d+>/rights/?' => 'user/updateRights',
+        'GET users/<id:\d+>/rights/?' => 'user/get-rights',
+        'PUT users/<id:\d+>/rights/?' => 'user/update-rights',
 
         /* Bans */
         'GET bans/?' => 'ban/index',
@@ -57,6 +57,7 @@ return [
 
         /* Tests */
         '/test/?' => 'test/run',
+        'GET test/delete-post/<name:\w+>/<threadNum:\d+>/<postNum:\d+>/?' => 'test/delete-post',
 
         /* Error handler */
         '<controller:[\S\s]+>' => 'error/not-found'

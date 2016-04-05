@@ -2,30 +2,34 @@
 
 namespace app\controllers;
 
-use app\common\filters\CpAccessControl;
-use app\common\filters\rules\CpAccessRule;
+use app\common\filters\cp\CpAccessControl;
+use app\common\filters\cp\rules\CpAccessRule;
 use app\models\Thread;
 use app\models\User;
 use yii\base\Object;
-use yii\filters\AccessControl;
 use yii\web\Controller;
 
 class TestController extends Controller
 {
     public function actionRun($name = 'test')
     {
-        print_r("test");
+        /**
+         * @var User $user
+         */
+        $user = User::findOne(14);
+        var_dump($user->getBoardRights()->one());
+    }
+
+    public function actionDeletePost($name, $threadNum, $postNum)
+    {
+        print_r('secret text');
     }
 
     public function behaviors()
     {
         return [
             'cpAccess' => [
-                'class' => CpAccessControl::className(),
-                // in the rules for evry action we need we specifying some child of CpAccessRule
-                'rules' => [
-                    'run' => CpAccessRule::className()
-                ]
+                'class' => CpAccessControl::className()
             ]
         ];
     }
