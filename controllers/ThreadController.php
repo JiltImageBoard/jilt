@@ -41,11 +41,13 @@ class ThreadController extends Controller
             $thread->boardId = $board->id;
             
             $models = [&$thread, new PostMessage(), &$postData];
+            
             if (
                 ActiveRecordExtended::loadMultiple(\Yii::$app->request->post(), $models) &&
                 Model::validateMultiple($models)
             ) {
                 if (ActiveRecordExtended::saveAndLink($models)) {
+                    //TODO: return thread presented like from ->toArray() method (don't work now)
                     return 'yayyy(ne yay)';
                 }
             }

@@ -2,35 +2,34 @@
 
 namespace app\controllers;
 
-use app\common\filters\cp\CpAccessControl;
-use app\common\filters\cp\rules\CpAccessRule;
+use app\common\classes\RelationData;
+use app\models\Board;
 use app\models\Thread;
-use app\models\User;
+<<<<<<< Temporary merge branch 1
+use app\common\helpers\StringHelper;
 use yii\base\Object;
+=======
+use app\models\User;
+>>>>>>> Temporary merge branch 2
 use yii\web\Controller;
 
 class TestController extends Controller
 {
     public function actionRun($name = 'test')
     {
-        /**
-         * @var User $user
-         */
-        $user = User::findOne(14);
-        var_dump($user->getBoardRights()->one());
+<<<<<<< Temporary merge branch 1
+        echo '<pre>';
+        echo '</pre>';
+=======
+        
+>>>>>>> Temporary merge branch 2
     }
+}
 
-    public function actionDeletePost($name, $threadNum, $postNum)
+class TestClass
+{
+    public static function test()
     {
-        print_r('secret text');
-    }
-
-    public function behaviors()
-    {
-        return [
-            'cpAccess' => [
-                'class' => CpAccessControl::className()
-            ]
-        ];
+        print_r("asdsadsa");
     }
 }

@@ -62,7 +62,7 @@ class PostData extends ActiveRecordExtended
         $this->saveFiles();
         return parent::save($runValidation, $attributeNames);
     }
-
+    
     private function saveFiles() {
         $fileIds = [];
         foreach ($this->files as $file) {
@@ -79,10 +79,7 @@ class PostData extends ActiveRecordExtended
                 $this->addError("files", "Error saving file");
         }
         $this->files = [];
- 
+
         $this->addLazyRelation(FileInfo::className(), 'fileInfos', $fileIds);
-        /*print_r("kek!" . PHP_EOL);
-        print_r($this->lazyRelations);
-        print_r("/kek!" . PHP_EOL);*/
     }
 }
