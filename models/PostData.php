@@ -62,7 +62,7 @@ class PostData extends ActiveRecordExtended
         $this->saveFiles();
         return parent::save($runValidation, $attributeNames);
     }
-
+    
     private function saveFiles() {
         $fileIds = [];
         foreach ($this->files as $file) {
