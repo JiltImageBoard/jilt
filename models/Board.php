@@ -56,7 +56,7 @@ class Board extends ActiveRecordExtended implements DeletableInterface
      */
     public function setFileFormats($ids)
     {
-        $this->addLazyRelation(FileFormat::className(), 'fileFormats', $ids);
+        if ($this->isNewRecord) $this->fileFormats = $ids;
     }
     
     public function getWordFilters()
@@ -70,7 +70,7 @@ class Board extends ActiveRecordExtended implements DeletableInterface
      */
     public function setWordFilters($ids)
     {
-        $this->addLazyRelation(WordFilter::className(), 'wordFilters', $ids);
+        if ($this->isNewRecord) $this->wordFilters = $ids;
     }
     
     public function getFileRatings()
@@ -84,7 +84,7 @@ class Board extends ActiveRecordExtended implements DeletableInterface
      */
     public function setFileRatings($ids)
     {
-        $this->addLazyRelation(FileRating::className(), 'fileRatings', $ids);
+        if ($this->isNewRecord) $this->fileRatings = $ids;
     }
     
     public function getMarkupTypes()
@@ -98,7 +98,7 @@ class Board extends ActiveRecordExtended implements DeletableInterface
      */
     public function setMarkupTypes($ids)
     {
-        $this->addLazyRelation(MarkupType::className(), 'markupTypes', $ids);
+        if ($this->isNewRecord) $this->fileRatings = $ids;
     }
     
     public function getThreads()
