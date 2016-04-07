@@ -17,9 +17,23 @@ use app\common\helpers\StringHelper;
 class ActiveRecordExtended extends ActiveRecord
 {
     /**
-     * @var RelationData[] $relationDataArray
+     * @var RelationData[]
      */
     public $relationDataArray = null;
+    /**
+     * Fields which will not be displayed through toArray() method
+     * @var array
+     */
+    protected $hidden = [];
+    /**
+     * Associative array, where prop name can be binded with relation name, from model of which property will be taken
+     * For example:
+     * when $delegatedFields = ['board' => thread],
+     * expression: $post->thread->board will be equal to $post->thread...nu i vot nahui ono nado lol..
+     * This gives some advantage when if u want apply hereditary behaviour to model attributes
+     * See FileInfo and it's descendants for real example
+     * @var array
+     */
     protected $delegatedFields = [];
 
     public function __construct(array $config = [])
@@ -147,40 +161,6 @@ class ActiveRecordExtended extends ActiveRecord
     }
 
     /**
-     * Returns all model fields and relations id's.
-     * @param array $fieldsToUnset Fields which shouldn't be printed
-     * @return array
-     */
-    /*public function toArray(...$fieldsToUnset)
-    {
-        $attributes = $this->attributes;
-        $data = [];
-        
-        foreach ($attributes as $key => $value) {
-            $data[StringHelper::underscoreToCamelCase($key)] = $value;
-        }
-
-        foreach ($this->relationDataArray as $relationData) {
-            if ($relationData->isMultiple) {
-                foreach ($this->{$relationData->name} as $relationModel) {
-                    $data[$relationData->name][] = $relationModel['id'];
-                }
-            } else {
-                $data[$relationData->name] = $this->{$relationData->name}->id;
-            }
-
-
-        }
-
-        foreach ($fieldsToUnset as $field) {
-            if (array_key_exists($field, $data)) {
-                unset($data[$field]);
-            }
-        }
-        return $data;
-    }*/
-
-    /**
      * @param array $fields
      * @param array $expand
      * @param bool|true $recursive
@@ -188,22 +168,14 @@ class ActiveRecordExtended extends ActiveRecord
      */
     public function toArray(array $fields = [], array $expand = [], $recursive = true)
     {
-        $data = parent::toArray(ArrayHelper::valuesToUnderscore($fields), $expand, $recursive);
-        $data = ArrayHelper::keysToCamelCase($data);
-
-
-        $relations = $this->relationDataArray;
-        foreach ($relations as $relation) {
-            if (!empty($fields) && !isset($fields[$relation->name])) continue;
-
-            if ($relation->isMultiple) {
-                foreach ($this->{$relation->name} as $relationModel) {
-                    $data[$relation->name][] = $relationModel['id'];
-                }
-            } else {
-                $data[$relation->name] = $this->{$relation->name}->id;
-            }
+        if (empty($fields)) {
+            $fields = $this->fields();
         }
+
+        $fields = array_diff($fields, $this->hidden);
+
+        $data = parent::toArray(ArrayHelper::valuesToUnderscore($fields), $expand, $recursive);
+        ArrayHelper::keysToCamelCase($data);
 
         return $data;
     }
