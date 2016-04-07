@@ -17,14 +17,24 @@ use app\common\helpers\StringHelper;
 class ActiveRecordExtended extends ActiveRecord
 {
     /**
-     * @var RelationData[] $relationDataArray
+     * @var RelationData[]
      */
     public $relationDataArray = null;
-    protected $delegatedFields = [];
     /**
-     * @var array[]
+     * Fields which will not be displayed through toArray() method
+     * @var array
      */
-    protected $lazyRelations = [];
+    protected $hidden = [];
+    /**
+     * Associative array, where prop name can be binded with relation name, from model of which property will be taken
+     * For example:
+     * when $delegatedFields = ['board' => thread],
+     * expression: $post->thread->board will be equal to $post->thread...nu i vot nahui ono nado lol..
+     * This gives some advantage when if u want apply hereditary behaviour to model attributes
+     * See FileInfo and it's descendants for real example
+     * @var array
+     */
+    protected $delegatedFields = [];
 
     public function __construct(array $config = [])
     {
@@ -107,70 +117,40 @@ class ActiveRecordExtended extends ActiveRecord
     }
 
     /**
-     * Links related models specified in lazyRelations array by many-to-many relation type
-     * @param bool $runValidation
-     * @param null $attributeNames
-     * @return bool
+     * @param bool $insert
+     * @param array $changedAttributes
      */
-    public function save($runValidation = true, $attributeNames = null)
+    public function afterSave($insert, $changedAttributes)
     {
-        $lazyRelationCheck = true;
-        $relatedModels = [];
+        parent::afterSave($insert, $changedAttributes);
+        if (!$insert) return;
 
-        foreach ($this->lazyRelations as $modelClass => $relationInfo) {
-            if (!$lazyRelationCheck) break;
+        $vars = get_object_vars($this);
+        $relations = $this->relationDataArray;
 
-            if (class_exists($modelClass)) {
-                $relationName = $relationInfo['relationName'];
-                $ids = $relationInfo['ids'];
+        // extracting models from ids, set in props and linking them
+        // props with ids should be equal to relation names
+        foreach ($vars as $var => $value) {
+            foreach ($relations as $relation) {
+                if ($var == $relation->name) {
+                    $ModelClass = $relation->modelClass;
+                    $ids = is_array($value) ? $value : [$value];
+                    $models = $ModelClass::find()->where(['id' => $ids]);
 
-                /**
-                 * @var ActiveRecord[] $models
-                 * @var ActiveRecord $modelClass
-                 */
-                $models = $modelClass::find()->where(['id' => $ids])->all();
-                $existingModelIds = [];
-                foreach ($models as $model) {
-                    if ($model) {
-                        $relatedModels[$relationName][] = $model;
-                        $existingModelIds[] = $model->getPrimaryKey();
-                    }
+                    foreach ($models as $model) $this->link($var, $model);
+                    unset($this->$var);
                 }
-
-                $invalidIds = array_diff($ids, $existingModelIds);
-
-                foreach ($invalidIds as $id) {
-                    $this->addError(ErrorMessage::ModelNotFound($relationName, $id));
-                    $lazyRelationCheck = false;
-                }
-            } else {
-                $this->addError(ErrorMessage::ClassNotFound($modelClass));
-                $lazyRelationCheck = false;
-                break;
             }
         }
-
-        if ($lazyRelationCheck) {
-            if (parent::save($runValidation, $attributeNames)) {
-                foreach ($relatedModels as $relationName => $models) {
-                    foreach ($models as $model) {
-                        $this->link($relationName, $model);
-                    }
-                }
-                return true;
-            }
-        }
-
-        $this->addError(ErrorMessage::ModelLinkingError());
-        return false;
     }
+
 
     /**
      * @param array|ErrorMessage $error|string
      * @param string|null $message
      * return void
      */
-    public function addError ($error, $message = null)
+    public function addError($error, $message = null)
     {
         if ($message != null) {
             parent::addError($error, $message);
@@ -181,38 +161,25 @@ class ActiveRecordExtended extends ActiveRecord
     }
 
     /**
-     * Returns all model fields and relations id's.
-     * @param array $fieldsToUnset Fields which shouldn't be printed
+     * @param array $fields
+     * @param array $expand
+     * @param bool|true $recursive
      * @return array
      */
-    public function toArray(...$fieldsToUnset)
+    public function toArray(array $fields = [], array $expand = [], $recursive = true)
     {
-        $attributes = $this->attributes;
-        $data = [];
-        
-        foreach ($attributes as $key => $value) {
-            $data[StringHelper::underscoreToCamelCase($key)] = $value;
+        if (empty($fields)) {
+            $fields = $this->fields();
         }
 
-        foreach ($this->relationDataArray as $relationData) {
-            if ($relationData->isMultiple) {
-                foreach ($this->{$relationData->name} as $relationModel) {
-                    $data[$relationData->name][] = $relationModel['id'];
-                }
-            } else {
-                $data[$relationData->name] = $this->{$relationData->name}->id;
-            }
+        $fields = array_diff($fields, $this->hidden);
 
+        $data = parent::toArray(ArrayHelper::valuesToUnderscore($fields), $expand, $recursive);
+        ArrayHelper::keysToCamelCase($data);
 
-        }
-
-        foreach ($fieldsToUnset as $field) {
-            if (array_key_exists($field, $data)) {
-                unset($data[$field]);
-            }
-        }
         return $data;
     }
+
 
     /**
      * Loads data into models
@@ -242,19 +209,6 @@ class ActiveRecordExtended extends ActiveRecord
         }
         return true;
     }
-
-    protected function addLazyRelation($modelName, $relationName, $relatedIds)
-    {
-        $relatedIds = ArrayHelper::getNumericSubset($relatedIds);
-
-        if (isset($this->lazyRelations[$modelName])) {
-            $this->lazyRelations[$modelName]['ids'] = array_merge($this->lazyRelations[$modelName], $relatedIds);
-        } else {
-            $this->lazyRelations[$modelName]['ids'] = $relatedIds;
-            $this->lazyRelations[$modelName]['relationName'] = $relationName;
-        }
-    }
-
 
     /**
      * Accesses delegated to some relation field and if it there is such relation with field $key,
