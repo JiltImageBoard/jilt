@@ -10,6 +10,9 @@ use app\models\BanSettings;
  * Checks if user banned by all data we can work with
  * 
  * @package app\common\classes
+ * 
+ * @property $board борда на которую идёт пост
+ * @property $thread тред на который идёт пост
  */
 class Ban
 {
@@ -81,44 +84,25 @@ class Ban
     public function check()
     {
         $query = BanSettings::find()
-        ->select('
-        bans_settings.ip as ip,
-        bans_settings.subnet as subnet,
-        bans_settings.name as name,
-        bans_settings.session as session,
-        bans_settings.message as message,
-        bans_settings.files_info_id as fileId,
-        bans_settings.country as country,
-        bans_settings.created_at as createdAt,
-        bans_settings.updated_at as updatedAt,
-        bans_settings.banned_until as bannedUntil,
-        bans_settings.reason_for_user as reasonForUser,
-        bans_settings.banned_by as bannedBy,
-        bans_settings.ban_user_on_violation as banUserOnViolation,
-        bans_global.id as globalBanId,
-        bans_boards.id as boardBanId
-        ')
             
         /**
-         *  Join bans_global, bans_boards and optionally bans_threads and bans_chat_pages
+         *  Join bans_boards and optionally bans_threads and bans_chat_pages
          */
-        ->join('LEFT JOIN', 'bans_global', 'bans_global.bans_settings_id = bans_settings.id')
             
         ->join('LEFT JOIN', 'bans_boards', 'bans_boards.bans_settings_id = bans_settings.id')
-                ->where(['bans_boards.id' => $this->board->id]);
+            ->where(['bans_boards.id' => $this->board->id]);
         
         if ($this->scenario = 'inThread') {
             $query->join('LEFT JOIN', 'bans_threads', 'bans_threads.bans_settings_id = bans_settings.id')
-            ->orWhere(['bans_threads.id' => $this->thread->id]);
+                ->orWhere(['bans_threads.id' => $this->thread->id]);
         }
-        
-        //TODO: implement chats
-        /**
+
+        /** TODO: implement chats
         if ($this->scenario = 'inChat') {
-            $query->join('INNER JOIN', 'bans_chat_pages', 'bans_chat_pages.bans_settings_id = bans_settings.id')
+            $query->join('LEFT JOIN', 'bans_chat_pages', 'bans_chat_pages.bans_settings_id = bans_settings.id')
                 ->orWhere(['bans_chat_pages.id' => $this->thread->id]);
         }
-        */
+         */
 
         /**
          *  Select all data we can retrieve from user
@@ -129,13 +113,48 @@ class Ban
             ->orWhere(['message' => $this->message])
             ->orWhere(['files_info_id' => 1])
             ->orWhere(['country' => 'UA']);
+
+        $desu = $query->createCommand()->rawSql;
         
-        $asd = $query->createCommand()->rawSql;
-        
-        $desu = $query->all();
-        foreach ($query->all() as $ban) {
-            $bans[] = $ban;
+        if (empty($query->all())) {
+            return true;
         }
-        return true;
+
+        /**
+         * @var BanSettings $ban
+         */
+        foreach ($query->all() as $ban) {
+            
+            if (!empty($ban->global->id)) {
+                if ($ban->banUserOnViolation) {
+                    $this->banStrict();
+                }
+                //TODO: return GlobalBannedException($ban->reasonForUser)
+            } 
+            
+            if (!empty($ban->boards)) {
+                foreach ($ban->boards as $board) {
+                    if ($this->board->id === $board->id) {
+                        if ($ban->banUserOnViolation) {
+                            $this->banStrict();
+                        }
+                        //TODO: return BoardBannedException($ban->reasonForUser)
+                    }
+                }
+                
+            } 
+            
+            if (!empty($ban->threads)) {
+                foreach ($ban->threads as $thread) {
+                    if ($this->thread->id === $thread->id) {
+                        if ($ban->banUserOnViolation) {
+                            $this->banStrict();
+                        }
+                        //TODO: return ThreadBannedException($ban->reasonForUser)
+                    }
+                }
+            }
+        }
+        return false;
     }
 }
