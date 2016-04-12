@@ -27,7 +27,6 @@ class BoardController extends Controller
                 $boardCounter = new BoardCounter();
                 $boardCounter->boardId = $board->id;
                 $boardCounter->save();
-
                 \Yii::$app->response->setStatusCode(201);
                 return $this->actionGet($board->name);
             }
@@ -105,7 +104,7 @@ class BoardController extends Controller
     public function actionGet($name)
     {
         if ($board = Board::find()->where(['name' => $name])->limit(1)->one()) {
-                return $board->toArray('id', 'counter');
+                return $board->toArray(['id', 'counter']);
         }
 
         \Yii::$app->response->setStatusCode(404);

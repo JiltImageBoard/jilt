@@ -130,15 +130,17 @@ class ActiveRecordExtended extends ActiveRecord
 
         // extracting models from ids, set in props and linking them
         // props with ids should be equal to relation names
-        foreach ($vars as $var => $value) {
+        foreach ($vars as $propName => $value) {
             foreach ($relations as $relation) {
-                if ($var == $relation->name) {
-                    $ModelClass = $relation->modelClass;
-                    $ids = is_array($value) ? $value : [$value];
-                    $models = $ModelClass::find()->where(['id' => $ids]);
-
-                    foreach ($models as $model) $this->link($var, $model);
-                    unset($this->$var);
+                if ($propName == $relation->name) {
+                    unset($this->$propName);
+                    if (!empty($value)) {
+                        $ModelClass = $relation->modelClass;
+                        $ids = $value;
+                        $models = $ModelClass::find()->where(['id' => $ids])->all();
+                        foreach ($models as $model) $this->link($relation->name, $model);
+                    }
+                    break;
                 }
             }
         }
