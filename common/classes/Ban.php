@@ -117,6 +117,7 @@ class Ban
         } 
         //TODO: if in chat
         
+
 //        $query->andFilterWhere(['or',
 //            ['ip' => ip2long($this->ip)],
 //            ['name' => $this->name],
@@ -125,16 +126,14 @@ class Ban
 //            ['files_info_id' => 1],
 //            ['country' => 'UA']
 //        ]);
-
-//        $query->orWhere(['ip' => ip2long($this->ip)])
-//            ->orWhere(['name' => $this->name])
-//            ->orWhere(['session' => $this->session])
-//            ->orWhere(['message' => $this->message])
-//            ->orWhere(['files_info_id' => 1])
-//            ->orWhere(['country' => 'UA']);
-
-
-        $desu = $query->createCommand()->rawSql;
+        //TODO: переделать нормально
+        $query->orWhere(['ip' => ip2long($this->ip)])
+            ->orWhere(['name' => $this->name])
+            ->orWhere(['session' => $this->session])
+            ->orWhere(['message' => $this->message])
+            ->orWhere(['files_info_id' => 1])
+            ->orWhere(['country' => 'UA']);
+        
 
         if (empty($query->all())) {
             return true;
