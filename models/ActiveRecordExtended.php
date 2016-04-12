@@ -2,6 +2,7 @@
 
 namespace app\models;
 use app\common\classes\ErrorMessage;
+use app\common\classes\RelationsManager;
 use app\common\helpers\ArrayHelper;
 use app\common\classes\RelationData;
 use yii\base\ErrorException;
@@ -14,7 +15,7 @@ use app\common\helpers\StringHelper;
  * Class ActiveRecordExtended
  * @package app\models
  */
-class ActiveRecordExtended extends ActiveRecord
+abstract class ActiveRecordExtended extends ActiveRecord
 {
     /**
      * @var RelationData[]

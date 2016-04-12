@@ -42,14 +42,14 @@ class ArrayHelper
      * @param $array
      * @return array
      */
-    public static function keysToCamelCase($array)
+    public static function keysToCamelCase(&$array)
     {
         foreach ($array as $key => $value) {
-            $array[StringHelper::camelCaseToUnderscore($key)] = $value;
+            $formattedKey = StringHelper::underscoreToCamelCase($key);
+            if ($formattedKey === $key) continue;
+            $array[StringHelper::underscoreToCamelCase($key)] = $value;
             unset($array[$key]);
         }
-
-        return $array;
     }
 
     public static function valuesToUnderscore($array)
