@@ -43,6 +43,11 @@ $config = [
             'format' => yii\web\Response::FORMAT_JSON,
             'charset' => 'UTF-8',
         ],
+        'user' => [
+            'identityClass' => 'app\models\User',
+            'enableSession' => false,
+            'enableAutoLogin' => true
+        ]
     ],
     'controller' => [
         'class' => 'yii\web\Controller',

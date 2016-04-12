@@ -17,14 +17,11 @@ class CsrfFilter extends ActionFilter
             throw new InvalidCsrfTokenException();
         }
         
-        $session = \yii::$app->session;
-        $session->open();
         
-        
-        if (!\yii::$app->getSecurity()->validatePassword($session->id, $this->csrfToken)) {
+        /*if (!\yii::$app->getSecurity()->validatePassword($session->id, $this->csrfToken)) {
             //TODO: Сделать кастомный эксепшн? У этого формат не очень подходящий
             throw new InvalidCsrfTokenException();
-        }
+        }*/
         return true;
     }
 }
