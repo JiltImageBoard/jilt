@@ -21,12 +21,8 @@ class BoardController extends Controller
     {
         //TODO: Check authorization.
         $board = new Board();
-
         if ($board->load(\Yii::$app->request->post()) && $board->validate()) {
             if ($board->save()) {
-                $boardCounter = new BoardCounter();
-                $boardCounter->boardId = $board->id;
-                $boardCounter->save();
                 \Yii::$app->response->setStatusCode(201);
                 return $this->actionGet($board->name);
             }
@@ -103,8 +99,8 @@ class BoardController extends Controller
      */
     public function actionGet($name)
     {
-        if ($board = Board::find()->where(['name' => $name])->limit(1)->one()) {
-                return $board->toArray(['id', 'counter']);
+        if ($board = Board::findOne(['name' => $name])) {
+            return $board->toArray();
         }
 
         \Yii::$app->response->setStatusCode(404);

@@ -110,12 +110,11 @@ class Board extends ActiveRecordExtended implements DeletableInterface
     {
         return $this->hasOne(BoardCounter::className(), ['board_id' => 'id']);
     }
-    
-    public function prepareToDelete()
-    {
-        
-    }
-    
+
+    /**
+     * Rules for validation
+     * @return array
+     */
     public function rules()
     {
         return [
@@ -156,7 +155,7 @@ class Board extends ActiveRecordExtended implements DeletableInterface
             ['is_closed', 'boolean'],
         ];
     }
-    
+
 
     public function behaviors()
     {
@@ -169,6 +168,15 @@ class Board extends ActiveRecordExtended implements DeletableInterface
             ]
         ];
     }
+
+    public function afterSave($insert, $changedAttributes)
+    {
+        parent::afterSave($insert, $changedAttributes);
+        $boardCounter = new BoardCounter();
+        $boardCounter->boardId = $this->id;
+        $boardCounter->save();
+    }
+
 
     public function getDeletedRows(Array &$carry) 
     {
