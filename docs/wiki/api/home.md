@@ -1,6 +1,3 @@
-## Response errors
-* [Errors](errors.md)
-
 ## Boards
 * [POST /api/boards/](create-board.md)
 * [GET /api/boards/](get-boards.md)
