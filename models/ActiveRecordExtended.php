@@ -175,13 +175,11 @@ class ActiveRecordExtended extends ActiveRecord
         }
 
         $fields = array_diff($fields, $this->hidden);
-
         $data = parent::toArray(ArrayHelper::valuesToUnderscore($fields), $expand, $recursive);
         ArrayHelper::keysToCamelCase($data);
 
         return $data;
     }
-
 
     /**
      * Loads data into models
