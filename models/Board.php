@@ -34,8 +34,8 @@ use app\common\interfaces;
  * @property \app\models\WordFilter[] $wordFilters
  * @property \app\models\FileRating[] $fileRatings
  * @property \app\models\MarkupType[] $markupTypes
- * @property-read \app\models\Thread[] $threads
- * @property-read \app\models\BoardCounter $counter
+ * @property \app\models\Thread[] $threads
+ * @property \app\models\BoardCounter $counter
  */
 class Board extends ActiveRecordExtended implements DeletableInterface
 {
