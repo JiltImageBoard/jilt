@@ -3,6 +3,7 @@
 namespace app\controllers;
 
 use app\common\classes\MultiLoader;
+use app\common\filters\BanFilter;
 use app\common\helpers\DataFormatter;
 use app\models\ActiveRecordExtended;
 use app\models\Board;
@@ -48,7 +49,7 @@ class ThreadController extends Controller
             ) {
                 if (ActiveRecordExtended::saveAndLink($models)) {
                     //TODO: return thread presented like from ->toArray() method (don't work now)
-                    return 'yayyy(ne yay)';
+                    return 'Thread created';
                 }
             }
 
@@ -75,5 +76,14 @@ class ThreadController extends Controller
     public function delete($name, $threadNum)
     {
 
+    }
+
+    public function behaviors()
+    {
+        return [
+            [
+                'class' => BanFilter::className()
+            ]
+        ];
     }
 }

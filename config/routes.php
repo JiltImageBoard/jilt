@@ -20,7 +20,7 @@ return [
         'DELETE boards/<name:\w+>/threads/<threadNum:\d+>/?' => 'thread/delete',
 
         /* Chats */
-        'GET boards/<name:\w+>/threads/<threadNum:\d+>/pages/<pageNum:\d+>/?' => 'thread/getPage',
+        'GET boards/<name:\w+>/threads/<threadNum:\d+>/pages/<pageNum:\d+>/?' => 'thread/get-page',
 
         /* Posts */
         'GET boards/<name:\w+>/threads/<threadNum:\d+>/posts/<postNum:\d+>/?' => 'post/get',

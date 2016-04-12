@@ -58,7 +58,7 @@ class AuthController extends Controller
         $session->open();
         return \yii::$app->getSecurity()->generatePasswordHash($session->id);
     }
-
+    
     public function behaviors()
     {
         return [
