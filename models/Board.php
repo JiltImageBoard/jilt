@@ -98,7 +98,7 @@ class Board extends ActiveRecordExtended implements DeletableInterface
      */
     public function setMarkupTypes($ids)
     {
-        if ($this->isNewRecord) $this->fileRatings = $ids;
+        if ($this->isNewRecord) $this->markupTypes = $ids;
     }
     
     public function getThreads()
