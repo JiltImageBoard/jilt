@@ -13,16 +13,16 @@
 |----------|--------------------|----------------------|-------------
 | `string` | yes                | name                 | Name of new board
 | `string` | optional           | description          | Description of a new board
-| `int`    | default: 1         | minFileSize        | Min file size in bytes
-| `int`    | default: 20971520  | maxFileSize        | Max file size in bytes
-| `string` | default: 1x1       | minImageResolution | Min image resolution in format {width}x{height}
-| `string` | default: 5000x5000 | maxImageResolution | Max image resolution in format {width}x{height}
-| `int`    | default: 30000     | maxMessageLength   | Max count of chars for message
-| `int`    | default: 15        | maxThreadsOnPage  | Max number of threads that board page can contain
-| `int`    | default: 100       | maxBoardPages      | Max number of pages that board can contain
-| `int`    | default: 500       | threadMaxPosts     | Max count of posts that thread on that board can contain
-| `string` | default: 'Anon'    | defaultName         | Default name
-| `bool`   | default: false     | isClosed            | Is board closed
+| `int`    | default: 1         | minFileSize          | Min file size in bytes
+| `int`    | default: 20971520  | maxFileSize          | Max file size in bytes
+| `string` | default: 1x1       | minImageResolution   | Min image resolution in format {width}x{height}
+| `string` | default: 5000x5000 | maxImageResolution   | Max image resolution in format {width}x{height}
+| `int`    | default: 30000     | maxMessageLength     | Max count of chars for message
+| `int`    | default: 15        | maxThreadsOnPage     | Max number of threads that board page can contain
+| `int`    | default: 100       | maxBoardPages        | Max number of pages that board can contain
+| `int`    | default: 500       | threadMaxPosts       | Max count of posts that thread on that board can contain
+| `string` | default: 'Anon'    | defaultName          | Default name
+| `bool`   | default: false     | isClosed             | Is board closed
 | `array`  | yes                | fileFormats          | File formats ids
 | `array`  | yes                | wordFilters          | Wordfilters ids
 | `array`  | yes                | fileRatings          | File ratings ids
@@ -39,7 +39,7 @@
 ```
 
 #### Example Result
-```
+```JSON
 HTTP/1.1 201 OK
 {
 	"id": 1,

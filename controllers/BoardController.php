@@ -38,8 +38,10 @@ class BoardController extends Controller
     public function actionGetAll()
     {
         $boards = [];
+        /** @var Board $board */
         foreach (Board::find()->all() as $board) {
             $boards[] = [
+                'id'  => $board->id,
                 'name' => $board->name,
                 'description' => $board->description
             ];

@@ -1,5 +1,5 @@
 #### Resource URL
-`GET /api/boards/{name}/pages/{page_num}`
+`GET /api/boards/{name}/pages/{pageNum}`
 
 #### Description
   Gets threads from the board
@@ -13,17 +13,15 @@
 | type     | required           | name                 | description
 |----------|--------------------|----------------------|-------------
 | `string` | yes                | name                 | Name of board
-| `int`    | default:0          | page_num             | Page number
+| `int`    | default:0          | pageNum              | Page number
 
 
 #### Example Request
-```javascript
-GET /boards/test/pages/0
-```
+`GET /boards/test/pages/0`
 
 //TODO: Доделать файлы
 #### Example Result
-```
+```JSON
 [{
 	"boardName": "test",
 	"number": 1,

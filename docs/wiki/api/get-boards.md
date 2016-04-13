@@ -10,17 +10,17 @@
 
 
 #### Example Request
-```javascript
-GET /api/boards/
-```
+`GET /api/boards/`
 
 #### Example Result
-```
+```JSON
 HTTP/1.1 200 OK
 [{
+    "id": 1,
 	"name": "test1",
 	"description": "test1"
 }, {
+    "id": 2,
 	"name": "test",
 	"description": "Test board"
 }]
