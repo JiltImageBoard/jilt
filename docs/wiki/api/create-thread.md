@@ -23,8 +23,8 @@
 | `bool`   | optional | is_chat              | Is chat
 
 #### Example Request
-```javascript
-POST /boards/test/threads
+`POST /boards/test/threads`
+```JSON
 {
   "name": "Anon",
   "text": "Example message",
@@ -33,9 +33,7 @@ POST /boards/test/threads
 ```
 
 #### Example Result
-```javascript
-{
-  "errorCode": 0,
-  "errorMessage": ""
-}
+Status code: `201`
+```JSON
+
 ```

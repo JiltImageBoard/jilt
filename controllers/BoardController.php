@@ -58,13 +58,8 @@ class BoardController extends Controller
      */
     public function actionGetPage($name, $pageNum = 0)
     {
+        /** @var Board $board */
         $board = Board::find()
-            ->joinWith([
-                'threads' => function ($query) {
-                    $query->orderBy('updated_at');
-                },
-                'threads.postData'
-            ])
             ->where(['boards.name' => $name])
             ->one();
         if ($board) {
@@ -73,6 +68,7 @@ class BoardController extends Controller
             // TODO: pagination not implemented
             foreach ($board->threads as $thread) {
                 $threadsJson[] = [
+                    'id' => $thread->id,
                     'boardName' => $thread->board->name,
                     'number' => $thread->number,
                     'isSticked' => $thread->isSticked,
@@ -85,7 +81,7 @@ class BoardController extends Controller
                     'files' => [], //TODO: Реализовать файлы
                     'isModPost' => $thread->postData->isModPost,
                     'createdAt' => $thread->postData->createdAt,
-                    'updatedAt' => $thread->postData->updatedAt
+                    'updatedAt' => $thread->updatedAt
                 ];
             }
             return $threadsJson;

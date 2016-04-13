@@ -103,7 +103,9 @@ class Board extends ActiveRecordExtended implements DeletableInterface
     
     public function getThreads()
     {
-        return $this->hasMany(Thread::className(), ['board_id' => 'id']);
+        return $this->hasMany(Thread::className(), ['board_id' => 'id'])
+            ->orderBy(['updated_at' => SORT_DESC]);
+        
     }
 
     public function getCounter()

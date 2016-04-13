@@ -91,7 +91,7 @@ class Ban
 
         ->join('LEFT JOIN', 'bans_boards', 'bans_boards.bans_settings_id = bans_settings.id');
 
-        if ($this->scenario = 'inThread') {
+        if ($this->scenario == 'inThread') {
             $query->join('LEFT JOIN', 'bans_threads', 'bans_threads.bans_settings_id = bans_settings.id');
         }
 
@@ -105,7 +105,7 @@ class Ban
         /**
          *  Select all data we can retrieve from user
          */
-        if ($this->scenario = 'inThread') {
+        if ($this->scenario == 'inThread') {
             $query->where([
                 'bans_boards.id' => $this->board->id,
                 'bans_threads.id' => $this->thread->id
