@@ -31,7 +31,6 @@
 #### Example Request
 `POST /boards/`
 ```JSON
-
 {
    "name": "test",
    "description": "Test board"
@@ -39,22 +38,22 @@
 ```
 
 #### Example Result
+Status code: `201`
 ```JSON
-HTTP/1.1 201 OK
 {
 	"id": 1,
 	"name": "test",
 	"description": "Test board",
-	"createdAt": "2016-04-12 15:19:51",
-	"updatedAt": "2016-04-12 15:19:51",
+	"createdAt": "2016-04-13 11:06:13",
+	"updatedAt": "2016-04-13 11:06:13",
 	"minFileSize": 1,
-	"maxFileSize": 1,
-	"minImageResolution": "1",
-	"maxImageResolution": "1",
-	"maxMessageLength": 1,
-	"maxThreadsOnPage": 1,
-	"maxBoardPages": 1,
-	"threadMaxPosts": 1,
+	"maxFileSize": 20971520,
+	"minImageResolution": "1x1",
+	"maxImageResolution": "5000x5000",
+	"maxMessageLength": 30000,
+	"maxThreadsOnPage": 15,
+	"maxBoardPages": 100,
+	"threadMaxPosts": 500,
 	"defaultName": "Anon",
 	"isClosed": 0,
 	"isDeleted": 0

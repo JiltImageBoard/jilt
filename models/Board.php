@@ -153,6 +153,9 @@ class Board extends ActiveRecordExtended implements DeletableInterface
 
             ['is_closed', 'default', 'value' => '0'],
             ['is_closed', 'boolean'],
+            
+            [['fileFormats', 'wordFilters', 'fileRatings', 'markupTypes'], 'required'],
+            [['fileFormats', 'wordFilters', 'fileRatings', 'markupTypes'], 'each', 'rule' => ['integer']],
         ];
     }
 

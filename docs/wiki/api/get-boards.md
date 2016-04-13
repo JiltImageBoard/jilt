@@ -13,15 +13,15 @@
 `GET /api/boards/`
 
 #### Example Result
+Status code: `200`
 ```JSON
-HTTP/1.1 200 OK
 [{
     "id": 1,
-	"name": "test1",
-	"description": "test1"
-}, {
+	"name": "Test board 1",
+	"description": "Test board 1"
+},{
     "id": 2,
-	"name": "test",
-	"description": "Test board"
-}]
+   	"name": "Test board 2",
+   	"description": "Test board 2"
+   }]
 ```
