@@ -18,21 +18,20 @@ class Tag extends ActiveRecordExtended
         return 'tags';
     }
     
-    public static function parseTags($message)
+    public static function parse($message)
     {
-        $matches = [];
+        $models = [];
         $regexp = '/(?:^|\W+)#(\p{L}+)/u';
         if (preg_match_all($regexp, $message, $matches)) {
             $models = [];
             foreach ($matches[1] as $tagElement) {
-                $tag = new Tag();
-                $tag->name = $tagElement;
+                $tag = new Tag(['name' => $tagElement]);
                 $tag->save();
                 $models[] = $tag;
             }
-          return $models;  
         } 
-        return false;
+
+        return $models;
     }
     
     public function getThreads()

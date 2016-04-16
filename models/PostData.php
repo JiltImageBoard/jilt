@@ -60,6 +60,11 @@ class PostData extends ActiveRecordExtended
             ->viaTable('post_data_files_info', ['post_data_id' => 'id']);
     }
 
+    public function setFileInfos($ids)
+    {
+        if ($this->isNewRecord) $this->fileInfos = $ids;
+    }
+
     public function save($runValidation = true, $attributeNames = null)
     {
         $this->saveFiles();
@@ -74,7 +79,7 @@ class PostData extends ActiveRecordExtended
              * @var FileFormat $fileFormat
              * @var FileInfo $FileClass
              */
-            $fileFormat = FileFormat::find()->where(['extension' => $file->extension])->one();
+            $fileFormat = FileFormat::findOne(['extension' => $file->extension]);
             $FileClass = 'app\models\File' . ucfirst($fileFormat->fileType);
             $newFileInfo = $FileClass::saveFile($file);
             if ($newFileInfo)
@@ -82,9 +87,9 @@ class PostData extends ActiveRecordExtended
             else
                 $this->addError("files", "Error saving file");
         }
-        $this->files = [];
 
-        $this->addLazyRelation(FileInfo::className(), 'fileInfos', $fileIds);
+        $this->files = [];
+        $this->fileInfos= $fileIds;
     }
 
     public function behaviors()

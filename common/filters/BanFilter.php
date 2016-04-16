@@ -9,7 +9,6 @@ use yii\base\ActionFilter;
 
 class BanFilter extends ActionFilter
 {
-    
     public function beforeAction($action)
     {
         $request = \Yii::$app->urlManager->parseRequest(\Yii::$app->request);

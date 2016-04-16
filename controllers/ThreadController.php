@@ -35,13 +35,12 @@ class ThreadController extends Controller
      */
     public function actionCreate($name)
     {
-        if ($board = Board::find()->where(['name' => $name])->limit(1)->one()) {
-            $postData = new PostData();
-            $thread = new Thread();
-            $postData->files = UploadedFile::getInstancesByName('files');
-            $thread->boardId = $board->id;
-            
-            $models = [&$thread, new PostMessage(), &$postData];
+        if ($board = Board::findOne(['name' => $name])) {
+            $models = [
+                new Thread(['boardId' => $board->id]),
+                new PostMessage(),
+                new PostData(['files' => UploadedFile::getInstancesByName('files')])
+            ];
             
             if (
                 ActiveRecordExtended::loadMultiple(\Yii::$app->request->post(), $models) &&

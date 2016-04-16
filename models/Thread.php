@@ -98,7 +98,7 @@ class Thread extends ActiveRecordExtended implements DeletableInterface
     {
         parent::afterSave($insert, $changedAttributes);
         if ($insert) {
-            $tagsArray = Tag::parseTags($this->postData->postMessage->text);
+            $tagsArray = Tag::parse($this->postData->postMessage->text);
             foreach ($tagsArray as $tag) {
                 $this->link('tags', $tag);
             }
