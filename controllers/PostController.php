@@ -10,7 +10,7 @@ class PostController extends Controller
 
     public function actionCreate($name, $threadNum)
     {
-        return true;
+
     }
 
     public function behaviors()

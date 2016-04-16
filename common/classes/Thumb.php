@@ -17,22 +17,26 @@ class Thumb
      */
     private static function selectStrategy($filePath)
     {
-        if (file_exists($filePath)) {
-            $pathInfo = pathinfo($filePath);
-            $extension = $pathInfo['extension'];
-            if ($extension) {
-                $ConcreteStrategy = __NAMESPACE__ . '\\' . ucfirst($extension) . 'ThumbCreationStrategy';
-                if (class_exists($ConcreteStrategy)) {
-                    return new $ConcreteStrategy($filePath);
-                } else {
-                    // TODO: throw exception?
-                    print_r('Thumb creation strategy is not implemented for [' . $extension . '] files');
-                }
-            } else {
-                // TODO: throw exception
-                print_r('File format was not specified');
-            }
+        if (!file_exists($filePath)) {
+            print_r('FIle does not exists');
+            return;
         }
+
+        $pathInfo = pathinfo($filePath);
+        $extension = $pathInfo['extension'];
+
+        if (!$extension) {
+            print_r('File format was not specified');
+            return;
+        }
+
+        $ConcreteStrategy = __NAMESPACE__ . '\\' . ucfirst($extension) . 'ThumbCreationStrategy';
+        if (!class_exists($ConcreteStrategy)) {
+            print_r('Thumb creation strategy is not implemented for [' . $extension . '] files');
+            return;
+        }
+
+        return new $ConcreteStrategy($filePath);
     }
 }
 
@@ -45,6 +49,7 @@ abstract class ThumbCreationStrategy
     protected $thumbWidth;
     protected $thumbHeight;
     protected $thumbPath;
+    protected $thumbFile;
 
     /**
      * @param string $sourceFilePath
@@ -54,6 +59,7 @@ abstract class ThumbCreationStrategy
         $this->sourceFilePath = $sourceFilePath;
         $this->initSizes();
         $this->initThumbPath();
+        $this->thumbFile = imagecreatetruecolor($this->thumbWidth, $this->thumbHeight);
     }
 
     protected function initSizes()
@@ -80,53 +86,83 @@ abstract class ThumbCreationStrategy
         $this->thumbWidth = $newWidth;
         $this->thumbHeight = $newHeight;
     }
+
     protected function initThumbPath()
     {
         $pathInfo = pathinfo($this->sourceFilePath);
         $this->thumbPath = $pathInfo['filename'] . '_thumb' . '.' . $pathInfo['extension'];
     }
+
     abstract public function execute();
 }
 
-class PngThumbCreationStrategy extends ThumbCreationStrategy
+abstract class ImageThumbCreationStrategy extends ThumbCreationStrategy
 {
     public function execute()
     {
-        $thumbFile = imagecreatetruecolor($this->thumbWidth, $this->thumbHeight);
-        $sourceFile = imagecreatefrompng($this->sourceFilePath);
+        $imageCreateFunc = $this->getImageCreateFunc();
+        $imageSaveFunc = $this->getImageSaveFunc();
+
+        $sourceFile = $imageCreateFunc($this->sourceFilePath);
         // PSR-2 violation, i know, but.. 4 lines for 4 zeros? That's not okay.
         imagecopyresized(
-            $thumbFile, $sourceFile, 0, 0, 0, 0,
+            $this->thumbFile, $sourceFile, 0, 0, 0, 0,
             $this->thumbWidth, $this->thumbHeight, $this->sourceWidth, $this->sourceHeight
         );
-        imagepng($thumbFile, $this->thumbPath);
+        $imageSaveFunc($this->thumbFile, $this->thumbPath);
     }
+
+    /**
+     * @return string
+     */
+    abstract protected function getImageCreateFunc();
+
+    /**
+     * @return string
+     */
+    abstract protected function getImageSaveFunc();
 }
 
-class JpgThumbCreationStrategy extends ThumbCreationStrategy
+class PngThumbCreationStrategy extends ImageThumbCreationStrategy
 {
-    public function execute()
+    protected function getImageCreateFunc()
     {
-        $thumbFile = imagecreatetruecolor($this->thumbWidth, $this->thumbHeight);
-        $sourceFile = imagecreatefromjpeg($this->sourceFilePath);
-        imagecopyresized(
-            $thumbFile, $sourceFile, 0, 0, 0, 0,
-            $this->thumbWidth, $this->thumbHeight, $this->sourceWidth, $this->sourceHeight
-        );
-        imagejpeg($thumbFile, $this->thumbPath);
+        return 'imagecreatefrompng';
     }
+
+    protected function getImageSaveFunc()
+    {
+        return 'imagepng';
+    }
+
 }
 
-class GifThumbCreationStrategy extends ThumbCreationStrategy
+class JpgThumbCreationStrategy extends ImageThumbCreationStrategy
 {
-    public function execute()
+    protected function getImageCreateFunc()
     {
-        $thumbFile = imagecreatetruecolor($this->thumbWidth, $this->thumbHeight);
-        $sourceFile = imagecreatefromgif($this->sourceFilePath);
-        imagecopyresized(
-            $thumbFile, $sourceFile, 0, 0, 0, 0,
-            $this->thumbWidth, $this->thumbHeight, $this->sourceWidth, $this->sourceHeight
-        );
-        imagegif($thumbFile, $this->thumbPath);
+        return 'imagecreatefromjpg';
     }
+
+    protected function getImageSaveFunc()
+    {
+        return 'imagejpg';
+    }
+
+}
+
+class JpegThumbCreationStrategy extends JpgThumbCreationStrategy {}
+
+class GifThumbCreationStrategy extends ImageThumbCreationStrategy
+{
+    protected function getImageCreateFunc()
+    {
+        return 'imagecreatefromgif';
+    }
+
+    protected function getImageSaveFunc()
+    {
+        return 'imagegif';
+    }
+
 }
