@@ -19,7 +19,7 @@ class Thumb
     {
         if (!file_exists($filePath)) {
             print_r('FIle does not exists');
-            return;
+            return null;
         }
 
         $pathInfo = pathinfo($filePath);
@@ -27,13 +27,13 @@ class Thumb
 
         if (!$extension) {
             print_r('File format was not specified');
-            return;
+            return null;
         }
 
         $ConcreteStrategy = __NAMESPACE__ . '\\' . ucfirst($extension) . 'ThumbCreationStrategy';
         if (!class_exists($ConcreteStrategy)) {
             print_r('Thumb creation strategy is not implemented for [' . $extension . '] files');
-            return;
+            return null;
         }
 
         return new $ConcreteStrategy($filePath);
