@@ -90,13 +90,12 @@ class UserController extends Controller
     
     public function actionGetCpRights($id)
     {
-        //TODO: Check rights
-        
+        return 'Not implemented';
     }
 
     public function actionUpdateCpRights($id)
     {
-        //TODO: Check rights
+        return 'Not implemented';
     }
 
 

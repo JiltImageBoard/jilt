@@ -28,6 +28,7 @@
 ```
 
 #### Example Result
+Status code: `200`
 ```JSON
 
 ```

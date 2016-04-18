@@ -12,6 +12,7 @@
 `GET /control-panel/users`
 
 #### Example Result
+Status code: `200`
 ```JSON
 [{
 	"id": 2,
