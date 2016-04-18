@@ -45,8 +45,8 @@ return [
         'PUT control-panel/users/<id:\d+>/cp-rights/?' => 'user/update-cp-rights',
 
         /* Board and chat rights */
-        'GET users/<id:\d+>/rights/?' => 'user/get-rights',
-        'PUT users/<id:\d+>/rights/?' => 'user/update-rights',
+        'GET control-panel/users/<id:\d+>/rights/?' => 'user/get-rights',
+        'PUT control-panel/users/<id:\d+>/rights/?' => 'user/update-rights',
 
         /* Bans */
         'GET bans/?' => 'ban/index',

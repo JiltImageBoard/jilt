@@ -98,6 +98,16 @@ class UserController extends Controller
         return 'Not implemented';
     }
 
+    public function actionGetRights($id)
+    {
+        return 'Not implemented';
+    }
+
+    public function actionUpdateRights($id)
+    {
+        return 'Not implemented';
+    }
+
 
 //    public function behaviors()
 //    {
