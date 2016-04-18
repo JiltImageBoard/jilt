@@ -30,6 +30,7 @@
 * [POST /api/control-panel/login](cp-login.md)
 * [POST /api/control-panel/logout](cp-logout.md)
 * [POST /api/control-panel/resetpassword](cp-reset-password.md)
+* [GET /api/control-panel/csrf-token/](get-csrf-token.md)
 
 
 #### Users
