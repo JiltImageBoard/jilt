@@ -23,5 +23,20 @@
 #### Example Result
 Status code: `200`
 ```JSON
-
+[{
+	"id": 135,
+	"boardName": "test",
+	"number": 2,
+	"isSticked": 0,
+	"isLocked": 0,
+	"isChat": 0,
+	"isOpMarkEnabled": 0,
+	"name": "Anon",
+	"subject": "Test",
+	"message": "Test",
+	"files": [],
+	"isModPost": 0,
+	"createdAt": "2016-04-18 08:35:38",
+	"updatedAt": "2016-04-18 08:35:38"
+}]
 ```

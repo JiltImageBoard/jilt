@@ -16,18 +16,10 @@
 
 
 #### Example Request
-```javascript
-POST /control-panel/resetpassword
-{
-  "odl_password": "admin",
-  "new_password": "admin22",
-}
+`POST /control-panel/resetpassword`
+```JSON
+
 ```
 
 #### Example Result
-```javascript
-{
-  "errorCode": 0,
-  "errorMessage": ""
-}
-```
+Status code: `200`

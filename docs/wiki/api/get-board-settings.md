@@ -15,33 +15,28 @@
 
 
 #### Example Request
-```javascript
-GET /api/boards/test
-```
+`GET /api/boards/test`
+
 #### Example Result
-```
-HTTP/1.1 200 OK
+Status code: `200`
+```JSON
 {
+	"id": 86,
 	"name": "test",
 	"description": "Test board",
-	"created_at": "2016-02-17 13:24:21",
-	"updated_at": "2016-02-21 15:08:03",
-	"min_file_size": 1,
-	"max_file_size": 1,
-	"min_image_resolution": "1",
-	"max_image_resolution": "1",
-	"max_message_length": 1,
-	"max_threads_on_page": 1,
-	"max_board_pages": 1,
-	"thread_max_posts": 1,
-	"default_name": "Anon",
-	"is_closed": 0,
-	"is_deleted": 0,
-	"fileFormats": [1, 2],
-	"wordFilters": [1],
-	"fileRatings": [1],
-	"markupTypes": [1],
-	"threads": [3, 4]
+	"createdAt": "2016-02-17 13:24:21",
+	"updatedAt": "2016-02-22 10:54:44",
+	"minFileSize": 1,
+	"maxFileSize": 1,
+	"minImageResolution": "1",
+	"maxImageResolution": "1",
+	"maxMessageLength": 1,
+	"maxThreadsOnPage": 1,
+	"maxBoardPages": 1,
+	"threadMaxPosts": 1,
+	"defaultName": "Anon",
+	"isClosed": 0,
+	"isDeleted": 0
 }
 ```
 

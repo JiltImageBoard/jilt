@@ -26,10 +26,6 @@
 ```
 
 #### Example Result
-```JSON
-{
-  "errorCode": 0,
-  "errorMessage": ""
-}
-```
+Status code: `200`
+
 `Cookie: PHPSESSID={token}`

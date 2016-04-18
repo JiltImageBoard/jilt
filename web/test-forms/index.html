@@ -7,24 +7,57 @@
 <body>
 <br>
 <b>Борда:</b><br>
+<a href="/boards/test">get-board</a> <br>
 <a href="create-board.html">create-board</a> <br>
 <a href="update-board.html">update-board</a> <br>
+<a href="delete-board.html">delete-board</a> <br>
+
 <br>
+
 <b>Тред:</b><br>
-<a href="create-thread.html">create-thread</a><br>
+<a href="/boards/test/threads/135">get-thread</a> <br>
+<a href="create-thread.html">create-thread</a> <br>
+<a href="update-thread.html">update-thread</a> <br>
+<a href="delete-thread.html">delete-thread</a> <br>
+
 <br>
+
+<b>Чат:</b><br>
+<a href="/boards/test/threads/135/pages/2">get-chat-page</a> <br>
+
+<br>
+
 <b>Пост:</b><br>
-<a href="create-post.html">create-post</a><br>
+<a href="/boards/test/threads/135/posts/1">get-post</a> <br>
+<a href="create-post.html">create-post</a> <br>
+<a href="update-post.html">update-post</a> <br>
+<a href="delete-post.html">delete-post</a> <br>
+
 <br>
+
+<b>Авторизация</b><br>
+<a href="cp-login.html">cp-login</a> <br>
+<a href="cp-logout.html">cp-logout</a> <br>
+<a href="cp-reset-password.html">cp-reset-password</a> <br>
+<a href="/control-panel/csrf-token/">csrf token</a> <br>
+
+<br>
+
 <b>Пользователи:</b><br>
+<a href="/control-panel/users">cp-get-users</a> <br>
 <a href="cp-create-user.html">cp-create-user</a> <br>
+<a href="/control-panel/users/14">cp-get-single-user</a> <br>
 <a href="cp-update-user.html">cp-update-user</a> <br>
 <a href="cp-delete-user.html">cp-delete-user</a> <br>
 <br>
-<b>Авторизация</b><br>
-<a href="/control-panel/csrf-token/">csrf token</a><br>
-<a href="cp-login.html">cp-login</a> <br>
-<a href="cp-logout.html">cp-logout</a> <br>
+<a href="/control-panel/users/15/cp-rights">cp-get-user-cp-rights</a> <br>
+<a href="cp-update-user-cp-rights.html">cp-update-user-cp-rights</a> <br>
+
+<br>
+
+<b>Права на доски и треды:</b><br>
+<a href="/control-panel/users/14/rights">cp-get-user-rights</a> <br>
+<a href="cp-update-user-rights.html">cp-update-user-rights</a> <br>
 <br>
 </body>
 </html>

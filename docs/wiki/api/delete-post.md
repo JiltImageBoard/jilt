@@ -17,14 +17,9 @@
 
 
 #### Example Request
-```javascript
-DELETE /boards/test/threads/123/posts/55
-```
+`DELETE /boards/test/threads/123/posts/1`
 
 #### Example Result
-```javascript
-{
-  "errorCode": 0,
-  "errorMessage": ""
-}
+Status code: `204`
+
 ```

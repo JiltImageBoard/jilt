@@ -25,20 +25,17 @@
 
 
 #### Example Request
-```javascript
-PUT /boards/test/threads/123/posts/55
+`PUT /boards/test/threads/123/posts/1`
+```JSON
 {
   "name": "Anon",
   "message": "Edited message",
   "subject": "Edited subject"
-  "imges": []
 }
 ```
 
 #### Example Result
-```javascript
-{
-  "errorCode": 0,
-  "errorMessage": ""
-}
+
+Status code: `200`
+```JSON
 ```

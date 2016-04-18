@@ -31,13 +31,13 @@ return [
         /* Authentication */
         'POST control-panel/login/?' => 'auth/login',
         'POST control-panel/logout/?' => 'auth/logout',
-        'GET control-panel/logout/?' => 'auth/logout', /* временно? */ 
+        'GET control-panel/logout/?' => 'auth/logout', /* временно */ 
         'POST control-panel/reset-password/?' => 'auth/reset-password',
         'GET  control-panel/csrf-token/?' => 'auth/get-csrf-token',
 
         /* Users */
-        'POST control-panel/users/?' => 'user/create',
         'GET control-panel/users/?' => 'user/get-all',
+        'POST control-panel/users/?' => 'user/create',
         'GET control-panel/users/<id:\d+>/?' => 'user/get',
         'PUT control-panel/users/<id:\d+>/?' => 'user/update',
         'DELETE control-panel/users/<id:\d+>/?' => 'user/delete',
@@ -45,8 +45,8 @@ return [
         'PUT control-panel/users/<id:\d+>/cp-rights/?' => 'user/update-cp-rights',
 
         /* Board and chat rights */
-        'GET users/<id:\d+>/rights/?' => 'user/get-rights',
-        'PUT users/<id:\d+>/rights/?' => 'user/update-rights',
+        'GET control-panel/users/<id:\d+>/rights/?' => 'user/get-rights',
+        'PUT control-panel/users/<id:\d+>/rights/?' => 'user/update-rights',
 
         /* Bans */
         'GET bans/?' => 'ban/index',

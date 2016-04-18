@@ -24,18 +24,13 @@
 
 
 #### Example Request
-```javascript
-POST /boards/test/threads/123/posts
-{
-  "name": "Anon",
-  "message": "Example message"
-}
+`POST /boards/test/threads/123/posts`
+```JSON
+
 ```
 
 #### Example Result
-```javascript
-{
-    "errorCode": 0,
-    "errorMessage": ""
-}
+Status code: `201`
+```JSON
+
 ```

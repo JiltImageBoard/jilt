@@ -90,27 +90,34 @@ class UserController extends Controller
     
     public function actionGetCpRights($id)
     {
-        //TODO: Check rights
-        
+        return 'Not implemented';
     }
 
     public function actionUpdateCpRights($id)
     {
-        //TODO: Check rights
+        return 'Not implemented';
     }
 
-
-    public function behaviors()
+    public function actionGetRights($id)
     {
-        return [
-            /*[
-                'class' => AuthFilter::className(),
-            ],
-            [
-                'class' => CsrfFilter::className(),
-                'only' => ['create', 'update', 'delete', 'update-cp-rights'],
-                'csrfToken' => \yii::$app->request->post('csrf')
-            ]*/
-        ];
+        return 'Not implemented';
     }
+
+    public function actionUpdateRights($id)
+    {
+        return 'Not implemented';
+    }
+
+
+//    public function behaviors()
+//    {
+//        return [
+//            
+//            [
+//                'class' => CsrfFilter::className(),
+//                'only' => ['create', 'update', 'delete', 'update-cp-rights'],
+//                'csrfToken' => \yii::$app->request->post('csrf')
+//            ]
+//        ];
+//    }
 }

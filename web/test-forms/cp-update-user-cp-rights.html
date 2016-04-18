@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Update User Cp Rights</title>
+
+    <script src="https://code.jquery.com/jquery-2.2.0.min.js"></script>
+    <script src="logger.js"></script>
+    <script src="updater.js"></script>
+</head>
+<body>
+
+<div class="url-watcher">
+    Form action url:<br>
+    <input type="text" id="url" value="">
+    <br><br>
+</div>
+
+<form id="testForm" action="/control-panel/users/14/cp-rights" method="put" accept-charset="UTF-8" enctype="application/x-www-form-urlencoded">
+
+    <input type="submit" value="Submit">
+</form>
+
+<div class="log">
+    <br><br><br><br><br>
+    Response from server:<br>
+    <textarea rows="10" cols="100" id="logArea"></textarea>
+</div>
+
+</body>
+</html>

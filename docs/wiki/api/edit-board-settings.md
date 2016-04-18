@@ -35,13 +35,13 @@
 
 
 #### Example Request
-```javascript
-PUT /boards/test/
+`PUT /boards/test/`
+```JSON
 {
   "name": "test",
   "description": "A test board",
   "min_file_size": 1,
-  "max_file_sze": 1000,
+  "max_file_sze": 1,
   "min_image_resolution": "1000x1000",
   "max_image_resolution": "5000x5000",
   "max_message_length": 300,
@@ -57,6 +57,24 @@ PUT /boards/test/
 }
 ```
 #### Example Result
-```javascript
-//TODO: Example Result
+Status code: `200`
+```JSON
+{
+	"id": 86,
+	"name": "test",
+	"description": "A test board",
+	"createdAt": "2016-02-17 13:24:21",
+	"updatedAt": "2016-04-18 08:59:15",
+    "min_file_size": 1,
+    "max_file_sze": 1,
+    "min_image_resolution": "1000x1000",
+    "max_image_resolution": "5000x5000",
+    "max_message_length": 300,
+    "max_threads_on_page": 5,
+    "max_board_pages": 100,
+    "thread_max_posts": 500,
+	"defaultName": "Anon",
+	"isClosed": 0,
+	"isDeleted": 0
+}
 ```

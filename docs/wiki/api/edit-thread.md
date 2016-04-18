@@ -20,24 +20,20 @@
 | `string` | optional | name                 | Poster name
 | `string` | optional | subject              | Thread subject
 | `string` | optional | message              | Thread message
-| `array`  | optional | images               | Thread images
 
 
 #### Example Request
-```javascript
-PUT /boards/test/threads/123/edit
+`PUT /boards/test/threads/123/`
+```JSON
 {
   "name": "Anon",
   "message": "Edited message",
-  "subject": "Edited subject",
-  "images": []
+  "subject": "Edited subject"
 }
 ```
 
 #### Example Result
-```javascript
-{
-  "errorCode": 0,
-  "errorMessage": ""
-}
+Status code: `200`
+```JSON
+
 ```
