@@ -134,6 +134,11 @@ class User extends ActiveRecordExtended implements IdentityInterface
         return $this->authKey;
     }
 
+    protected function setAuthKey($value)
+    {
+        return $this->authKey = $value;
+    }
+
     public function validateAuthKey($authKey)
     {
         return $this->getAuthKey() === $authKey;
