@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Update Thread</title>
+
+    <script src="https://code.jquery.com/jquery-2.2.0.min.js"></script>
+    <script src="logger.js"></script>
+    <script src="updater.js"></script>
+    
+</head>
+<body>
+
+<div class="url-watcher">
+    Form action url:<br>
+    <input type="text" id="url" value="">
+    <br><br>
+</div>
+
+<form id="testForm" action="/boards/test/threads/135" method="put" accept-charset="UTF-8" enctype="multipart/form-data">
+    Name: <br><input type="text" name="name" value="Anon"><br>
+    Subj: <br><input type="text" name="subject" value=""><br>
+    Text: <br><textarea name="text" cols="40" rows="10"></textarea><br>
+    Is chat : <input type="checkbox" name="isChat"/><br>
+    Files: <br>
+    <input type="file" name="files[]"><br>
+    <input type="file" name="files[]"><br>
+    <input type="file" name="files[]"><br>
+    <input type="file" name="files[]"><br>
+    <br><input type="submit" value="Submit">
+</form>
+
+<div class="log">
+    <br><br><br><br><br>
+    Response from server:<br>
+    <textarea rows="10" cols="100" id="logArea"></textarea>
+</div>
+
+</body>
+</html>

@@ -16,14 +16,10 @@
 
 
 #### Example Request
-```javascript
-DELETE /boards/test/threads/123
-```
+`DELETE /boards/test/threads/123`
 
 #### Example Result
-```javascript
-{
-  "errorCode": 0,
-  "errorMessage": ""
-}
+Status code: `204`
+```JSON
+
 ```
