@@ -25,8 +25,8 @@ use yii\web\IdentityInterface;
  */
 class User extends ActiveRecordExtended implements IdentityInterface
 {
-    
     const SCENARIO_UPDATE = 'update';
+    protected $hidden = ['password', 'salt'];
     
     public static function tableName()
     {

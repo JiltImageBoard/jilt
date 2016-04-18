@@ -34,7 +34,7 @@ class UserController extends Controller
             /**
              * @var User $user
              */
-            $users[] = $user->toArray('password', 'cpRights', 'boardRights', 'chatRights');
+            $users[] = $user->toArray();
         }
 
         return $users;
@@ -44,7 +44,7 @@ class UserController extends Controller
     public function actionGet($id)
     {
         //TODO: Check rights user get only self related info
-        return User::findOne($id)->toArray('password', 'salt');
+        return User::findOne($id)->toArray();
     }
     
     public function actionUpdate($id)
