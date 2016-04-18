@@ -2,7 +2,7 @@
 `GET /api/control-panel/users/{id}/cp-rights`
 
 #### Description
-  Gets user rights for control panel.
+  Gets user rights for board.
 
 #### Resource information:
   Requires authentication: yes    
@@ -15,15 +15,10 @@
 
 
 #### Example Request
-```javascript
-GET /control-panel/users/5/cp-rights
-```
+`GET /api/control-panel/users/5/cp-rights`
 
 #### Example Result
-```javascript
-{
-  "can_create_boards": false,
-  "can_delete_boards": false,
-  "is_admin": false
-}
+Status code: `200`
+```JSON
+
 ```
