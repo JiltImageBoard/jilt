@@ -17,9 +17,10 @@
 
 
 #### Example Request
-`GET /boards/test/threads/5/pages/10`
+`GET /boards/test/threads/123/pages/2`
 
 #### Example Result
 Status code: `200`
 ```JSON
+
 ```

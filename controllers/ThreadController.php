@@ -28,6 +28,11 @@ class ThreadController extends Controller
     {
         return 'Not implemented';
     }
+    
+    public function actionGetPage($name, $threadNum, $pageNum)
+    {
+        return 'Not implemented';
+    }
 
     /**
      * @param string $name
@@ -64,7 +69,7 @@ class ThreadController extends Controller
      * @param int $threadNum
      * @return string
      */
-    public function update($name, $threadNum)
+    public function actionUpdate($name, $threadNum)
     {
         return 'Not implemented';
     }
@@ -74,7 +79,7 @@ class ThreadController extends Controller
      * @param int $threadNum
      * @return string
      */
-    public function delete($name, $threadNum)
+    public function actionDelete($name, $threadNum)
     {
         return 'Not implemented';
     }
