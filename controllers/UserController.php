@@ -100,17 +100,15 @@ class UserController extends Controller
     }
 
 
-    public function behaviors()
-    {
-        return [
-            /*[
-                'class' => AuthFilter::className(),
-            ],
-            [
-                'class' => CsrfFilter::className(),
-                'only' => ['create', 'update', 'delete', 'update-cp-rights'],
-                'csrfToken' => \yii::$app->request->post('csrf')
-            ]*/
-        ];
-    }
+//    public function behaviors()
+//    {
+//        return [
+//            
+//            [
+//                'class' => CsrfFilter::className(),
+//                'only' => ['create', 'update', 'delete', 'update-cp-rights'],
+//                'csrfToken' => \yii::$app->request->post('csrf')
+//            ]
+//        ];
+//    }
 }

@@ -9,14 +9,7 @@
   Response formats: `JSON`
 
 #### Example Request
-```javascript
 `POST /control-panel/logout`
-```
 
 #### Example Result
-```javascript
-{
-  "errorCode": 0,
-  "errorMessage": ""
-}
-```
+Status code: `200`

@@ -31,7 +31,7 @@ return [
         /* Authentication */
         'POST control-panel/login/?' => 'auth/login',
         'POST control-panel/logout/?' => 'auth/logout',
-        'GET control-panel/logout/?' => 'auth/logout', /* временно? */ 
+        'GET control-panel/logout/?' => 'auth/logout', /* временно */ 
         'POST control-panel/reset-password/?' => 'auth/reset-password',
         'GET  control-panel/csrf-token/?' => 'auth/get-csrf-token',
 
