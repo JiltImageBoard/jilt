@@ -38,15 +38,18 @@ class FileImage extends FileInfo
      */
     public static function saveFile($file)
     {
-        if ($fileInfo = parent::saveFile($file)) {
+        $fileInfo = parent::saveFile($file);
+        if (!$fileInfo) return false;
+
+        if ($fileInfo->isNewFile) {
             $fileImage = new FileImage();
             list($fileImage->width, $fileImage->height) = getimagesize($fileInfo->filePath);
             $fileImage->filesInfoId = $fileInfo->id;
             $fileImage->save();
-
-            Thumb::create($fileInfo->filePath);
         }
 
-        return false;
+        Thumb::create($fileInfo->filePath);
+
+        return $fileInfo;
     }
 }

@@ -18,6 +18,11 @@ use yii\web\UploadedFile;
  */
 class FileInfo extends ActiveRecordExtended
 {
+    /**
+     * @var bool if file was saved right now and was not yielded from the db search
+     */
+    public $isNewFile = false;
+
     public static function tableName()
     {
         return 'files_info';
@@ -42,6 +47,12 @@ class FileInfo extends ActiveRecordExtended
         return $this->hasOne(FileFormat::className(), ['id' => 'file_formats_id']);
     }
 
+    public function save($runValidation = true, $attributeNames = null)
+    {
+        $this->isNewFile = $this->getIsNewRecord();
+        $this->save($runValidation, $attributeNames);
+    }
+
     /**
      * @param UploadedFile $file
      * @return FileInfo|bool
@@ -52,27 +63,30 @@ class FileInfo extends ActiveRecordExtended
 
         $fileWithSameHash = FileInfo::find()->where(['hash' => $checkSum])->one();
 
-        if (!$fileWithSameHash) {
-            $newId = FileInfo::find()->select('id')->max('id') + 1;
-            $filePath = $file->baseName . '_' . $newId . '.' . $file->extension;
-
-            if ($file->saveAs($filePath)) {
-                $fileFormat = FileFormat::find()->where(['extension' => $file->extension])->one();
-                $newFileInfo = new FileInfo();
-                $newFileInfo->id = $newId;
-                $newFileInfo->filePath = $filePath;
-                $newFileInfo->originalName = $file->baseName;
-                $newFileInfo->hash = $checkSum;
-                $newFileInfo->fileFormatsId = $fileFormat->id;
-                $newFileInfo->size = $file->size;
-
-                if ($newFileInfo->save())
-                    return $newFileInfo;
-            } else {
-                return false;
-            }
-        } else {
+        if ($fileWithSameHash) {
             return $fileWithSameHash;
         }
+
+        $newId = FileInfo::find()->select('id')->max('id') + 1;
+        $filePath = $file->baseName . '_' . $newId . '.' . $file->extension;
+
+        if (!$file->saveAs($filePath)) {
+            return false;
+        }
+
+        $fileFormat = FileFormat::find()->where(['extension' => $file->extension])->one();
+        $newFileInfo = new FileInfo();
+        $newFileInfo->id = $newId;
+        $newFileInfo->filePath = $filePath;
+        $newFileInfo->originalName = $file->baseName;
+        $newFileInfo->hash = $checkSum;
+        $newFileInfo->fileFormatsId = $fileFormat->id;
+        $newFileInfo->size = $file->size;
+
+        if (!$newFileInfo->save()) {
+            return false;
+        }
+
+        return $newFileInfo;
     }
 }

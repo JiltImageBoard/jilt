@@ -28,9 +28,14 @@ use yii\web\UploadedFile;
 class PostData extends ActiveRecordExtended
 {
     /**
-     * @var UploadedFile[] $files
+     * @var UploadedFile[]
      */
     public $files;
+
+    /**
+     * @var FileFormat[]
+     */
+    public $allowedFormats;
 
     /**
      * @return string
@@ -42,10 +47,22 @@ class PostData extends ActiveRecordExtended
 
     public function rules()
     {
-        // TODO: we should get rule values from board config
+        $extensions = [];
+        foreach ($this->allowedFormats as $allowedFormat)
+            $extensions[] = $allowedFormat->extension;
+        $filesAllowed = !empty($extensions);
+
+        // message => null means here, that we are using yii default message
         // TODO: webm files not loading for some reason
         return [
-            [['files'], 'file', 'skipOnEmpty' => true, 'extensions' => 'png, jpg, htm', 'maxFiles' => 4]
+            [
+                ['files'],
+                'file',
+                'skipOnEmpty' => true,
+                'extensions' => $filesAllowed ? $extensions : '.',
+                'maxFiles' => 4,
+                'wrongExtension' => $filesAllowed ? null : 'File posting is not allowed on this board'
+            ]
         ];
     }
 
@@ -89,7 +106,7 @@ class PostData extends ActiveRecordExtended
         }
 
         $this->files = [];
-        $this->fileInfos= $fileIds;
+        $this->fileInfos = $fileIds;
     }
 
     public function behaviors()

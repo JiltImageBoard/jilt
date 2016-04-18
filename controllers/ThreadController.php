@@ -35,11 +35,17 @@ class ThreadController extends Controller
      */
     public function actionCreate($name)
     {
+        /**
+         * @var Board $board
+         */
         if ($board = Board::findOne(['name' => $name])) {
             $models = [
                 new Thread(['boardId' => $board->id]),
                 new PostMessage(),
-                new PostData(['files' => UploadedFile::getInstancesByName('files')])
+                new PostData([
+                    'files' => UploadedFile::getInstancesByName('files'),
+                    'allowedFormats' => $board->fileFormats
+                ])
             ];
             
             if (

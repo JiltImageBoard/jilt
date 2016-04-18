@@ -137,21 +137,21 @@ class PngThumbCreationStrategy extends ImageThumbCreationStrategy
 
 }
 
-class JpgThumbCreationStrategy extends ImageThumbCreationStrategy
+class JpegThumbCreationStrategy extends ImageThumbCreationStrategy
 {
     protected function getImageCreateFunc()
     {
-        return 'imagecreatefromjpg';
+        return 'imagecreatefromjpeg';
     }
 
     protected function getImageSaveFunc()
     {
-        return 'imagejpg';
+        return 'imagejpeg';
     }
 
 }
 
-class JpegThumbCreationStrategy extends JpgThumbCreationStrategy {}
+class JpgThumbCreationStrategy extends JpegThumbCreationStrategy {}
 
 class GifThumbCreationStrategy extends ImageThumbCreationStrategy
 {
