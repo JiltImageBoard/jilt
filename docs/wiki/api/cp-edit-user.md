@@ -24,19 +24,10 @@
 #### Example Request
 `PUT /control-panel/users/5`
 ```JSON
-{
-  "username": "admin_edited",
-  "password": "admin_edited",
-  "email": "admin_edited@example.com"
-}
+
 ```
 
 #### Example Result
 ```JSON
-{
-	"username": "admin_edited",
-	"email": "admin_edited@example.com",
-	"created_at": "2016-03-10 14:10:21",
-	"updated_at": "2016-03-10 15:13:54"
-}
+
 ```

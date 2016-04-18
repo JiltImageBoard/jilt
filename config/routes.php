@@ -36,8 +36,8 @@ return [
         'GET  control-panel/csrf-token/?' => 'auth/get-csrf-token',
 
         /* Users */
-        'POST control-panel/users/?' => 'user/create',
         'GET control-panel/users/?' => 'user/get-all',
+        'POST control-panel/users/?' => 'user/create',
         'GET control-panel/users/<id:\d+>/?' => 'user/get',
         'PUT control-panel/users/<id:\d+>/?' => 'user/update',
         'DELETE control-panel/users/<id:\d+>/?' => 'user/delete',

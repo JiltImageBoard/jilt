@@ -27,6 +27,7 @@
 ```
 
 #### Example Result
+Status code: `201`
 ```JSON
 {
 	"username": "admin",

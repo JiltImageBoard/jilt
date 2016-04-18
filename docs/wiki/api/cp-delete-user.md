@@ -15,14 +15,8 @@
 
 
 #### Example Request
-```javascript
-DELETE /control-panel/users/5
-```
+`DELETE /control-panel/users/1`
 
 #### Example Result
-```javascript
-{
-  "errorCode": 0,
-  "errorMessage": ""
-}
+Status code: `200`
 ```
