@@ -57,7 +57,7 @@
 }
 ```
 #### Example Result
-Status code: `201`
+Status code: `200`
 ```JSON
 {
 	"id": 86,
