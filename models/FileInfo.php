@@ -47,10 +47,14 @@ class FileInfo extends ActiveRecordExtended
         return $this->hasOne(FileFormat::className(), ['id' => 'file_formats_id']);
     }
 
-    public function save($runValidation = true, $attributeNames = null)
+    public function beforeSave($insert)
     {
+        if (!parent::beforeSave($insert)) {
+            return false;
+        }
+
         $this->isNewFile = $this->getIsNewRecord();
-        $this->save($runValidation, $attributeNames);
+        return true;
     }
 
     /**

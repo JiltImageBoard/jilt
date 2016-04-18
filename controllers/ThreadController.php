@@ -44,8 +44,9 @@ class ThreadController extends Controller
          * @var Board $board
          */
         if ($board = Board::findOne(['name' => $name])) {
+            $thread = new Thread(['boardId' => $board->id]);
             $models = [
-                new Thread(['boardId' => $board->id]),
+                $thread,
                 new PostMessage(),
                 new PostData([
                     'files' => UploadedFile::getInstancesByName('files'),
@@ -58,8 +59,7 @@ class ThreadController extends Controller
                 Model::validateMultiple($models)
             ) {
                 if (ActiveRecordExtended::saveAndLink($models)) {
-                    //TODO: return thread presented like from ->toArray() method (don't work now)
-                    return 'Thread created';
+                    return $thread->toArray();
                 }
             }
 

@@ -73,7 +73,17 @@ class Thread extends ActiveRecordExtended implements DeletableInterface
     {
         return [
                 ['is_chat', 'default', 'value' => '0'],
-            ];
+        ];
+    }
+
+    public function getUpdatedAt()
+    {
+        return $this->updatedAt;
+    }
+
+    public function setUpdatedAt(\DateTime $value)
+    {
+        $this->updatedAt = $value;
     }
     
     public function getDeletedRows(Array &$carry)
@@ -93,7 +103,14 @@ class Thread extends ActiveRecordExtended implements DeletableInterface
         }
         
     }
-    
+
+    public function beforeSave($insert)
+    {
+        $this->updatedAt = new \DateTime();
+        return parent::beforeSave($insert);
+    }
+
+
     public function afterSave($insert, $changedAttributes)
     {
         parent::afterSave($insert, $changedAttributes);
