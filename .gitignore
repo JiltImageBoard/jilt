@@ -1,4 +1,4 @@
+/controllers/TestController.php
 .idea
 config/db.php
 vendor/*
-controllers/TestController.php
