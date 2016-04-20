@@ -1,5 +1,5 @@
 #### Resource URL
-`GET /api/control-panel/users/{id}/cp-rights`
+`GET /api/control-panel/users/{id}/rights`
 
 #### Description
   Gets user rights for board.
@@ -15,7 +15,7 @@
 
 
 #### Example Request
-`GET /api/control-panel/users/5/cp-rights`
+`GET /api/control-panel/users/5/rights`
 
 #### Example Result
 Status code: `200`
