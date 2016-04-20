@@ -21,6 +21,7 @@ class BoardController extends Controller
     {
         //TODO: Check authorization.
         $board = new Board();
+        $board->scenario = Board::SCENARIO_CREATE;
         if ($board->load(\Yii::$app->request->post()) && $board->validate()) {
             if ($board->save()) {
                 \Yii::$app->response->setStatusCode(201);
@@ -114,7 +115,8 @@ class BoardController extends Controller
     public function actionUpdate($name)
     {
         $board = Board::find()->where(['name' => $name])->limit(1)->one();
-
+        $board->scenario = Board::SCENARIO_UPDATE;
+        
         if ($board->load(\Yii::$app->request->post()) && $board->validate()) {
             if ($board->save()) {
                 return $this->actionGet($board->name);

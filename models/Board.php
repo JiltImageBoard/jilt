@@ -40,6 +40,9 @@ use app\common\interfaces;
 class Board extends ActiveRecordExtended implements DeletableInterface
 {
 
+    const SCENARIO_CREATE = 'create';
+    const SCENARIO_UPDATE = 'update';
+
     public static function tableName()
     {
         return 'boards';
@@ -156,9 +159,26 @@ class Board extends ActiveRecordExtended implements DeletableInterface
             ['is_closed', 'default', 'value' => '0'],
             ['is_closed', 'boolean'],
             
-            [['fileFormats', 'wordFilters', 'fileRatings', 'markupTypes'], 'required'],
-            [['fileFormats', 'wordFilters', 'fileRatings', 'markupTypes'], 'each', 'rule' => ['integer']],
+            [['fileFormats', 'wordFilters', 'fileRatings', 'markupTypes'], 'required', 'on' => 'create'],
+            [['fileFormats', 'wordFilters', 'fileRatings', 'markupTypes'], 'each', 'rule' => ['integer'], 'on' => 'create'],
         ];
+    }
+
+    public function scenarios() {
+
+        $scenarios = parent::scenarios();
+
+        $scenarios[self::SCENARIO_CREATE] = [
+            'name', 'description', 'min_file_size', 'max_file_size', 'min_image_resolution', 'max_image_resolution', 
+            'max_message_length', 'max_threads_on_page', 'max_board_pages', 'thread_max_posts', 'default_name', 'is_closed', 
+            'fileFormats', 'wordFilters', 'fileRatings', 'markupTypes'];
+        $scenarios[self::SCENARIO_UPDATE] = [
+            'name', 'description', 'min_file_size', 'max_file_size', 'min_image_resolution', 'max_image_resolution',
+            'max_message_length', 'max_threads_on_page', 'max_board_pages', 'thread_max_posts', 'default_name', 'is_closed'
+        ];
+
+        return $scenarios;
+
     }
 
 
