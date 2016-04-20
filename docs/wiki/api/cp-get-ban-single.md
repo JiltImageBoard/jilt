@@ -15,15 +15,14 @@
 
 
 #### Example Request
-```javascript
-GET /control-panel/bans/2
-```
+`GET /control-panel/bans/2`
 
 #### Example Result
-```javascript
+Status code: `200`
+```JSON
 {
   "id": 2,
-  "board_id": 2
+  "board_id": 2,
   "ip": "127.0.0.1",
   "banned_until": "12.12.2016",
   "reason_for_user": "Test ban #2",

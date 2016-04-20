@@ -47,7 +47,7 @@ return [
         'PUT control-panel/users/<id:\d+>/rights/?' => 'user/update-rights',
 
         /* Bans */
-        'GET bans/?' => 'ban/index',
+        'GET bans/?' => 'ban/get-all',
         'POST bans/?' => 'ban/create',
         'GET bans/<id:\d+>/?' => 'ban/get',
         'PUT bans/<id:\d+>/?' => 'ban/update',
