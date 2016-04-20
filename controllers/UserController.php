@@ -87,16 +87,6 @@ class UserController extends Controller
         \Yii::$app->response->setStatusCode(204);
     }
     
-    public function actionGetCpRights($id)
-    {
-        return 'Not implemented';
-    }
-
-    public function actionUpdateCpRights($id)
-    {
-        return 'Not implemented';
-    }
-
     public function actionGetRights($id)
     {
         return 'Not implemented';
