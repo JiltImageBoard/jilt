@@ -15,14 +15,9 @@
 
 
 #### Example Request
-```javascript
-DELETE /control-panel/bans/2
-```
+`DELETE /control-panel/bans/2`
 
 #### Example Result
-```javascript
-{
-  "errorCode": 0,
-  "errorMessage": ""
-}
+Status code: `204`
+
 ```
