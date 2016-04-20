@@ -3,6 +3,7 @@
 namespace app\models;
 
 use yii\behaviors\TimestampBehavior;
+use yii\db\ActiveRecord;
 use yii\db\Expression;
 use app\common\interfaces\DeletableInterface;
 
@@ -20,7 +21,7 @@ use app\common\interfaces\DeletableInterface;
  * @property bool $isChat
  * @property bool $isDeleted
  * @property int $postDataId
- * @property \DateTime $updatedAt
+ * @property string $updatedAt
  * 
  * @property \app\models\Board $board
  * @property \app\models\PostData $postData
@@ -57,14 +58,13 @@ class Thread extends ActiveRecordExtended implements DeletableInterface
         return $this->hasMany(Post::className(), ['thread_id' => 'id']);
     }
 
-    //TODO: Проверить что бехавор работает
     public function behaviors()
     {
         return [
             [
                 'class' => TimestampBehavior::className(),
                 'updatedAtAttribute' => 'updated_at',
-                'value' => new Expression('NOW()'),
+                'value' => (new \DateTime())->format('Y-m-d H:i:s')
             ]
         ];
     }
@@ -72,18 +72,8 @@ class Thread extends ActiveRecordExtended implements DeletableInterface
     public function rules()
     {
         return [
-                ['is_chat', 'default', 'value' => '0'],
+            ['is_chat', 'default', 'value' => '0'],
         ];
-    }
-
-    public function getUpdatedAt()
-    {
-        return $this->updatedAt;
-    }
-
-    public function setUpdatedAt(\DateTime $value)
-    {
-        $this->updatedAt = $value;
     }
     
     public function getDeletedRows(Array &$carry)
@@ -103,13 +93,6 @@ class Thread extends ActiveRecordExtended implements DeletableInterface
         }
         
     }
-
-    public function beforeSave($insert)
-    {
-        $this->updatedAt = new \DateTime();
-        return parent::beforeSave($insert);
-    }
-
 
     public function afterSave($insert, $changedAttributes)
     {
