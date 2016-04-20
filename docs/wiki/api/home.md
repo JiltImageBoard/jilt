@@ -39,8 +39,6 @@
 * [GET /api/control-panel/users/{id}](cp-get-user-single.md)
 * [PUT /api/control-panel/users/{id}](cp-edit-user.md)
 * [DELETE /api/control-panel/users/{id}](cp-delete-user.md)
-* [GET /api/control-panel/users/{id}/cp-rights](cp-get-user-cp-rights.md)
-* [PUT /api/control-panel/users/{id}/cp-rights](cp-edit-user-cp-rights.md)
 
 
 #### Board and chat rights

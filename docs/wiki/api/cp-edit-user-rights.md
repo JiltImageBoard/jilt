@@ -1,5 +1,5 @@
 #### Resource URL
-`PUT /api/control-panel/users/{id}/cp-rights`
+`PUT /api/control-panel/users/{id}/rights`
 
 #### Description
   Edits user rights for board
@@ -31,7 +31,7 @@
 
 
 #### Example Request
-`PUT /api/control-panel/users/5/cp-rights`
+`PUT /api/control-panel/users/5/rights`
 ```JSON
 
 ```
