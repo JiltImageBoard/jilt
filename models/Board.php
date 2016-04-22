@@ -203,9 +203,9 @@ class Board extends ActiveRecordExtended implements DeletableInterface
     }
 
 
-    public function getDeletedRows(Array &$carry) 
+    public static function getDeletedRows(Array &$carry) 
     {
-        $boards = $this->find()->where(['is_deleted' => '1'])->all();
+        $boards = self::find()->where(['is_deleted' => '1'])->all();
         
         if (empty($boards)) {
             return $carry;

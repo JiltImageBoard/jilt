@@ -9,6 +9,12 @@ use app\models\PostData;
 use app\models\PostMessage;
 
 
+/**
+ * Class Cleanup
+ * 
+ * This class aims to delete all data with relations which have isDelete = 1
+ * @package app\common\classes
+ */
 class Cleanup
 {
     
@@ -44,6 +50,7 @@ class Cleanup
 
     /**
      * TODO: In future models will have more relations which might not delete automatically. It should be tested properly
+     * TODO: Files should be deleted too
      * Deletes all boards, threads and posts with 'is_deleted = 1', handles relation between them.
      * @return array with deleted rows
      */
@@ -58,9 +65,9 @@ class Cleanup
             'postMessageIds' => []
         ];
         
-        (new Post())->getDeletedRows($itemsToDelete);
-        (new Thread())->getDeletedRows($itemsToDelete);
-        (new Board())->getDeletedRows($itemsToDelete);
+        Post::getDeletedRows($itemsToDelete);
+        Thread::getDeletedRows($itemsToDelete);
+        Board::getDeletedRows($itemsToDelete);
         self::getPostDataIds($itemsToDelete);
         self::getPostMessageIds($itemsToDelete);
 
