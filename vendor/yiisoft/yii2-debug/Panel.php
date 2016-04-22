@@ -12,7 +12,7 @@ use yii\base\Component;
 use yii\helpers\Url;
 
 /**
- * Panel is a base class for debugger panel helpers. It defines how data should be collected,
+ * Panel is a base class for debugger panel classes. It defines how data should be collected,
  * what should be displayed at debug toolbar and on debugger details view.
  *
  * @property string $detail Content that is displayed in debugger detail view. This property is read-only.

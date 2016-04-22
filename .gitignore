@@ -1,5 +1,6 @@
-/controllers/TestController.php
 .idea
+
 config/db.php
 vendor/*
-composer.lock
+
+/controllers/TestController.php

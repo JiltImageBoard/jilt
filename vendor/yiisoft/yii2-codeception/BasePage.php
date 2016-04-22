@@ -12,7 +12,7 @@ use yii\base\Component;
 use yii\base\InvalidConfigException;
 
 /**
- * BasePage is the base class for page helpers that represent Web pages to be tested.
+ * BasePage is the base class for page classes that represent Web pages to be tested.
  *
  * @property string $url The URL to this page. This property is read-only.
  *
