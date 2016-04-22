@@ -12,7 +12,6 @@ use app\models\PostData;
 use app\models\PostMessage;
 use app\models\Thread;
 use yii\base\Model;
-use yii\helpers\Json;
 use yii\web\Controller;
 use yii\web\UploadedFile;
 
@@ -49,6 +48,8 @@ class ThreadController extends Controller
                 $thread,
                 new PostMessage(),
                 new PostData([
+                    //TODO: Мы не можем полагаться лишь на один массив файлов,
+                    // потому что в таком случае порушиться последовательность их загрузки, так как стандарт этого не гарантирует
                     'files' => UploadedFile::getInstancesByName('files'),
                     'allowedFormats' => $board->fileFormats
                 ])

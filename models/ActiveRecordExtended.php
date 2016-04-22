@@ -153,6 +153,7 @@ abstract class ActiveRecordExtended extends ActiveRecord
      * @param string|null $message
      * return void
      */
+    //TODO: Не позориться и сделать эксепшены
     public function addError($error, $message = null)
     {
         if ($message != null) {

@@ -2,6 +2,10 @@
 
 namespace app\common\classes;
 
+use app\common\exceptions\FileDoesNotExistException;
+use app\common\exceptions\FileFormatWasNotSpecifiedException;
+use app\common\exceptions\ThumbCreationStrategyIsNotImplementedException;
+
 class Thumb
 {
     public static function create($filePath)
@@ -13,27 +17,25 @@ class Thumb
     /**
      * Selects proper strategy, depending on file extension
      * @param string $filePath
-     * @return ThumbCreationStrategy
+     * @throws FileDoesNotExistException|FileFormatWasNotSpecifiedException|ThumbCreationStrategyIsNotImplementedException
+     * @return null|ThumbCreationStrategy
      */
     private static function selectStrategy($filePath)
     {
         if (!file_exists($filePath)) {
-            print_r('FIle does not exists');
-            return null;
+            throw new FileDoesNotExistException();
         }
 
         $pathInfo = pathinfo($filePath);
         $extension = $pathInfo['extension'];
 
         if (!$extension) {
-            print_r('File format was not specified');
-            return null;
+            throw new FileFormatWasNotSpecifiedException();
         }
 
         $ConcreteStrategy = __NAMESPACE__ . '\\' . ucfirst($extension) . 'ThumbCreationStrategy';
         if (!class_exists($ConcreteStrategy)) {
-            print_r('Thumb creation strategy is not implemented for [' . $extension . '] files');
-            return null;
+            throw new ThumbCreationStrategyIsNotImplementedException($extension);
         }
 
         return new $ConcreteStrategy($filePath);
@@ -42,6 +44,7 @@ class Thumb
 
 abstract class ThumbCreationStrategy
 {
+    //TODO: THUMB_MAX_SIDE_LENGTH should get value from board settings
     const THUMB_MAX_SIDE_LENGTH = 285;
     protected $sourceFilePath;
     protected $sourceWidth;
@@ -64,10 +67,12 @@ abstract class ThumbCreationStrategy
 
     protected function initSizes()
     {
+        //TODO: getimagesize in abstract class? 
         list($sourceWidth, $sourceHeight) = getimagesize($this->sourceFilePath);
 
         $newWidth = $sourceWidth;
         $newHeight = $sourceHeight;
+        //TODO: This should be tested properly to work with all resolutions
         $ratio = $sourceWidth / $sourceHeight;
         if ($sourceWidth > $sourceHeight) {
             if ($sourceWidth > static::THUMB_MAX_SIDE_LENGTH) {
@@ -104,7 +109,6 @@ abstract class ImageThumbCreationStrategy extends ThumbCreationStrategy
         $imageSaveFunc = $this->getImageSaveFunc();
 
         $sourceFile = $imageCreateFunc($this->sourceFilePath);
-        // PSR-2 violation, i know, but.. 4 lines for 4 zeros? That's not okay.
         imagecopyresized(
             $this->thumbFile, $sourceFile, 0, 0, 0, 0,
             $this->thumbWidth, $this->thumbHeight, $this->sourceWidth, $this->sourceHeight
