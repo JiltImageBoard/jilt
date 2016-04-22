@@ -65,8 +65,7 @@ class Ban
 
     public function getCountry()
     {
-        //TODO: Вычислять страну
-        return '';
+        return \Yii::$app->ipGeoBase->getLocation($this->ip)['country'];
     }
 
     public function getFiles()
@@ -78,7 +77,7 @@ class Ban
 
     public function banStrict()
     {
-        //TODO: Если вызывается этот метод, то глобально банить юзера абсолютно по всем имеющимся данным
+        //TODO: Если вызывается этот метод, то глобально банить юзера по айпи и сессии
     }
 
     public function check()
@@ -132,7 +131,7 @@ class Ban
             ->orWhere(['session' => $this->session])
             ->orWhere(['message' => $this->message])
             ->orWhere(['files_info_id' => 1])
-            ->orWhere(['country' => 'UA']);
+            ->orWhere(['country' => $this->getCountry()]);
         
 
         if (empty($query->all())) {
