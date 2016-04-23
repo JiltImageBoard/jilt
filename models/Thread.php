@@ -76,9 +76,9 @@ class Thread extends ActiveRecordExtended implements DeletableInterface
         ];
     }
     
-    public function getDeletedRows(Array &$carry)
+    public static function getDeletedRows(Array &$carry)
     {
-        $threads = $this->find()->where(['is_deleted' => '1'])->all();
+        $threads = self::find()->where(['is_deleted' => '1'])->all();
 
         if (empty($threads)) {
             return $carry;

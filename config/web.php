@@ -48,7 +48,11 @@ $config = [
             'identityClass' => 'app\models\User',
             'enableSession' => false,
             'enableAutoLogin' => true
-        ]
+        ],
+        'ipGeoBase' => [
+            'class' => 'himiklab\ipgeobase\IpGeoBase',
+            'useLocalDB' => true,
+        ],
     ],
     'controller' => [
         'class' => 'yii\web\Controller',

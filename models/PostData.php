@@ -48,11 +48,11 @@ class PostData extends ActiveRecordExtended
     public function rules()
     {
         $extensions = [];
-        foreach ($this->allowedFormats as $allowedFormat)
+        foreach ($this->allowedFormats as $allowedFormat) {
             $extensions[] = $allowedFormat->extension;
+        }
         $filesAllowed = !empty($extensions);
 
-        // message => null means here, that we are using yii default message
         // TODO: webm files not loading for some reason
         return [
             [
@@ -99,10 +99,12 @@ class PostData extends ActiveRecordExtended
             $fileFormat = FileFormat::findOne(['extension' => $file->extension]);
             $FileClass = 'app\models\File' . ucfirst($fileFormat->fileType);
             $newFileInfo = $FileClass::saveFile($file);
-            if ($newFileInfo)
+            if ($newFileInfo) {
                 $fileIds[] = $newFileInfo->id;
-            else
+            } 
+            else {
                 $this->addError("files", "Error saving file");
+            }
         }
 
         $this->files = [];
