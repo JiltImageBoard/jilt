@@ -59,7 +59,7 @@ class Board extends ActiveRecordExtended implements DeletableInterface
      */
     public function setFileFormats($ids)
     {
-        if ($this->isNewRecord) $this->fileFormats = $ids;
+        $this->fileFormats = $ids;
     }
     
     public function getWordFilters()
@@ -73,7 +73,7 @@ class Board extends ActiveRecordExtended implements DeletableInterface
      */
     public function setWordFilters($ids)
     {
-        if ($this->isNewRecord) $this->wordFilters = $ids;
+        $this->wordFilters = $ids;
     }
     
     public function getFileRatings()
@@ -87,7 +87,7 @@ class Board extends ActiveRecordExtended implements DeletableInterface
      */
     public function setFileRatings($ids)
     {
-        if ($this->isNewRecord) $this->fileRatings = $ids;
+        $this->fileRatings = $ids;
     }
     
     public function getMarkupTypes()
@@ -101,14 +101,13 @@ class Board extends ActiveRecordExtended implements DeletableInterface
      */
     public function setMarkupTypes($ids)
     {
-        if ($this->isNewRecord) $this->markupTypes = $ids;
+        $this->markupTypes = $ids;
     }
     
     public function getThreads()
     {
         return $this->hasMany(Thread::className(), ['board_id' => 'id'])
             ->orderBy(['updated_at' => SORT_DESC]);
-        
     }
 
     public function getCounter()
@@ -197,8 +196,7 @@ class Board extends ActiveRecordExtended implements DeletableInterface
     public function afterSave($insert, $changedAttributes)
     {
         parent::afterSave($insert, $changedAttributes);
-        $boardCounter = new BoardCounter();
-        $boardCounter->boardId = $this->id;
+        $boardCounter = new BoardCounter(['board_id' => $this->id]);
         $boardCounter->save();
     }
 

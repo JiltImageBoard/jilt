@@ -114,7 +114,7 @@ class BoardController extends Controller
      */
     public function actionUpdate($name)
     {
-        $board = Board::find()->where(['name' => $name])->limit(1)->one();
+        $board = Board::findOne(['name' => $name]);
         $board->scenario = Board::SCENARIO_UPDATE;
         
         if ($board->load(\Yii::$app->request->post()) && $board->validate()) {

@@ -129,17 +129,28 @@ abstract class ActiveRecordExtended extends ActiveRecord
         $vars = get_object_vars($this);
         $relations = $this->relationDataArray;
 
-        // extracting models from ids, set in props and linking them
-        // props with ids should be equal to relation names
+        // this code extracts models by id, which is set in model properties and links them with current model
+        // and unsets temp properties, used for hold ids
         foreach ($vars as $propName => $value) {
             foreach ($relations as $relation) {
                 if ($propName == $relation->name) {
                     unset($this->$propName);
-                    if (!empty($value)) {
-                        $ModelClass = $relation->modelClass;
-                        $ids = $value;
-                        $models = $ModelClass::find()->where(['id' => $ids])->all();
-                        foreach ($models as $model) $this->link($relation->name, $model);
+
+                    $relationGetMethod = 'get' . ucfirst($relation->name);
+                    if (method_exists($this, $relationGetMethod)) {
+                        $excludedModels = $this->$relationGetMethod()->where(['not in', 'id', $value]);
+                        if (!is_null($excludedModels)) {
+                            foreach ($excludedModels as $model) {
+                                $this->unlink($relation->name, $model);
+                            }
+                        }
+                    }
+
+                    $ModelClass = $relation->modelClass;
+                    $ids = $value;
+                    $models = $ModelClass::find()->where(['id' => $ids])->all();
+                    foreach ($models as $model) {
+                        $this->link($relation->name, $model);
                     }
                     break;
                 }
