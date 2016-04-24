@@ -2,6 +2,7 @@
 
 namespace app\controllers;
 
+use app\common\classes\FileWrapper;
 use app\common\classes\MultiLoader;
 use app\common\filters\BanFilter;
 use app\common\helpers\DataFormatter;
@@ -11,6 +12,7 @@ use app\models\Post;
 use app\models\PostData;
 use app\models\PostMessage;
 use app\models\Thread;
+use Faker\Provider\File;
 use yii\base\Model;
 use yii\web\Controller;
 use yii\web\UploadedFile;
@@ -44,33 +46,16 @@ class ThreadController extends Controller
          */
         if ($board = Board::findOne(['name' => $name])) {
 
-            ob_start();
-            $post = \Yii::$app->request->post();
-
-            for ($i = 0; $i < 4; $i++) {
-                $uploadedFile = UploadedFile::getInstanceByName("file-{$i}");
-                if ($uploadedFile) {
-                    print_r($uploadedFile);
-                    print_r(PHP_EOL);
-                } elseif (isset($post["file-{$i}"])) {
-                    print_r($post["file-{$i}"]);
-                    print_r(PHP_EOL);
-                }
-            }
-
-            return ob_get_clean();
-
             $thread = new Thread(['boardId' => $board->id]);
             $models = [
                 $thread,
                 new PostMessage(),
                 new PostData([
-                    //TODO: Мы не можем полагаться лишь на один массив файлов,
-                    // потому что в таком случае порушиться последовательность их загрузки, так как стандарт этого не гарантирует
-                    'files' => UploadedFile::getInstancesByName('files'),
+                    'files' => FileWrapper::getLoadedFiles($board->maxFiles),
                     'allowedFormats' => $board->fileFormats
                 ])
             ];
+
             
             if (
                 ActiveRecordExtended::loadMultiple(\Yii::$app->request->post(), $models) &&

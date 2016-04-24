@@ -16,7 +16,6 @@ use app\common\interfaces;
  * @property string $description
  * @property \DateTime $createdAt
  * @property \DateTime $updatedAt
- * 
  * @property int $minFileSize
  * @property int $maxFileSize
  * @property string $minImageResolution
@@ -28,6 +27,7 @@ use app\common\interfaces;
  * @property string $defaultName
  * @property bool $isClosed
  * @property bool $isDeleted
+ * @property int $maxFiles
  * 
  * relations
  * @property \app\models\FileFormat[] $fileFormats

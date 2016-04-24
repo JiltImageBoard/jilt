@@ -2,6 +2,7 @@
 
 namespace app\models;
 
+use app\common\classes\FileWrapper;
 use yii\behaviors\TimestampBehavior;
 use yii\db\Expression;
 use yii\web\UploadedFile;
@@ -28,7 +29,7 @@ use yii\web\UploadedFile;
 class PostData extends ActiveRecordExtended
 {
     /**
-     * @var UploadedFile[]
+     * @var FileWrapper[]
      */
     public $files;
 

@@ -24,7 +24,7 @@ $(function () {
 
             reader.readAsBinaryString(file);
         } else {
-
+            delete fileHashes[$input.attr('name')];
         }
     }
 
@@ -39,6 +39,12 @@ $(function () {
         });
     });
 
+    // это, думаю, временный вариант, вообще, количество инпутов должно браться из параметров борды, как там
+    // оно до этого момента дойдет - хз.
+
+    //var filesCount = $('#files').find('input').size();
+
+
     $form.submit(function (e) {
         e.preventDefault();
 
@@ -47,6 +53,9 @@ $(function () {
         for (var inputName in fileHashes) {
             formData.set(inputName, fileHashes[inputName]);
         }
+
+/*        // текущая реализация такая, что, сервер должен знать сколько файлов ему прочитать
+        formData.append('filesCount', filesCount);*/
 
         $.ajax({
             url: $form.attr('action'),
