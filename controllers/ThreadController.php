@@ -43,6 +43,23 @@ class ThreadController extends Controller
          * @var Board $board
          */
         if ($board = Board::findOne(['name' => $name])) {
+
+            ob_start();
+            $post = \Yii::$app->request->post();
+
+            for ($i = 0; $i < 4; $i++) {
+                $uploadedFile = UploadedFile::getInstanceByName("file-{$i}");
+                if ($uploadedFile) {
+                    print_r($uploadedFile);
+                    print_r(PHP_EOL);
+                } elseif (isset($post["file-{$i}"])) {
+                    print_r($post["file-{$i}"]);
+                    print_r(PHP_EOL);
+                }
+            }
+
+            return ob_get_clean();
+
             $thread = new Thread(['boardId' => $board->id]);
             $models = [
                 $thread,

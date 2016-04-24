@@ -53,6 +53,9 @@ return [
         'PUT bans/<id:\d+>/?' => 'ban/update',
         'DELETE bans/<id:\d+>/?' => 'ban/delete',
 
+        /* Files */
+        'GET files/exists/<hash:\w+>/?' => 'file/exists',
+
         /* Tests */
         '/test/?' => 'test/run',
         'GET test/delete-post/<name:\w+>/<threadNum:\d+>/<postNum:\d+>/?' => 'test/delete-post',

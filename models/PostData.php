@@ -90,25 +90,7 @@ class PostData extends ActiveRecordExtended
     
     private function saveFiles() 
     {
-        $fileIds = [];
-        foreach ($this->files as $file) {
-            /**
-             * @var FileFormat $fileFormat
-             * @var FileInfo $FileClass
-             */
-            $fileFormat = FileFormat::findOne(['extension' => $file->extension]);
-            $FileClass = 'app\models\File' . ucfirst($fileFormat->fileType);
-            $newFileInfo = $FileClass::saveFile($file);
-            if ($newFileInfo) {
-                $fileIds[] = $newFileInfo->id;
-            } 
-            else {
-                $this->addError("files", "Error saving file");
-            }
-        }
 
-        $this->files = [];
-        $this->fileInfos = $fileIds;
     }
 
     public function behaviors()
