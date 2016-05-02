@@ -37,7 +37,7 @@ use app\common\interfaces;
  * @property \app\models\Thread[] $threads
  * @property \app\models\BoardCounter $counter
  */
-class Board extends ActiveRecordExtended implements DeletableInterface
+class Board extends ActiveRecordExtended
 {
 
     const SCENARIO_CREATE = 'create';
@@ -201,7 +201,8 @@ class Board extends ActiveRecordExtended implements DeletableInterface
     }
 
 
-    public static function getDeletedRows(Array &$carry) 
+    // TODO: workaround used here to prevent calling getter in initRelationData: changed 'get*' to 'gat*
+    public static function gatDeletedRows(Array &$carry)
     {
         $boards = self::find()->where(['is_deleted' => '1'])->all();
         

@@ -2,7 +2,8 @@
 
 namespace app\models;
 
-use app\common\classes\FileWrapper;
+use app\common\classes\PostedFile;
+use app\common\validators\PostedFileValidator;
 use yii\behaviors\TimestampBehavior;
 use yii\db\Expression;
 use yii\web\UploadedFile;
@@ -29,14 +30,14 @@ use yii\web\UploadedFile;
 class PostData extends ActiveRecordExtended
 {
     /**
-     * @var FileWrapper[]
+     * @var PostedFile[]
      */
     public $files;
 
     /**
-     * @var FileFormat[]
+     * @var array
      */
-    public $allowedFormats;
+    public $fileValidationParams;
 
     /**
      * @return string
@@ -48,21 +49,12 @@ class PostData extends ActiveRecordExtended
 
     public function rules()
     {
-        $extensions = [];
-        foreach ($this->allowedFormats as $allowedFormat) {
-            $extensions[] = $allowedFormat->extension;
-        }
-        $filesAllowed = !empty($extensions);
-
-        // TODO: webm files not loading for some reason
         return [
             [
-                ['files'],
-                'file',
+                'files',
+                PostedFileValidator::className(),
                 'skipOnEmpty' => true,
-                'extensions' => $filesAllowed ? $extensions : '.',
-                'maxFiles' => 4,
-                'wrongExtension' => $filesAllowed ? null : 'File posting is not allowed on this board'
+                'params' => $this->fileValidationParams
             ]
         ];
     }

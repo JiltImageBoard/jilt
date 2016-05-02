@@ -30,7 +30,7 @@ $(function () {
 
 
     var $form = $("#testForm");
-    var $log = $('#logArea');
+    var $log = $('#logOutput');
 
     $('#files').find('input').each(function (i, input) {
         var $input = $(input);
@@ -55,10 +55,14 @@ $(function () {
             contentType: false,
             data: formData,
             success: function (data) {
-                $log.val(JSON.stringify(data));
+                var stringData = JSON.stringify(data)
+                stringData = stringData.replace(/\\n/g, "<br/>");
+                $log.html(stringData);
             },
             error: function (data) {
-                $log.val(JSON.stringify(data));
+                var stringData = JSON.stringify(data)
+                stringData = stringData.replace(/\\n/g, "<br/>");
+                $log.html(stringData);
             }
         });
 
