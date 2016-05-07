@@ -51,24 +51,16 @@ class ThreadController extends Controller
                 'files' => PostedFile::getPostedFiles($board->maxFiles),
                 'fileValidationParams' => [
                     'allowedFormats' => $board->fileFormats,
-                    'maxFiles' => $board->maxFiles,
                     'maxSize' => $board->maxFileSize
                 ]
             ]);
 
             $post->validate();
 
-
-            print_r('settings: ' . PHP_EOL);
-            print_r('max file size: ' . $board->maxFileSize . PHP_EOL);
-
             print_r('errors: ');
             print_r($post->getErrors());
-            print_r('files : ');
-            print_r($post->files);
 
             return ob_get_clean();
-
 
             $thread = new Thread(['boardId' => $board->id]);
             $models = [

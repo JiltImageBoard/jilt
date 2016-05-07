@@ -4,6 +4,8 @@ namespace app\common\validators;
 
 use app\common\classes\PostedFile;
 use app\models\FileFormat;
+use app\models\FileInfo;
+use Yii;
 use yii\validators\FileValidator;
 use yii\web\UploadedFile;
 
@@ -48,11 +50,15 @@ class PostedFileValidator extends FileValidator
         }
         $filesAllowed = !empty($extensions);
 
+        /*
+         * We placing dot if there is no extensions because for yii FileValidator "no extensions" means
+         * that all extensions is allowed, which is not our case
+         */
+        if (!$filesAllowed) {
+            $this->wrongExtension = 'File posting is not allowed on this board';
+        }
         $this->extensions = $filesAllowed ? $extensions : '.';
-        $this->wrongExtension = $filesAllowed ? null : 'File posting is not allowed on this board';
         $this->notArray = 'Attribute is not an array';
-
-        print_r('MAX SIZE: ' . $this->maxSize . PHP_EOL);
     }
 
     public function validateAttribute($model, $attribute)
@@ -73,14 +79,57 @@ class PostedFileValidator extends FileValidator
             }
         }
 
-        if (count($files) > $this->maxFiles) {
-            $this->addError($model, $attribute, $this->tooMany, ['limit' => $this->maxFiles]);
-        }
-
         foreach ($files as $file) {
             if ($file->fileData instanceof UploadedFile) {
-                parent::validateValue($file);
+                $result = parent::validateValue($file->fileData);
+            } elseif ($file->fileData instanceof FileInfo) {
+                $result = $this->validateValue($file->fileData);
+            }
+
+            if (!empty($result)) {
+                $this->addError($model, $attribute, $result[0], $result[1]);
             }
         }
+    }
+
+    public function isEmpty($value, $trim = false)
+    {
+        if (!is_array($value)) {
+            return !$value instanceof PostedFile;
+        }
+
+        foreach ($value as $item) {
+            if ($item instanceof PostedFile) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    protected function validateValue(FileInfo $file)
+    {
+        // We assuming here that fileFormat's extension matches with the actual file mime type
+        $fileExtension = $file->fileFormat->extension;
+        $fileName = "$file->originalName.$fileExtension";
+
+        if (!in_array($fileExtension, $this->extensions)) {
+            return [
+                $this->wrongExtension,
+                ['file' => $fileName, 'extensions' => implode(', ', $this->extensions)]
+            ];
+        }
+
+        if ($file->size > $this->getSizeLimit()) {
+            return [
+                $this->tooBig,
+                [
+                    'file' => $fileName,
+                    'limit' => $this->getSizeLimit(),
+                    'formattedLimit' => Yii::$app->formatter->asShortSize($this->getSizeLimit())
+                ]
+            ];
+        }
+
     }
 }
