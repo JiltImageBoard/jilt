@@ -9,7 +9,7 @@
  */
 
 /**
- * A base Event which all Event helpers inherit from.
+ * A base Event which all Event classes inherit from.
  *
  * @author Chris Corbyn
  */

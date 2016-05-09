@@ -6,7 +6,7 @@
  * @warning This class is strongly defined: that means that the class
  *          will fail if an undefined directive is retrieved or set.
  *
- * @note Many helpers that could (although many times don't) use the
+ * @note Many classes that could (although many times don't) use the
  *       configuration object make it a mandatory parameter.  This is
  *       because a configuration object should always be forwarded,
  *       otherwise, you run the risk of missing a parameter and then
@@ -21,7 +21,7 @@ class HTMLPurifier_Config
      * HTML Purifier's version
      * @type string
      */
-    public $version = '4.6.0';
+    public $version = '4.7.0';
 
     /**
      * Whether or not to automatically finalize
@@ -646,16 +646,25 @@ class HTMLPurifier_Config
         return $this->getDefinition($name, true, true);
     }
 
+    /**
+     * @return HTMLPurifier_HTMLDefinition
+     */
     public function maybeGetRawHTMLDefinition()
     {
         return $this->getDefinition('HTML', true, true);
     }
-
+    
+    /**
+     * @return HTMLPurifier_CSSDefinition
+     */
     public function maybeGetRawCSSDefinition()
     {
         return $this->getDefinition('CSS', true, true);
     }
-
+    
+    /**
+     * @return HTMLPurifier_URIDefinition
+     */
     public function maybeGetRawURIDefinition()
     {
         return $this->getDefinition('URI', true, true);

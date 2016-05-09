@@ -4,7 +4,7 @@ namespace Faker\ORM\Propel;
 
 /**
  * Service class for populating a database using the Propel ORM.
- * A Populator can populate several tables using ActiveRecord helpers.
+ * A Populator can populate several tables using ActiveRecord classes.
  */
 class Populator
 {
@@ -12,6 +12,9 @@ class Populator
     protected $entities = array();
     protected $quantities = array();
 
+    /**
+     * @param \Faker\Generator $generator
+     */
     public function __construct(\Faker\Generator $generator)
     {
         $this->generator = $generator;
@@ -42,7 +45,7 @@ class Populator
     }
 
     /**
-     * Populate the database using all the Entity helpers previously added.
+     * Populate the database using all the Entity classes previously added.
      *
      * @param PropelPDO $con A Propel connection object
      *

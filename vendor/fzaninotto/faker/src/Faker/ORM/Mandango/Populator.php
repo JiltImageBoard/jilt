@@ -6,7 +6,7 @@ use Mandango\Mandango;
 
 /**
  * Service class for populating a database using Mandango.
- * A Populator can populate several tables using ActiveRecord helpers.
+ * A Populator can populate several tables using ActiveRecord classes.
  */
 class Populator
 {
@@ -15,6 +15,10 @@ class Populator
     protected $entities = array();
     protected $quantities = array();
 
+    /**
+     * @param \Faker\Generator $generator
+     * @param Mandango $mandango
+     */
     public function __construct(\Faker\Generator $generator, Mandango $mandango)
     {
         $this->generator = $generator;
@@ -42,7 +46,7 @@ class Populator
     }
 
     /**
-     * Populate the database using all the Entity helpers previously added.
+     * Populate the database using all the Entity classes previously added.
      *
      * @return array A list of the inserted entities.
      */

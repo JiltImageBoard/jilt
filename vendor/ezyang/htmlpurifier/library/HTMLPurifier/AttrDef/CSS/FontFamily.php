@@ -109,7 +109,7 @@ class HTMLPurifier_AttrDef_CSS_FontFamily extends HTMLPurifier_AttrDef
             // shouldn't show up regardless
             $font = str_replace(array("\n", "\t", "\r", "\x0C"), ' ', $font);
 
-            // Here, there are various helpers of characters which need
+            // Here, there are various classes of characters which need
             // to be treated differently:
             //  - Alphanumeric characters are essentially safe.  We
             //    handled these above.

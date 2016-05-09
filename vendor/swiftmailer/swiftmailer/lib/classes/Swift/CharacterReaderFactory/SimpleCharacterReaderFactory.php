@@ -16,7 +16,7 @@
 class Swift_CharacterReaderFactory_SimpleCharacterReaderFactory implements Swift_CharacterReaderFactory
 {
     /**
-     * A map of charset patterns to their implementation helpers.
+     * A map of charset patterns to their implementation classes.
      *
      * @var array
      */
