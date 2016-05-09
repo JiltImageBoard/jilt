@@ -224,26 +224,17 @@ class Validator extends Component
      * Validates the specified object.
      * @param \yii\base\Model $model the data model being validated
      * @param array|null $attributes the list of attributes to be validated.
-     * Note that if an attribute is not associated with the validator, or is is prefixed with `!` char - it will be
-     * ignored. If this parameter is null, every attribute listed in [[attributes]] will be validated.
+     * Note that if an attribute is not associated with the validator,
+     * it will be ignored.
+     * If this parameter is null, every attribute listed in [[attributes]] will be validated.
      */
     public function validateAttributes($model, $attributes = null)
     {
         if (is_array($attributes)) {
-            $newAttributes = [];
-            foreach ($attributes as $attribute) {
-                if (in_array($attribute, $this->attributes) || in_array('!' . $attribute, $this->attributes)) {
-                    $newAttributes[] = $attribute;
-                }
-            }
-            $attributes = $newAttributes;
+            $attributes = array_intersect($this->attributes, $attributes);
         } else {
-            $attributes = [];
-            foreach ($this->attributes as $attribute) {
-                $attributes[] = $attribute[0] === '!' ? substr($attribute, 1) : $attribute;
-            }
+            $attributes = $this->attributes;
         }
-
         foreach ($attributes as $attribute) {
             $skip = $this->skipOnError && $model->hasErrors($attribute)
                 || $this->skipOnEmpty && $this->isEmpty($model->$attribute);
@@ -285,13 +276,7 @@ class Validator extends Component
 
         list($message, $params) = $result;
         $params['attribute'] = Yii::t('yii', 'the input value');
-        if (is_array($value)) {
-            $params['value'] = 'array()';
-        } elseif (is_object($value)) {
-            $params['value'] = 'object';
-        } else {
-            $params['value'] = $value;
-        }
+        $params['value'] = is_array($value) ? 'array()' : $value;
         $error = Yii::$app->getI18n()->format($message, $params, Yii::$app->language);
 
         return false;
@@ -371,11 +356,9 @@ class Validator extends Component
      */
     public function addError($model, $attribute, $message, $params = [])
     {
+        $value = $model->$attribute;
         $params['attribute'] = $model->getAttributeLabel($attribute);
-        if (!isset($params['value'])) {
-            $value = $model->$attribute;
-            $params['value'] = is_array($value) ? 'array()' : $value;
-        }
+        $params['value'] = is_array($value) ? 'array()' : $value;
         $model->addError($attribute, Yii::$app->getI18n()->format($message, $params, Yii::$app->language));
     }
 
