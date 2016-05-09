@@ -1,21 +1,16 @@
 var fileForm = {
     $container: null,
+    $inputs: null,
     fileHashes: {},
     init: function (selector) {
-        this.$container = $(selector)
-        this.addInput()
+        this.$container = $(selector);
+        this.addInput();
     },
     addInput: function () {
         var inputName = "file-" + (this.$container.find('input').length + 1);
         var $input = $('<input type="file" name="' + inputName + '" />').css('display', 'block');
         $input.change(function (e) {
             this.fileChanged($input);
-            var file = $input[0].files[0];
-            if (file) {
-                this.addInput();
-            } else {
-                this.removeInput($input);
-            }
         }.bind(this))
         this.$container.append($input);
     },
@@ -25,9 +20,25 @@ var fileForm = {
             $(input).attr('name', 'file-' + (i + 1));
         });
     },
+    hasEmptyInputs: function () {
+        var result = false;
+        this.$container.find('input').each(function (i, input) {
+            if (!$(input)[0].files[0]) {
+                result = true;
+                return false;
+            }
+        })
+
+        return result;
+    },
     fileChanged: function ($input) {
         var file = $input[0].files[0];
-        if (!file) {
+        if (file) {
+            if (!this.hasEmptyInputs()) {
+                this.addInput();
+            }
+        } else {
+            this.removeInput($input);
             delete this.fileHashes[$input.attr('name')];
             return;
         }
@@ -84,6 +95,7 @@ $(function () {
             },
             error: function (data) {
                 var stringData = JSON.stringify(data)
+                console.log(stringData)
                 stringData = stringData.replace(/\\n/g, "<br/>");
                 $log.html(stringData);
             }

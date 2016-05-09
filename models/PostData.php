@@ -77,13 +77,42 @@ class PostData extends ActiveRecordExtended
 
     public function save($runValidation = true, $attributeNames = null)
     {
-        $this->saveFiles();
-        return parent::save($runValidation, $attributeNames);
+        if (!parent::save($runValidation, $attributeNames)) {
+            return false;
+        }
+
+        if (!$this->saveFiles()) {
+            parent::delete();
+            return false;
+        }
+
+        return true;
     }
-    
+
+    /**
+     * @return bool
+     */
     private function saveFiles() 
     {
+        $saveFailed = false;
+        foreach ($this->files as $file) {
+            if ($file->save()) {
+                $fileInfo = $file->getInfo();
+                $this->link('fileInfos', $fileInfo);
+            } else {
+                $saveFailed = true;
+                break;
+            }
+        }
 
+        // We should remove all saved files if something gone wrong
+        if ($saveFailed) {
+            foreach ($this->files as $file) {
+                $file->delete();
+            }
+        }
+
+        return !$saveFailed;
     }
 
     public function behaviors()

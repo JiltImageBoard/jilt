@@ -3,7 +3,7 @@
 namespace app\common\validators;
 
 use app\common\classes\PostedFile;
-use app\models\FileFormat;
+use app\models\MimeType;
 use app\models\FileInfo;
 use Yii;
 use yii\validators\FileValidator;
@@ -19,9 +19,9 @@ class PostedFileValidator extends FileValidator
 
     /**
      * Will be transformed into string array of allowed extensions on init
-     * @var FileFormat[]
+     * @var MimeType[]
      */
-    public $allowedFormats;
+    public $allowedMimeTypes;
 
     /**
      * With this you can set all validator params in one array
@@ -42,22 +42,22 @@ class PostedFileValidator extends FileValidator
             }
         }
 
-        $extensions = [];
-        if (isset($this->allowedFormats)) {
-            foreach ($this->allowedFormats as $allowedFormat) {
-                $extensions[] = $allowedFormat->extension;
+        $mimeTypes = [];
+        if (isset($this->allowedMimeTypes)) {
+            foreach ($this->allowedMimeTypes as $allowedMimeType) {
+                $mimeTypes[] = $allowedMimeType->name;
             }
         }
-        $filesAllowed = !empty($extensions);
+        $filesAllowed = !empty($mimeTypes);
 
         /*
-         * We placing dot if there is no extensions because for yii FileValidator "no extensions" means
-         * that all extensions is allowed, which is not our case
+         * We placing dot if there is no mimeTypes because for yii FileValidator "no mime types" means
+         * that all types is allowed, which is not what we want
          */
         if (!$filesAllowed) {
             $this->wrongExtension = 'File posting is not allowed on this board';
         }
-        $this->extensions = $filesAllowed ? $extensions : '.';
+        $this->mimeTypes = $filesAllowed ? $mimeTypes : ['.'];
         $this->notArray = 'Attribute is not an array';
     }
 
@@ -109,14 +109,12 @@ class PostedFileValidator extends FileValidator
 
     protected function validateValue(FileInfo $file)
     {
-        // We assuming here that fileFormat's extension matches with the actual file mime type
-        $fileExtension = $file->fileFormat->extension;
-        $fileName = "$file->originalName.$fileExtension";
+        $fileType = $file->mimeType->name;
 
-        if (!in_array($fileExtension, $this->extensions)) {
+        if (!in_array($fileType, $this->mimeTypes)) {
             return [
-                $this->wrongExtension,
-                ['file' => $fileName, 'extensions' => implode(', ', $this->extensions)]
+                $this->wrongMimeType,
+                ['file' => $file->originalName, 'mimeTypes' => implode(', ', $this->mimeTypes)]
             ];
         }
 
@@ -124,7 +122,7 @@ class PostedFileValidator extends FileValidator
             return [
                 $this->tooBig,
                 [
-                    'file' => $fileName,
+                    'file' => $file->originalName,
                     'limit' => $this->getSizeLimit(),
                     'formattedLimit' => Yii::$app->formatter->asShortSize($this->getSizeLimit())
                 ]

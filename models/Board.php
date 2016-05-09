@@ -30,12 +30,12 @@ use app\common\interfaces;
  * @property int $maxFiles
  * 
  * relations
- * @property \app\models\FileFormat[] $fileFormats
- * @property \app\models\WordFilter[] $wordFilters
- * @property \app\models\FileRating[] $fileRatings
- * @property \app\models\MarkupType[] $markupTypes
- * @property \app\models\Thread[] $threads
- * @property \app\models\BoardCounter $counter
+ * @property MimeType[] $mimeTypes
+ * @property WordFilter[] $wordFilters
+ * @property FileRating[] $fileRatings
+ * @property MarkupType[] $markupTypes
+ * @property Thread[] $threads
+ * @property BoardCounter $counter
  */
 class Board extends ActiveRecordExtended
 {
@@ -48,18 +48,18 @@ class Board extends ActiveRecordExtended
         return 'boards';
     }
     
-    public function getFileFormats()
+    public function getMimeTypes()
     {
-        return $this->hasMany(FileFormat::className(), ['id' => 'file_format_id'])
-            ->viaTable('boards_file_formats', ['board_id' => 'id']);
+        return $this->hasMany(MimeType::className(), ['id' => 'mime_type_id'])
+            ->viaTable('boards_mime_types', ['board_id' => 'id']);
     }
 
     /**
      * @param int[] $ids
      */
-    public function setFileFormats($ids)
+    public function setMimeTypes($ids)
     {
-        $this->fileFormats = $ids;
+        $this->mimeTypes = $ids;
     }
     
     public function getWordFilters()
@@ -158,8 +158,8 @@ class Board extends ActiveRecordExtended
             ['is_closed', 'default', 'value' => '0'],
             ['is_closed', 'boolean'],
             
-            [['fileFormats', 'wordFilters', 'fileRatings', 'markupTypes'], 'required', 'on' => 'create'],
-            [['fileFormats', 'wordFilters', 'fileRatings', 'markupTypes'], 'each', 'rule' => ['integer'], 'on' => 'create'],
+            [['mimeTypes', 'wordFilters', 'fileRatings', 'markupTypes'], 'required', 'on' => 'create'],
+            [['mimeTypes', 'wordFilters', 'fileRatings', 'markupTypes'], 'each', 'rule' => ['integer'], 'on' => 'create'],
         ];
     }
 
@@ -170,7 +170,7 @@ class Board extends ActiveRecordExtended
         $scenarios[self::SCENARIO_CREATE] = [
             'name', 'description', 'min_file_size', 'max_file_size', 'min_image_resolution', 'max_image_resolution', 
             'max_message_length', 'max_threads_on_page', 'max_board_pages', 'thread_max_posts', 'default_name', 'is_closed', 
-            'fileFormats', 'wordFilters', 'fileRatings', 'markupTypes'];
+            'mimeTypes', 'wordFilters', 'fileRatings', 'markupTypes'];
         $scenarios[self::SCENARIO_UPDATE] = [
             'name', 'description', 'min_file_size', 'max_file_size', 'min_image_resolution', 'max_image_resolution',
             'max_message_length', 'max_threads_on_page', 'max_board_pages', 'thread_max_posts', 'default_name', 'is_closed'

@@ -28,7 +28,7 @@
 | `int`    | default: 500       | thread_max_posts     | Max count of posts that thread on that board can contain
 | `string` | default: 'Anon'    | default_name         | Default name
 | `bool`   | default: false     | is_closed            | Is board closed
-| `array`  | yes                | fileFormats          | File formats ids
+| `array`  | yes                | mimeTypes          | File formats ids
 | `array`  | yes                | wordFilters          | Wordfilters ids
 | `array`  | yes                | fileRatings          | File ratings ids
 | `array`  | yes                | markupTypes          | Markup types ids
@@ -50,7 +50,7 @@
   "thread_max_posts": 500,
   "default_name": "Anon",
   "is_closed": false,
-  "fileFormats": [1],
+  "mimeTypes": [1],
   "wordFilters": [1],
   "fileRatings": [1],
   "markupTypes": [1]

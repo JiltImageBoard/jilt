@@ -23,7 +23,7 @@
 | `int`    | default: 500       | threadMaxPosts       | Max count of posts that thread on that board can contain
 | `string` | default: 'Anon'    | defaultName          | Default name
 | `bool`   | default: false     | isClosed             | Is board closed
-| `array`  | yes                | fileFormats          | File formats ids
+| `array`  | yes                | mimeTypes          | File formats ids
 | `array`  | yes                | wordFilters          | Wordfilters ids
 | `array`  | yes                | fileRatings          | File ratings ids
 | `array`  | yes                | markupTypes          | Markup types ids

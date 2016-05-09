@@ -60,6 +60,9 @@ $config = [
     ],
     'params' => $params,
     'defaultRoute' => 'board/get-all',
+    'aliases' => [
+        '@files' => 'files'
+    ]
 ];
 
 if (YII_ENV_DEV) {

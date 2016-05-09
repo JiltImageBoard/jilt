@@ -39,4 +39,9 @@ class Tag extends ActiveRecordExtended
         return $this->hasMany(Thread::className(), ['id' => 'thread_id'])
             ->viaTable('threads_tags', ['tag_id' => 'id']);
     }
+
+    public function setHash($value)
+    {
+        $this->hash = $value;
+    }
 }

@@ -26,16 +26,6 @@ abstract class ActiveRecordExtended extends ActiveRecord
      * @var array
      */
     protected $hidden = [];
-    /**
-     * Associative array, where prop name can be binded with relation name, from model of which property will be taken
-     * For example:
-     * when $delegatedFields = ['board' => thread],
-     * expression: $post->thread->board will be equal to $post->thread...nu i vot nahui ono nado lol..
-     * This gives some advantage when if u want apply hereditary behaviour to model attributes
-     * See FileInfo and it's descendants for real example
-     * @var array
-     */
-    protected $delegatedFields = [];
 
     public function __construct(array $config = [])
     {
@@ -45,13 +35,6 @@ abstract class ActiveRecordExtended extends ActiveRecord
 
     public function __get($key)
     {
-        $this->accessDelegatedField($key, function ($field) use (&$delegatedField) {
-            $delegatedField = $field;
-        });
-
-        if (isset($delegatedField))
-            return $delegatedField;
-
         if ($key = $this->hasKey($key)){
             return parent::__get($key);
         }
@@ -59,12 +42,6 @@ abstract class ActiveRecordExtended extends ActiveRecord
 
     public function __set($key, $value)
     {
-        $this->accessDelegatedField($key, function (&$field) use ($value, &$isDelegated) {
-            $field = $value;
-        });
-
-        if (isset($isDelegated)) return;
-
         if ($key = $this->hasKey($key)) {
             parent::__set($key, $value);
         }
@@ -72,12 +49,6 @@ abstract class ActiveRecordExtended extends ActiveRecord
 
     public function __unset($key)
     {
-        $this->accessDelegatedField($key, function () use (&$isDelegated) {
-            return false;
-        });
-
-        if (isset($isDelegated)) return;
-
         if ($key = $this->hasKey($key)){
             parent::__unset($key);
         }
@@ -85,10 +56,6 @@ abstract class ActiveRecordExtended extends ActiveRecord
 
     public function hasKey($key)
     {
-        $this->accessDelegatedField($key, function () use (&$isDelegated) {});
-
-        if (isset($isDelegated)) return $key;
-
         if ($this->hasAttribute($key) || $this->hasProperty($key)) {
             return $key;
         } else {
@@ -224,32 +191,14 @@ abstract class ActiveRecordExtended extends ActiveRecord
     }
 
     /**
-     * Accesses delegated to some relation field and if it there is such relation with field $key,
-     * Callback will be invoked. Field will be unsetted if callback returns false
-     * @param string $key
-     * @param $callback
-     */
-    private function accessDelegatedField($key, $callback)
-    {
-        if (isset($this->delegatedFields[$key])) {
-            $relationName = $this->delegatedFields[$key];
-            $relationModel = $this->$relationName;
-            if (isset($relationModel)) {
-                if ($relationModel->hasKey($key)) {
-                    if ($callback($relationModel[$key]) === false)
-                        unset($relationModel[$key]);
-                }
-            }
-        }
-    }
-
-    /**
      * Gets all relations with this model
      * TODO: should be reworked. Calls methods for retrieve return type, it's not optimal
      * @return array
      */
     public function initRelationDataArray()
     {
+        return [];
+
         $ARMethods = get_class_methods('\yii\db\ActiveRecord');
         $modelMethods = get_class_methods('\yii\base\Model');
         $reflection = new \ReflectionClass($this);

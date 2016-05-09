@@ -2,7 +2,10 @@
 
 namespace app\models;
 use app\common\classes\Thumb;
+use Imagine\Image\Box;
+use Imagine\Image\Point;
 use yii\web\UploadedFile;
+use yii\imagine\Image;
 
 /**
  * Class FileVideo
@@ -10,17 +13,13 @@ use yii\web\UploadedFile;
  * @property int $filesInfoId
  * @property int $width
  * @property int $height
- * inherited
- * @property string $filePath
- * @property string $originalName
- * @property string $hash
- * @property float $size
  * relations
  * @property FileInfo $fileInfo
  */
-class FileImage extends FileInfo
+class FileImage extends ActiveRecordExtended
 {
-    const THUMB_MAX_SIZE = 285;
+    const THUMB_MAX_SIDE_LENGTH = 285;
+    const THUMB_QUALITY = 80;
 
     public static function tableName()
     {
@@ -32,26 +31,70 @@ class FileImage extends FileInfo
         return $this->hasOne(FileInfo::className(), ['id' => 'files_info_id']);
     }
 
-    /**
-     * @param UploadedFile $file
-     * @return FileInfo|
-     */
-    public static function saveFile($file)
+    public function beforeSave($insert)
     {
-        $fileInfo = parent::saveFile($file);
-        if (!$fileInfo) {
+        if (!parent::beforeSave($insert)) {
             return false;
         }
 
-        if ($fileInfo->isNewFile) {
-            $fileImage = new FileImage();
-            list($fileImage->width, $fileImage->height) = getimagesize($fileInfo->filePath);
-            $fileImage->filesInfoId = $fileInfo->id;
-            $fileImage->save();
+        list($sourceWidth, $sourceHeight) = getimagesize($this->fileInfo->filePath);
+        $this->width = $sourceWidth;
+        $this->height = $sourceHeight;
 
-            Thumb::create($fileInfo->filePath);
+        return $this->generateThumb();
+    }
+
+    public function beforeDelete()
+    {
+        unlink($this->getThumbPath());
+        return parent::beforeDelete();
+    }
+
+    public function getThumbSizes()
+    {
+        $width = $this->width;
+        $height = $this->height;
+        $ratio = $this->width / $this->height;
+        if ($this->width > $this->height) {
+            if ($this->width > FileImage::THUMB_MAX_SIDE_LENGTH) {
+                $width = FileImage::THUMB_MAX_SIDE_LENGTH;
+                $height = $width / $ratio;
+            }
+        } else {
+            if ($this->height > FileImage::THUMB_MAX_SIDE_LENGTH) {
+                $height = FileImage::THUMB_MAX_SIDE_LENGTH;
+                $width = $height * $ratio;
+            }
         }
 
-        return $fileInfo;
+        return [$width, $height];
+    }
+
+    public function getThumbPath()
+    {
+        if (!$this->fileInfo) {
+            return null;
+        }
+
+        list($fileName, $fileExtension) = explode('.', $this->fileInfo->filePath);
+        return $fileName . '_thumb.' . $fileExtension;
+    }
+
+    public function generateThumb()
+    {
+        $sourcePath = $this->fileInfo->filePath;
+        $thumbPath = $this->getThumbPath();
+        list($thumbwidth, $thumbHeight) = $this->getThumbSizes();
+
+        try {
+            Image::thumbnail($sourcePath, $this->width, $this->height)
+                ->resize(new Box($thumbwidth, $thumbHeight))
+                ->save($thumbPath, ['quality' => FileImage::THUMB_QUALITY]);
+
+        } catch (\Exception $e) {
+            return false;
+        }
+
+        return is_readable($thumbPath);
     }
 }

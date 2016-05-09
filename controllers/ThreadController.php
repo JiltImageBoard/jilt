@@ -14,6 +14,7 @@ use app\models\PostMessage;
 use app\models\Thread;
 use Faker\Provider\File;
 use yii\base\Model;
+use yii\helpers\FileHelper;
 use yii\web\Controller;
 use yii\web\UploadedFile;
 
@@ -50,15 +51,17 @@ class ThreadController extends Controller
             $post = new PostData([
                 'files' => PostedFile::getPostedFiles($board->maxFiles),
                 'fileValidationParams' => [
-                    'allowedFormats' => $board->fileFormats,
+                    'allowedMimeTypes' => $board->mimeTypes,
                     'maxSize' => $board->maxFileSize
                 ]
             ]);
 
-            $post->validate();
-
-            print_r('errors: ');
-            print_r($post->getErrors());
+            if ($post->validate() && $post->save()) {
+                print_r('saved successfully');
+            } else {
+                print_r('errors:' . PHP_EOL);
+                print_r($post->errors);
+            }
 
             return ob_get_clean();
 
@@ -68,7 +71,10 @@ class ThreadController extends Controller
                 new PostMessage(),
                 new PostData([
                     'files' => PostedFile::getPostedFiles($board->maxFiles),
-                    'allowedFormats' => $board->fileFormats
+                    'fileValidationParams' => [
+                        'allowedFormats' => $board->mimeTypes,
+                        'maxSize' => $board->maxFileSize
+                    ]
                 ])
             ];
 
