@@ -59,7 +59,7 @@ class Board extends ActiveRecordExtended
      */
     public function setMimeTypes($ids)
     {
-        $this->mimeTypes = $ids;
+        $this->linkAfterSave('mimeTypes', MimeType::where(['id' => $ids])->get());
     }
     
     public function getWordFilters()
@@ -73,7 +73,7 @@ class Board extends ActiveRecordExtended
      */
     public function setWordFilters($ids)
     {
-        $this->wordFilters = $ids;
+        $this->linkAfterSave('wordFilters', WordFilter::where(['id' => $ids])->get());
     }
     
     public function getFileRatings()
@@ -87,7 +87,7 @@ class Board extends ActiveRecordExtended
      */
     public function setFileRatings($ids)
     {
-        $this->fileRatings = $ids;
+        $this->linkAfterSave('fileRatings', FileRating::where(['id' => $ids])->get());
     }
     
     public function getMarkupTypes()
@@ -101,7 +101,7 @@ class Board extends ActiveRecordExtended
      */
     public function setMarkupTypes($ids)
     {
-        $this->markupTypes = $ids;
+        $this->linkAfterSave('markupTypes', MarkupType::where(['id' => $ids])->get());
     }
     
     public function getThreads()
@@ -195,8 +195,11 @@ class Board extends ActiveRecordExtended
 
     public function afterSave($insert, $changedAttributes)
     {
-        parent::afterSave($insert, $changedAttributes);
-        $boardCounter = new BoardCounter(['board_id' => $this->id]);
+        if (!parent::afterSave($insert, $changedAttributes)) {
+            return false;
+        }
+
+        $boardCounter = new BoardCounter(['boardId' => $this->id]);
         $boardCounter->save();
     }
 

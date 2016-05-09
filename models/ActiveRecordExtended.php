@@ -85,48 +85,6 @@ abstract class ActiveRecordExtended extends ActiveRecord
     }
 
     /**
-     * @param bool $insert
-     * @param array $changedAttributes
-     */
-    public function afterSave($insert, $changedAttributes)
-    {
-        parent::afterSave($insert, $changedAttributes);
-        if (!$insert) return;
-
-        $vars = get_object_vars($this);
-        $relations = $this->relationDataArray;
-
-        // this code extracts models by id, which is set in model properties and links them with current model
-        // and unsets temp properties, used for hold ids
-        foreach ($vars as $propName => $value) {
-            foreach ($relations as $relation) {
-                if ($propName == $relation->name) {
-                    unset($this->$propName);
-
-                    $relationGetMethod = 'get' . ucfirst($relation->name);
-                    if (method_exists($this, $relationGetMethod)) {
-                        $excludedModels = $this->$relationGetMethod()->where(['not in', 'id', $value]);
-                        if (!is_null($excludedModels)) {
-                            foreach ($excludedModels as $model) {
-                                $this->unlink($relation->name, $model);
-                            }
-                        }
-                    }
-
-                    $ModelClass = $relation->modelClass;
-                    $ids = $value;
-                    $models = $ModelClass::find()->where(['id' => $ids])->all();
-                    foreach ($models as $model) {
-                        $this->link($relation->name, $model);
-                    }
-                    break;
-                }
-            }
-        }
-    }
-
-
-    /**
      * @param array|ErrorMessage $error|string
      * @param string|null $message
      * return void
@@ -190,51 +148,32 @@ abstract class ActiveRecordExtended extends ActiveRecord
         return true;
     }
 
-    /**
-     * Gets all relations with this model
-     * TODO: should be reworked. Calls methods for retrieve return type, it's not optimal
-     * @return array
-     */
-    public function initRelationDataArray()
+    public function getAfterSaveEvent()
     {
-        return [];
-
-        $ARMethods = get_class_methods('\yii\db\ActiveRecord');
-        $modelMethods = get_class_methods('\yii\base\Model');
-        $reflection = new \ReflectionClass($this);
-        $relationDataArray = [];
-        /* @var $method \ReflectionMethod */
-        foreach ($reflection->getMethods() as $method) {
-            if ($method->isStatic()) continue; //костыль?
-            if (in_array($method->name, $ARMethods) || in_array($method->name, $modelMethods)) {
-                continue;
-            }
-
-            if (StringHelper::startsWith($method->name, 'get')) {
-                if ($method->name === 'getAttributesWithRelatedAsPost') continue;
-                if ($method->name === 'getAttributesWithRelated') continue;
-
-                try {
-                    $rel = call_user_func(array($this, $method->name));
-                    if ($rel instanceof ActiveQuery) {
-                        $relationDataArray[] = new RelationData(
-                            lcfirst(str_replace('get', '', $method->name)),
-                            $method->name,
-                            $rel->multiple,
-                            $rel->modelClass,
-                            $rel->link,
-                            $rel->via
-                        );
-                    }
-                } catch (ErrorException $exc) {
-                    // TODO: implement some error output maybe?
-                }
-            }
-        }
-
-        return $relationDataArray;
+        return $this->isNewRecord ? static::EVENT_AFTER_INSERT : static::EVENT_AFTER_UPDATE;
     }
 
+    /**
+     * @param string $relationName
+     * @param array|ActiveRecordExtended $models
+     */
+    public function linkAfterSave($relationName, $models)
+    {
+        $this->on($this->getAfterSaveEvent(), function() use ($relationName, &$models) {
+            if (is_null($models)) {
+                return;
+            }
+
+            if (!is_array($models)) {
+                $this->link($relationName, $models);
+                return;
+            }
+
+            foreach ($models as $model) {
+                $this->link($relationName, $model);
+            }
+        });
+    }
 
     /**
      * returns foreign key if model belongs to passed model
