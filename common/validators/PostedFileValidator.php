@@ -80,10 +80,10 @@ class PostedFileValidator extends FileValidator
         }
 
         foreach ($files as $file) {
-            if ($file->fileData instanceof UploadedFile) {
-                $result = parent::validateValue($file->fileData);
-            } elseif ($file->fileData instanceof FileInfo) {
-                $result = $this->validateValue($file->fileData);
+            if ($file->uploadedFile) {
+                $result = parent::validateValue($file->uploadedFile);
+            } elseif ($file->fileInfo) {
+                $result = $this->validateValue($file->fileInfo);
             }
 
             if (!empty($result)) {
