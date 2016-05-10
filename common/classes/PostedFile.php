@@ -17,30 +17,26 @@ use yii\web\UploadedFile;
 class PostedFile extends Object
 {
     /**
-     * @var UploadedFile|FileInfo
+     * @var UploadedFile
      */
-    public $fileData;
+    public $uploadedFile;
+
+    /**
+     * @var FileInfo
+     */
+    public $fileInfo;
 
     /**
      * @var string
      */
     public $fileHash;
 
-    /**
-     * @var
-     */
-    public $isNewFile;
-
     public function init()
     {
         parent::init();
 
         if (!empty($this->fileHash)) {
-            $this->fileData = FileInfo::findOne(['hash' => $this->fileHash]);
-        }
-
-        if ($this->fileData instanceof UploadedFile) {
-            $this->isNewFile = true;
+            $this->fileInfo = FileInfo::findOne(['hash' => $this->fileHash]);
         }
     }
 
@@ -56,7 +52,7 @@ class PostedFile extends Object
         for ($i = 0; $i < $filesCount; $i++) {
             $uploadedFile = UploadedFile::getInstanceByName("file-{$i}");
             if ($uploadedFile) {
-                $files[] = new PostedFile(['fileData' => $uploadedFile]);
+                $files[] = new PostedFile(['uploadedFile' => $uploadedFile]);
             } elseif (!empty($postData["file-{$i}"])) {
                 $files[] = new PostedFile(['fileHash' => $postData["file-{$i}"]]);
             }
@@ -71,21 +67,17 @@ class PostedFile extends Object
      */
     public function save()
     {
-        if (!$this->fileData instanceof UploadedFile) {
-            return true;
+        if (!empty($this->uploadedFile)) {
+            return false;
         }
 
-        /**
-         * @var UploadedFile $file
-         */
-        $file = $this->fileData;
+        $file = $this->uploadedFile;
         $fileHash = md5_file($file->tempName);
 
         // just in case if file already exists
         $existingFileInfo = FileInfo::find()->where(['hash' => $fileHash])->one();
         if ($existingFileInfo) {
-            $this->isNewFile = false;
-            $this->fileData = $existingFileInfo;
+            $this->fileInfo = $existingFileInfo;
             return true;
         }
 
@@ -107,26 +99,15 @@ class PostedFile extends Object
         ]);
 
         $result = $fileInfo->save();
-        $this->fileData = $result ? $fileInfo : null;
+        $this->fileInfo = $result ? $fileInfo : null;
         return $result;
-    }
-
-    /**
-     * @return FileInfo|null
-     */
-    public function getInfo()
-    {
-        if (!$this->fileData instanceof FileInfo) {
-            return null;
-        }
-
-        return $this->fileData;
     }
 
     public function delete()
     {
-        if ($this->isNewFile && $this->fileData instanceof FileInfo) {
-            $this->fileData->delete();
+        // if file was uploaded now (so already existing won't be affected)
+        if ($this->uploadedFile && $this->fileInfo) {
+            $this->fileInfo->delete();
         }
     }
 }

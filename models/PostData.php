@@ -97,8 +97,7 @@ class PostData extends ActiveRecordExtended
         $saveFailed = false;
         foreach ($this->files as $file) {
             if ($file->save()) {
-                $fileInfo = $file->getInfo();
-                $this->link('fileInfos', $fileInfo);
+                $this->link('fileInfos', $file->fileInfo);
             } else {
                 $saveFailed = true;
                 break;
