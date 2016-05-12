@@ -46,25 +46,6 @@ class ThreadController extends Controller
          * @var Board $board
          */
         if ($board = Board::findOne(['name' => $name])) {
-            ob_start();
-
-            $post = new PostData([
-                'files' => PostedFile::getPostedFiles($board->maxFiles),
-                'fileValidationParams' => [
-                    'allowedMimeTypes' => $board->mimeTypes,
-                    'maxSize' => $board->maxFileSize
-                ]
-            ]);
-
-            if ($post->validate() && $post->save()) {
-                print_r('saved successfully');
-            } else {
-                print_r('errors:' . PHP_EOL);
-                print_r($post->errors);
-            }
-
-            return ob_get_clean();
-
             $thread = new Thread(['boardId' => $board->id]);
             $models = [
                 $thread,
