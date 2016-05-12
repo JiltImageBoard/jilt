@@ -4,4 +4,5 @@ config/db.php
 vendor/*
 composer.lock
 
-/controllers/TestController.php
+controllers/TestController.php
+tests/_output/*
