@@ -80,11 +80,7 @@ class PostedFileValidator extends FileValidator
         }
 
         foreach ($files as $file) {
-            if ($file->uploadedFile) {
-                $result = parent::validateValue($file->uploadedFile);
-            } elseif ($file->fileInfo) {
-                $result = $this->validateValue($file->fileInfo);
-            }
+            $result = $this->validateValue($file);
 
             if (!empty($result)) {
                 $this->addError($model, $attribute, $result[0], $result[1]);
@@ -107,8 +103,14 @@ class PostedFileValidator extends FileValidator
         return true;
     }
 
-    protected function validateValue(FileInfo $file)
+    protected function validateValue(PostedFile $value)
     {
+        if (!empty($value->uploadedFile)) {
+            return parent::validateValue($value->uploadedFile);
+        }
+
+        $file = $value->fileInfo;
+
         $fileType = $file->mimeType->name;
 
         if (!in_array($fileType, $this->mimeTypes)) {
@@ -128,6 +130,5 @@ class PostedFileValidator extends FileValidator
                 ]
             ];
         }
-
     }
 }
