@@ -45,35 +45,38 @@ class ThreadController extends Controller
         /**
          * @var Board $board
          */
-        if ($board = Board::findOne(['name' => $name])) {
-            $thread = new Thread(['boardId' => $board->id]);
-            $models = [
-                $thread,
-                new PostMessage(),
-                new PostData([
-                    'files' => PostedFile::getPostedFiles($board->maxFiles),
-                    'fileValidationParams' => [
-                        'allowedFormats' => $board->mimeTypes,
-                        'maxSize' => $board->maxFileSize
-                    ]
-                ])
-            ];
+        
+        $data = \Yii::$app->request->post();
 
-            
-            if (
-                ActiveRecordExtended::loadMultiple(\Yii::$app->request->post(), $models) &&
-                Model::validateMultiple($models)
-            ) {
-                if (ActiveRecordExtended::saveAndLink($models)) {
-                    return $thread->toArray();
-                }
-            }
-
-            return DataFormatter::collectErrors($models);
+        if (!$board = Board::findOne(['name' => $name])) {
+            \Yii::$app->response->setStatusCode(404);
+            return 'Board was not found';
         }
 
-        \Yii::$app->response->setStatusCode(404);
-        return 'Board was not found';
+        $thread = new Thread(['boardId' => $board->id]);
+        $postMessage = new PostMessage();
+        $postData = new PostData([
+            'files' => PostedFile::getPostedFiles($board->maxFiles),
+            'fileValidationParams' => [
+                'allowedMimeTypes' => $board->mimeTypes,
+                'maxSize'        => $board->maxFileSize
+            ]
+        ]);
+
+        $models = [$thread, $postMessage, $postData];
+        
+        if (
+            ActiveRecordExtended::loadMultiple($models, $data) &&
+            Model::validateMultiple($models)
+        ) {
+            
+        }
+
+        return $this->render('create', [
+            'thread'      => $thread,
+            'postMessage' => $postMessage,
+            'postData'    => $postData
+        ]);
     }
 
     /**

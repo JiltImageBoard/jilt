@@ -41,18 +41,18 @@ $config = [
         'db' => require(__DIR__ . '/db.php'),
         'urlManager' => require(__DIR__ . '/routes.php'),
         'response' => [
-            'format' => yii\web\Response::FORMAT_JSON,
+            'format' => yii\web\Response::FORMAT_HTML,
             'charset' => 'UTF-8',
         ],
         'user' => [
             'identityClass' => 'app\models\User',
             'enableSession' => false,
             'enableAutoLogin' => true
-        ],
-        'ipGeoBase' => [
+        ]
+        /*'ipGeoBase' => [
             'class' => 'himiklab\ipgeobase\IpGeoBase',
             'useLocalDB' => true,
-        ],
+        ],*/
     ],
     'controller' => [
         'class' => 'yii\web\Controller',

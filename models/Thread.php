@@ -22,10 +22,11 @@ use app\common\interfaces\DeletableInterface;
  * @property bool $isDeleted
  * @property int $postDataId
  * @property string $updatedAt
- * 
- * @property \app\models\Board $board
- * @property \app\models\PostData $postData
- * @property \app\models\Post $posts
+ * relations
+ * @property Board $board
+ * @property PostData $postData
+ * @property Post[] $posts
+ * @property PostsSettings $postsSettings
  */
 class Thread extends ActiveRecordExtended implements DeletableInterface
 {
@@ -56,6 +57,11 @@ class Thread extends ActiveRecordExtended implements DeletableInterface
     public function getPosts()
     {
         return $this->hasMany(Post::className(), ['thread_id' => 'id']);
+    }
+
+    public function getPostsSettings()
+    {
+        return $this->hasOne(PostsSettings::className(), ['id' => 'posts_settings_id']);
     }
 
     public function behaviors()

@@ -18,6 +18,8 @@ return [
         'POST boards/<name:\w+>/threads/?' => 'thread/create',
         'PUT boards/<name:\w+>/threads/<threadNum:\d+>/?' => 'thread/update',
         'DELETE boards/<name:\w+>/threads/<threadNum:\d+>/?' => 'thread/delete',
+        /* Threads Debug routes */
+        'GET,POST boards/<name:\w+>/threads/create/?' => 'thread/create',
 
         /* Chats */
         'GET boards/<name:\w+>/threads/<threadNum:\d+>/pages/<pageNum:\d+>/?' => 'thread/get-page',

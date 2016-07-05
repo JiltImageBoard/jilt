@@ -16,24 +16,15 @@ use app\common\interfaces;
  * @property string $description
  * @property \DateTime $createdAt
  * @property \DateTime $updatedAt
- * @property int $minFileSize
- * @property int $maxFileSize
- * @property string $minImageResolution
- * @property string $maxImageResolution
- * @property int $maxMessageLength
  * @property int $maxThreadsOnPage
  * @property int $maxBoardPages
  * @property int $threadMaxPosts
- * @property string $defaultName
  * @property bool $isClosed
  * @property bool $isDeleted
  * @property int $maxFiles
  * 
  * relations
- * @property MimeType[] $mimeTypes
- * @property WordFilter[] $wordFilters
- * @property FileRating[] $fileRatings
- * @property MarkupType[] $markupTypes
+ * @property PostsSettings $postsSettings
  * @property Thread[] $threads
  * @property BoardCounter $counter
  */
@@ -48,44 +39,10 @@ class Board extends ActiveRecordExtended
         return 'boards';
     }
     
-    public function getMimeTypes()
-    {
-        return $this->hasMany(MimeType::className(), ['id' => 'mime_type_id'])
-            ->viaTable('boards_mime_types', ['board_id' => 'id']);
-    }
-
     /**
      * @param int[] $ids
      */
-    public function setMimeTypes($ids)
-    {
-        $this->linkAfterSave('mimeTypes', MimeType::where(['id' => $ids])->get());
-    }
-    
-    public function getWordFilters()
-    {
-        return $this->hasMany(WordFilter::className(), ['id' => 'wordfilter_id'])
-            ->viaTable('boards_wordfilters', ['board_id' => 'id']);
-    }
-
-    /**
-     * @param int[] $ids
-     */
-    public function setWordFilters($ids)
-    {
-        $this->linkAfterSave('wordFilters', WordFilter::where(['id' => $ids])->get());
-    }
-    
-    public function getFileRatings()
-    {
-        return $this->hasMany(FileRating::className(), ['id' => 'file_rating_id'])
-            ->viaTable('boards_file_ratings', ['board_id' => 'id']);
-    }
-
-    /**
-     * @param int[] $ids
-     */
-    public function setFileRatings($ids)
+    /*public function setFileRatings($ids)
     {
         $this->linkAfterSave('fileRatings', FileRating::where(['id' => $ids])->get());
     }
@@ -94,14 +51,11 @@ class Board extends ActiveRecordExtended
     {
         return $this->hasMany(MarkupType::className(), ['id' => 'markup_type_id'])
             ->viaTable('boards_markup_types', ['board_id' => 'id']);
-    }
+    }*/
 
-    /**
-     * @param int[] $ids
-     */
-    public function setMarkupTypes($ids)
+    public function getPostsSettings()
     {
-        $this->linkAfterSave('markupTypes', MarkupType::where(['id' => $ids])->get());
+        return $this->hasOne(PostsSettings::className(), ['posts_settings_id' => 'id']);
     }
     
     public function getThreads()
@@ -116,6 +70,7 @@ class Board extends ActiveRecordExtended
     }
 
     /**
+     * TODO: most of these rules related to other Models
      * Rules for validation
      * @return array
      */
@@ -179,8 +134,7 @@ class Board extends ActiveRecordExtended
         return $scenarios;
 
     }
-
-
+    
     public function behaviors()
     {
         return [

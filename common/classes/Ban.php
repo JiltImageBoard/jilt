@@ -65,7 +65,8 @@ class Ban
 
     public function getCountry()
     {
-        return \Yii::$app->ipGeoBase->getLocation($this->ip)['country'];
+        /*location = \Yii::$app->ipGeoBase->getLocation($this->ip);*/
+        return isset($location['country']) ? $location['country'] : null;
     }
 
     public function getFiles()

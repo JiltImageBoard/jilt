@@ -30,7 +30,6 @@ abstract class ActiveRecordExtended extends ActiveRecord
     public function __construct(array $config = [])
     {
         parent::__construct($config);
-        $this->relationDataArray = $this->initRelationDataArray();
     }
 
     public function __get($key)
@@ -120,32 +119,19 @@ abstract class ActiveRecordExtended extends ActiveRecord
     }
 
     /**
-     * Loads data into models
-     * @param array $data can be any associative array, each array item should be loaded into some model
-     * @param array $models Array with model objects
+     * Diff with Model::loadMultiple is, that we can pass models of different classes
+     * @param Model[] $models
+     * @param array $data
      * @return bool
      */
-    public static function loadMultiple($data, $models)
+    public static function loadMultiple($models, $data)
     {
-        foreach ($data as $key => $value) {
-            $keyValueLoaded = false;
-            foreach ($models as $model) {
-                /**
-                 * @var ActiveRecordExtended $model
-                 */
-                if ($model->hasKey($key)) {
-                    $model->$key = $value;
-                    $keyValueLoaded = true;
-                    break;
-                }
-            }
-
-            if (!$keyValueLoaded) {
-                print_r($data);
-                return false;
-            }
+        $success = true;
+        foreach ($models as $model) {
+            $success &= $model->load($data);
         }
-        return true;
+
+        return $success;
     }
 
     public function getAfterSaveEvent()

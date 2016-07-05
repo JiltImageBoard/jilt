@@ -25,6 +25,7 @@ class BoardController extends Controller
         if ($board->load(\Yii::$app->request->post()) && $board->validate()) {
             if ($board->save()) {
                 \Yii::$app->response->setStatusCode(201);
+                // TODO: we need to return full entity, not just name 
                 return $this->actionGet($board->name);
             }
         }
