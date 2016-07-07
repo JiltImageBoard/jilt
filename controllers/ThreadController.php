@@ -53,17 +53,13 @@ class ThreadController extends Controller
             return 'Board was not found';
         }
 
-        $thread = new Thread(['boardId' => $board->id]);
-        $postMessage = new PostMessage();
+        $thread   = new Thread(['boardId' => $board->id]);
         $postData = new PostData([
-            'files' => PostedFile::getPostedFiles($board->maxFiles),
-            'fileValidationParams' => [
-                'allowedMimeTypes' => $board->mimeTypes,
-                'maxSize'        => $board->maxFileSize
-            ]
+            'postedFiles'   => PostedFile::getPostedFiles($board->maxFiles),
+            'postsSettings' => $board->postsSettings
         ]);
 
-        $models = [$thread, $postMessage, $postData];
+        $models = [$thread, $postData];
         
         if (
             ActiveRecordExtended::loadMultiple($models, $data) &&
@@ -74,7 +70,6 @@ class ThreadController extends Controller
 
         return $this->render('create', [
             'thread'      => $thread,
-            'postMessage' => $postMessage,
             'postData'    => $postData
         ]);
     }

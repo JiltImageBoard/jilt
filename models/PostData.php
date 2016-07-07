@@ -23,8 +23,8 @@ use yii\web\UploadedFile;
  * @property bool $isDeleted
  * @property \DateTime $createdAt
  * @property \DateTime $updatedAt
+ * @property string $messageText
  * relations
- * @property PostMessage $postMessage
  * @property FileInfo[] $fileInfos
  */
 class PostData extends ActiveRecordExtended
@@ -32,12 +32,12 @@ class PostData extends ActiveRecordExtended
     /**
      * @var PostedFile[]
      */
-    public $files;
+    public $postedFiles;
 
     /**
-     * @var array
+     * @var PostsSettings
      */
-    public $fileValidationParams;
+    public $postsSettings;
 
     /**
      * @return string
@@ -51,10 +51,22 @@ class PostData extends ActiveRecordExtended
     {
         return [
             [
-                'files',
+                'postedFiles',
                 PostedFileValidator::className(),
-                'skipOnEmpty' => true,
-                'params' => $this->fileValidationParams
+                'skipOnEmpty'        => true,
+                'allowedMimeTypes'   => $this->postsSettings->mimeTypes,
+                'maxFiles'           => $this->postsSettings->maxFiles,
+                'minFileSize'        => $this->postsSettings->minFileSize,
+                'maxFileSize'        => $this->postsSettings->maxFileSize,
+                'minImageResolution' => $this->postsSettings->minImageResolution,
+                'maxImageResolution' => $this->postsSettings->maxImageResolution,
+
+            ],
+            [
+                'messageText', 'string'
+            ],
+            [
+                
             ]
         ];
     }

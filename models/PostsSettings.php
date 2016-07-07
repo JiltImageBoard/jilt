@@ -11,6 +11,12 @@ namespace app\models;
 /**
  * Class PostsSettings
  * @package app\models
+ * @property int $minFileSize
+ * @property int $maxFileSize
+ * @property string $minImageResolution
+ * @property string $maxImageResolution
+ * @property int $maxFiles
+ * @property string $maxMessageLength
  * relations
  * @property Board[] $boards
  * @property Thread[] $threads
