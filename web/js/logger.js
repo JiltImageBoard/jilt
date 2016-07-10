@@ -82,7 +82,9 @@ $(function () {
             formData.set(inputName, fileForm.fileHashes[inputName]);
         }
 
-        $.ajax({
+        console.log(data);
+
+        /*$.ajax({
             url: $form.attr('action'),
             type: $form.attr('method'),
             processData: false,
@@ -99,7 +101,7 @@ $(function () {
                 stringData = stringData.replace(/\\n/g, "<br/>");
                 $log.html(stringData);
             }
-        });
+        });*/
 
     });
 });

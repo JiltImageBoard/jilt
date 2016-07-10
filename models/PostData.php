@@ -50,7 +50,7 @@ class PostData extends ActiveRecordExtended
     public function rules()
     {
         return [
-            [
+            /*[
                 'postedFiles',
                 PostedFileValidator::className(),
                 'skipOnEmpty'        => true,
@@ -61,13 +61,7 @@ class PostData extends ActiveRecordExtended
                 'minImageResolution' => $this->postsSettings->minImageResolution,
                 'maxImageResolution' => $this->postsSettings->maxImageResolution,
 
-            ],
-            [
-                'messageText', 'string'
-            ],
-            [
-                
-            ]
+            ]*/
         ];
     }
 

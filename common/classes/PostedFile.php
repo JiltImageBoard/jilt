@@ -31,6 +31,8 @@ class PostedFile extends Object
      */
     public $fileHash;
 
+
+
     public function init()
     {
         parent::init();

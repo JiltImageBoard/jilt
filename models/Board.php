@@ -38,24 +38,10 @@ class Board extends ActiveRecordExtended
     {
         return 'boards';
     }
-    
-    /**
-     * @param int[] $ids
-     */
-    /*public function setFileRatings($ids)
-    {
-        $this->linkAfterSave('fileRatings', FileRating::where(['id' => $ids])->get());
-    }
-    
-    public function getMarkupTypes()
-    {
-        return $this->hasMany(MarkupType::className(), ['id' => 'markup_type_id'])
-            ->viaTable('boards_markup_types', ['board_id' => 'id']);
-    }*/
 
     public function getPostsSettings()
     {
-        return $this->hasOne(PostsSettings::className(), ['posts_settings_id' => 'id']);
+        return $this->hasOne(PostsSettings::className(), ['id' => 'posts_settings_id']);
     }
     
     public function getThreads()

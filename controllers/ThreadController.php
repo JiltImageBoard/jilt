@@ -12,6 +12,7 @@ use app\models\Post;
 use app\models\PostData;
 use app\models\PostMessage;
 use app\models\Thread;
+use app\models\UploadForm;
 use Faker\Provider\File;
 use yii\base\Model;
 use yii\helpers\FileHelper;
@@ -52,19 +53,19 @@ class ThreadController extends Controller
             \Yii::$app->response->setStatusCode(404);
             return 'Board was not found';
         }
+        
+        $settings = $board->postsSettings;
 
-        $thread   = new Thread(['boardId' => $board->id]);
-        $postData = new PostData([
-            'postedFiles'   => PostedFile::getPostedFiles($board->maxFiles),
-            'postsSettings' => $board->postsSettings
+        $thread     = new Thread(['boardId' => $board->id]);
+        $postData   = new PostData();
+        $uploadForm = new UploadForm([
+            'files'    => PostedFile::getPostedFiles($settings->maxFiles),
+            'settings' => $settings
         ]);
 
-        $models = [$thread, $postData];
+        $models = [$thread, $postData, $uploadForm];
         
-        if (
-            ActiveRecordExtended::loadMultiple($models, $data) &&
-            Model::validateMultiple($models)
-        ) {
+        if (Model::loadMultiple($models, $data) && Model::validateMultiple($models)) {
             
         }
 

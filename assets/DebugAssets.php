@@ -17,6 +17,7 @@ class DebugAssets extends AssetBundle
         'yii\bootstrap\BootstrapAsset'
     ];
     public $js = [
+        'js/crypto.js',
         'js/logger.js'
     ];
 }

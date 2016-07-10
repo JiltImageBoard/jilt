@@ -17,7 +17,7 @@ $form = ActiveForm::begin([
 <div class="container" style="margin-top: 50px;">
     <div class="row">
         <div class="col-md-6 col-md-offset-3">
-            <?= $form->field($postMessage, 'text')->textarea()->label('Post Text') ?>
+            <?= $form->field($postData, 'message_text')->textarea()->label('Post Text') ?>
             <?= $form->field($postData, 'name') ?>
             <?= $form->field($postData, 'subject') ?>
             <?= $form->field($thread, 'isChat')->checkbox() ?>
