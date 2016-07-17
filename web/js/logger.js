@@ -68,8 +68,7 @@ var fileForm = {
 }
 
 $(function () {
-    var $form = $("#testForm");
-    var $log = $('#logOutput');
+    var $form = $("#threadCreateForm");
 
     fileForm.init('#files');
 
@@ -82,9 +81,7 @@ $(function () {
             formData.set(inputName, fileForm.fileHashes[inputName]);
         }
 
-        console.log(data);
-
-        /*$.ajax({
+        $.ajax({
             url: $form.attr('action'),
             type: $form.attr('method'),
             processData: false,
@@ -93,15 +90,16 @@ $(function () {
             success: function (data) {
                 var stringData = JSON.stringify(data)
                 stringData = stringData.replace(/\\n/g, "<br/>");
-                $log.html(stringData);
+                console.log(stringData);
+                /*$log.html(stringData);*/
             },
             error: function (data) {
                 var stringData = JSON.stringify(data)
                 console.log(stringData)
                 stringData = stringData.replace(/\\n/g, "<br/>");
-                $log.html(stringData);
+                /*$log.html(stringData);*/
             }
-        });*/
+        });
 
     });
 });

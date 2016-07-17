@@ -17,6 +17,7 @@ use Faker\Provider\File;
 use yii\base\Model;
 use yii\helpers\FileHelper;
 use yii\web\Controller;
+use yii\web\Response;
 use yii\web\UploadedFile;
 
 class ThreadController extends Controller
@@ -55,6 +56,12 @@ class ThreadController extends Controller
         }
         
         $settings = $board->postsSettings;
+
+        if (\Yii::$app->request->isAjax) {
+            \Yii::$app->response->format = Response::FORMAT_JSON;
+            $count = count(PostedFile::getPostedFiles($settings->maxFiles));
+            return ['count' => $count];
+        }
 
         $thread     = new Thread(['boardId' => $board->id]);
         $postData   = new PostData();

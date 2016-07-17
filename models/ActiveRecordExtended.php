@@ -124,7 +124,7 @@ abstract class ActiveRecordExtended extends ActiveRecord
      * @param array $data
      * @return bool
      */
-    public static function loadMultiple($models, $data)
+    public static function loadMultiple($models, $data, $formName = null)
     {
         $success = true;
         foreach ($models as $model) {
