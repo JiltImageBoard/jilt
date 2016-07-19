@@ -14,7 +14,7 @@ use app\common\interfaces\DeletableInterface;
  * @property \app\models\PostData $postData
  */
 
-class Post extends ActiveRecordExtended implements DeletableInterface
+class Post extends ARExtended implements DeletableInterface
 {
     public static function tableName()
     {

@@ -74,6 +74,7 @@ $(function () {
 
     $form.submit(function (e) {
         e.preventDefault();
+        e.stopImmediatePropagation();
 
         var formData = new FormData($form[0]);
 
@@ -91,15 +92,13 @@ $(function () {
                 var stringData = JSON.stringify(data)
                 stringData = stringData.replace(/\\n/g, "<br/>");
                 console.log(stringData);
-                /*$log.html(stringData);*/
             },
             error: function (data) {
                 var stringData = JSON.stringify(data)
                 console.log(stringData)
                 stringData = stringData.replace(/\\n/g, "<br/>");
-                /*$log.html(stringData);*/
+                console.error(stringData);
             }
         });
-
     });
 });

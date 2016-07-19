@@ -11,7 +11,7 @@ namespace app\models;
  * 
  * @property \app\models\Thread $threads
  */
-class Tag extends ActiveRecordExtended
+class Tag extends ARExtended
 {
     public static function tableName()
     {

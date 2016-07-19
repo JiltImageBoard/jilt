@@ -28,7 +28,7 @@ use app\common\interfaces\DeletableInterface;
  * @property Post[] $posts
  * @property PostsSettings $postsSettings
  */
-class Thread extends ActiveRecordExtended implements DeletableInterface
+class Thread extends ARExtended implements DeletableInterface
 {
     /**
      * @return string

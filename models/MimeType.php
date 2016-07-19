@@ -11,7 +11,7 @@ namespace app\models;
  * @property Board[] $boards
  * @propetry FileInfo[] $fileInfos
  */
-class MimeType extends ActiveRecordExtended
+class MimeType extends ARExtended
 {
     public static function tableName()
     {

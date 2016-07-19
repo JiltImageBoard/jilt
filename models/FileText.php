@@ -8,7 +8,7 @@ namespace app\models;
  * relations
  * @property FileInfo $fileInfo
  */
-class FileText extends ActiveRecordExtended
+class FileText extends ARExtended
 {
     public static function tableName()
     {

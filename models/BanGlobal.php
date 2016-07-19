@@ -11,7 +11,7 @@ namespace app\models;
  * @property \DateTime $createdAt
  * @property \DateTime $updatedAt
  */
-class BanGlobal extends ActiveRecordExtended
+class BanGlobal extends ARExtended
 {
     public static function tableName()
     {

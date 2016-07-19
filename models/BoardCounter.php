@@ -10,7 +10,7 @@ namespace app\models;
  * @property int $boardId
  * @property int $counter
  */
-class BoardCounter extends ActiveRecordExtended
+class BoardCounter extends ARExtended
 {
     public static function tableName()
     {

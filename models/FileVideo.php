@@ -8,7 +8,7 @@ namespace app\models;
  * relations
  * @property FileInfo $fileInfo
  */
-class FileVideo extends ActiveRecordExtended
+class FileVideo extends ARExtended
 {
     public static function tableName()
     {

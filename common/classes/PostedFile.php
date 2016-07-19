@@ -69,8 +69,8 @@ class PostedFile extends Object
      */
     public function save()
     {
-        if (!empty($this->uploadedFile)) {
-            return false;
+        if (empty($this->uploadedFile)) {
+            return $this->fileInfo ? true : false;
         }
 
         $file = $this->uploadedFile;

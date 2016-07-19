@@ -18,7 +18,7 @@ namespace app\models;
  * @property User[] $users
  * @property Board[] $boards
  */
-class BoardRights extends ActiveRecordExtended
+class BoardRights extends ARExtended
 {
     public static function tableName()
     {

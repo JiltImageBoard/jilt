@@ -14,7 +14,7 @@ use yii\web\UploadedFile;
  *
  * @property int $id
  * @property string $name
- * @property int $messageId
+ * @property string $messageText
  * @property string $subject
  * @property int $ip
  * @property string $session
@@ -23,17 +23,11 @@ use yii\web\UploadedFile;
  * @property bool $isDeleted
  * @property \DateTime $createdAt
  * @property \DateTime $updatedAt
- * @property string $messageText
  * relations
  * @property FileInfo[] $fileInfos
  */
-class PostData extends ActiveRecordExtended
+class PostData extends ARExtended
 {
-    /**
-     * @var PostedFile[]
-     */
-    public $postedFiles;
-
     /**
      * @var PostsSettings
      */
@@ -65,11 +59,6 @@ class PostData extends ActiveRecordExtended
         ];
     }
 
-    public function getPostMessage()
-    {
-        return $this->hasOne(PostMessage::className(), ['id' => 'message_id']);
-    }
-
     public function getFileInfos()
     {
         return $this->hasMany(FileInfo::className(), ['id' => 'files_info_id'])
@@ -93,31 +82,6 @@ class PostData extends ActiveRecordExtended
         }
 
         return true;
-    }
-
-    /**
-     * @return bool
-     */
-    private function saveFiles() 
-    {
-        $saveFailed = false;
-        foreach ($this->files as $file) {
-            if ($file->save()) {
-                $this->link('fileInfos', $file->fileInfo);
-            } else {
-                $saveFailed = true;
-                break;
-            }
-        }
-
-        // We should remove all saved files if something gone wrong
-        if ($saveFailed) {
-            foreach ($this->files as $file) {
-                $file->delete();
-            }
-        }
-
-        return !$saveFailed;
     }
 
     public function behaviors()

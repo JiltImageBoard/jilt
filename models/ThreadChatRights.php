@@ -14,7 +14,7 @@ namespace app\models;
  * @property User[] $users
  * @property Thread[] $threadChats
  */
-class ThreadChatRights extends ActiveRecordExtended
+class ThreadChatRights extends ARExtended
 {
     public static function tableName()
     {

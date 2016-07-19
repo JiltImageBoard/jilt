@@ -13,11 +13,11 @@ use yii\web\UploadedFile;
  * @property string $originalName
  * @property string $hash
  * @property float $size
- * @property ActiveRecordExtended $subClassInstance
+ * @property ARExtended $subClassInstance
  * relations
  * @property MimeType $mimeType
  */
-class FileInfo extends ActiveRecordExtended
+class FileInfo extends ARExtended
 {
     public static function tableName()
     {
@@ -30,7 +30,7 @@ class FileInfo extends ActiveRecordExtended
     }
 
     /**
-     * @return ActiveRecordExtended|null
+     * @return ARExtended|null
      */
     public function getSubClassName()
     {
@@ -43,7 +43,7 @@ class FileInfo extends ActiveRecordExtended
     }
 
     /**
-     * @return ActiveRecordExtended|null
+     * @return ARExtended|null
      */
     public function getSubClassInstance()
     {

@@ -8,7 +8,7 @@ namespace app\models;
  * @property string $ratingName
  * @property string $picturePath
  */
-class FileRating extends ActiveRecordExtended
+class FileRating extends ARExtended
 {
     public static function tableName()
     {

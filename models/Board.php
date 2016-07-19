@@ -28,7 +28,7 @@ use app\common\interfaces;
  * @property Thread[] $threads
  * @property BoardCounter $counter
  */
-class Board extends ActiveRecordExtended
+class Board extends ARExtended
 {
 
     const SCENARIO_CREATE = 'create';

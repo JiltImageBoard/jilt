@@ -27,7 +27,7 @@ namespace app\models;
  * @property $threads
  * @property $chatPages
  */
-class BanSettings extends ActiveRecordExtended
+class BanSettings extends ARExtended
 {
     public static function tableName()
     {

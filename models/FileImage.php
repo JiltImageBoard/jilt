@@ -16,7 +16,7 @@ use yii\imagine\Image;
  * relations
  * @property FileInfo $fileInfo
  */
-class FileImage extends ActiveRecordExtended
+class FileImage extends ARExtended
 {
     const THUMB_MAX_SIDE_LENGTH = 285;
     const THUMB_QUALITY = 80;

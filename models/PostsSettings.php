@@ -25,7 +25,7 @@ namespace app\models;
  * @property MarkupType[] $markupTypes
  * @property FileRating[] $fileRatings
  */
-class PostsSettings extends ActiveRecordExtended
+class PostsSettings extends ARExtended
 {
     public static function tableName()
     {

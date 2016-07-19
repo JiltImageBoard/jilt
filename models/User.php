@@ -23,7 +23,7 @@ use yii\web\IdentityInterface;
  * @property BoardRights[] $boardRights
  * @property ThreadChatRights[] $chatRights
  */
-class User extends ActiveRecordExtended implements IdentityInterface
+class User extends ARExtended implements IdentityInterface
 {
     const SCENARIO_UPDATE = 'update';
     protected $hidden = ['password', 'salt'];
