@@ -11,17 +11,17 @@ namespace app\models;
 /**
  * Class PostsSettings
  * @package app\models
- * @property int $minFileSize
- * @property int $maxFileSize
+ * @property int    $minFileSize
+ * @property int    $maxFileSize
  * @property string $minImageResolution
  * @property string $maxImageResolution
- * @property int $maxFiles
+ * @property int    $maxFiles
  * @property string $maxMessageLength
  * relations
- * @property Board[] $boards
- * @property Thread[] $threads
+ * @property Board[]      $boards
+ * @property Thread[]     $threads
  * @property WordFilter[] $wordFilters
- * @property MimeType[] $mimeTypes
+ * @property MimeType[]   $mimeTypes
  * @property MarkupType[] $markupTypes
  * @property FileRating[] $fileRatings
  */
@@ -64,5 +64,25 @@ class PostsSettings extends ARExtended
     {
         return $this->hasMany(FileRating::className(), ['id' => 'file_rating_id'])
             ->viaTable('posts_settings_file_ratings', ['posts_settings_id' => 'id']);
+    }
+
+    /**
+     * @return array
+     */
+    public function getValidationParams() {
+        $mimeTypes = [];
+        foreach ($this->mimeTypes as $mimeType) {
+            $mimeTypes[] = $mimeType->name;
+        }
+
+        return [
+            'minFileSize'        => $this->minFileSize,
+            'maxFileSIze'        => $this->maxFileSize,
+            'minImageResolution' => $this->minImageResolution,
+            'maxImageResolution' => $this->maxImageResolution,
+            'maxFiles'           => $this->maxFiles,
+            'maxMessageLength'   => $this->maxMessageLength,
+            'mimeTypes'          => $mimeTypes
+        ];
     }
 }

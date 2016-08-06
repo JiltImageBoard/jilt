@@ -5,6 +5,7 @@ namespace app\common\validators;
 use app\common\classes\PostedFile;
 use app\models\MimeType;
 use app\models\FileInfo;
+use app\models\PostsSettings;
 use Yii;
 use yii\validators\FileValidator;
 use yii\web\UploadedFile;
@@ -17,16 +18,7 @@ class PostedFileValidator extends FileValidator
      */
     public $notArray;
 
-    /**
-     * Will be transformed into string array of allowed extensions on init
-     * @var MimeType[]
-     */
-    public $allowedMimeTypes;
-
-    /**
-     * With this you can set all validator params in one array
-     * @var array
-     */
+    /** @var  array */
     public $params;
 
     public function init()
@@ -36,19 +28,20 @@ class PostedFileValidator extends FileValidator
         $this->maxFiles = 1;
         $this->maxSize = 20971520;
 
-        if (!empty($this->params)) {
-            foreach ($this->params as $paramName => $paramValue) {
-                $this->$paramName = $paramValue;
+        if (!empty($this->array)) {
+            foreach ($this->array as $prop => $value) {
+                $this->$prop = $value;
             }
         }
 
-        $mimeTypes = [];
-        if (isset($this->allowedMimeTypes)) {
-            foreach ($this->allowedMimeTypes as $allowedMimeType) {
-                $mimeTypes[] = $allowedMimeType->name;
+        // turning mime types into strings
+        foreach ($this->mimeTypes as $i => $mimeType) {
+            if ($mimeType instanceof MimeType) {
+                $this->mimeTypes[$i] = $mimeType->name;
             }
         }
-        $filesAllowed = !empty($mimeTypes);
+        $filesAllowed = !empty($this->mimeTypes);
+        $this->mimeTypes = $filesAllowed ? $this->mimeTypes : ['.'];
 
         /*
          * We placing dot if there is no mimeTypes because for yii FileValidator "no mime types" means
@@ -57,7 +50,6 @@ class PostedFileValidator extends FileValidator
         if (!$filesAllowed) {
             $this->wrongExtension = 'File posting is not allowed on this board';
         }
-        $this->mimeTypes = $filesAllowed ? $mimeTypes : ['.'];
         $this->notArray = 'Attribute is not an array';
     }
 
@@ -91,7 +83,7 @@ class PostedFileValidator extends FileValidator
     public function isEmpty($value, $trim = false)
     {
         if (!is_array($value)) {
-            return !$value instanceof PostedFile;
+            return !($value instanceof PostedFile);
         }
 
         foreach ($value as $item) {
@@ -103,14 +95,27 @@ class PostedFileValidator extends FileValidator
         return true;
     }
 
-    protected function validateValue(PostedFile $value)
+    protected function validateValue($value)
     {
-        if (!empty($value->uploadedFile)) {
-            return parent::validateValue($value->uploadedFile);
+        if (!$value instanceof PostedFile) {
+            throw new \InvalidArgumentException();
         }
 
-        $file = $value->fileInfo;
+        if (!empty($value->uploadedFile)) {
+            return self::validateUploadedFile($value->uploadedFile);
+        }
 
+        return self::validateFileInfo($value->fileInfo);
+    }
+
+    protected function validateUploadedFile(UploadedFile $file) {
+        $baseValidation = parent::validateValue($file);
+        if (!empty($baseValidation)) {
+            return $baseValidation;
+        }
+    }
+
+    protected function validateFileInfo(FileInfo $file) {
         $fileType = $file->mimeType->name;
 
         if (!in_array($fileType, $this->mimeTypes)) {

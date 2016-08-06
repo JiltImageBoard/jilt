@@ -29,9 +29,9 @@ use yii\web\UploadedFile;
 class PostData extends ARExtended
 {
     /**
-     * @var PostsSettings
+     * @var array
      */
-    public $postsSettings;
+    public $validationParams;
 
     /**
      * @return string
@@ -48,7 +48,7 @@ class PostData extends ARExtended
                 'postedFiles',
                 PostedFileValidator::className(),
                 'skipOnEmpty'        => true,
-                'allowedMimeTypes'   => $this->postsSettings->mimeTypes,
+                'mimeTypes'          => $this->postsSettings->mimeTypes,
                 'maxFiles'           => $this->postsSettings->maxFiles,
                 'minFileSize'        => $this->postsSettings->minFileSize,
                 'maxFileSize'        => $this->postsSettings->maxFileSize,
@@ -63,25 +63,6 @@ class PostData extends ARExtended
     {
         return $this->hasMany(FileInfo::className(), ['id' => 'files_info_id'])
             ->viaTable('post_data_files_info', ['post_data_id' => 'id']);
-    }
-
-    public function setFileInfos($ids)
-    {
-        if ($this->isNewRecord) $this->fileInfos = $ids;
-    }
-
-    public function save($runValidation = true, $attributeNames = null)
-    {
-        if (!parent::save($runValidation, $attributeNames)) {
-            return false;
-        }
-
-        if (!$this->saveFiles()) {
-            parent::delete();
-            return false;
-        }
-
-        return true;
     }
 
     public function behaviors()

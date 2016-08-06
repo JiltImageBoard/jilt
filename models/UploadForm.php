@@ -3,6 +3,7 @@
 namespace app\models;
 
 use app\common\classes\PostedFile;
+use app\common\validators\PostedFileValidator;
 use yii\base\Model;
 
 class UploadForm extends Model
@@ -10,12 +11,18 @@ class UploadForm extends Model
     /** @var PostedFile[] */
     public $files;
 
-    /** @var PostsSettings */
-    public $settings;
+    /** @var array */
+    public $validationParams;
 
     public function rules()
     {
-        return [];
+        return [
+            [
+                'files',
+                PostedFileValidator::className(),
+                'params' => $this->validationParams
+            ]
+        ];
     }
 
     /**

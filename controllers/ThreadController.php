@@ -56,13 +56,13 @@ class ThreadController extends Controller
             return 'Board was not found';
         }
         
-        $settings = $board->postsSettings;
+        $validationParams = $board->postsSettings->getValidationParams();
 
         $thread     = new Thread(['boardId' => $board->id]);
-        $postData   = new PostData(['settings' => $settings]);
+        $postData   = new PostData(['validationParams' => $validationParams]);
         $uploadForm = new UploadForm([
-            'files'    => PostedFile::getPostedFiles($settings->maxFiles),
-            'settings' => $settings
+            'files'            => PostedFile::getPostedFiles($validationParams['maxFiles']),
+            'validationParams' => $validationParams
         ]);
 
         if (Yii::$app->request->isAjax) {
@@ -72,14 +72,14 @@ class ThreadController extends Controller
             $toValidate = [$thread, $postData, $uploadForm];
             $toSave = [$thread, $postData, $uploadForm];
 
-            if (!ARExtended::loadMultiple($toLoad, $data) || Model::validateMultiple($toValidate)) {
+            if (!ARExtended::loadMultiple($toLoad, $data) || !Model::validateMultiple($toValidate)) {
                 return ['success' => false];
             }
 
             $saved = true;
-            foreach ($toSave as $item) {
-                if (method_exists($item, 'save')) {
-                    $saved = $saved && $item->save();
+            foreach ($toSave as $model) {
+                if (method_exists($model, 'save')) {
+                    $saved = $saved && $model->save();
                 }
             }
 
@@ -90,7 +90,9 @@ class ThreadController extends Controller
             foreach ($uploadForm->getFileInfos() as $fileInfo) {
                 $postData->link('fileInfos', $fileInfo);
             }
+
             $thread->link('postData', $postData);
+            $thread->link('board', $board);
 
             return ['success' => true];
         }
