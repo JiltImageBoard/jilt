@@ -77,7 +77,7 @@ class PostedFile extends Object
         $fileHash = md5_file($file->tempName);
 
         // just in case if file already exists
-        $existingFileInfo = FileInfo::find()->where(['hash' => $fileHash])->one();
+        $existingFileInfo = FileInfo::findOne(['hash' => $fileHash]);
         if ($existingFileInfo) {
             $this->fileInfo = $existingFileInfo;
             return true;
@@ -88,9 +88,7 @@ class PostedFile extends Object
             return false;
         }
 
-        $mimeType = MimeType::findOne([
-            'name' => FileHelper::getMimeType($filePath)
-        ]);
+        $mimeType = MimeType::findOne(['name' => FileHelper::getMimeType($filePath)]);
 
         $fileInfo = new FileInfo([
             'filePath' => $filePath,

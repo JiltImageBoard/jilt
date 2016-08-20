@@ -45,12 +45,9 @@ class ThreadController extends Controller
      */
     public function actionCreate($name)
     {
-        /**
-         * @var Board $board
-         */
-        
         $data = Yii::$app->request->post();
 
+        /** @var Board $board */
         if (!$board = Board::findOne(['name' => $name])) {
             Yii::$app->response->setStatusCode(404);
             return 'Board was not found';
@@ -76,14 +73,23 @@ class ThreadController extends Controller
                 return ['success' => false];
             }
 
+            if (strlen($postData->messageText) == 0 && count($uploadForm->files)) {
+                return ['success' => false];
+            }
+
             $saved = true;
             foreach ($toSave as $model) {
                 if (method_exists($model, 'save')) {
                     $saved = $saved && $model->save();
+                    if (!$saved) break;
                 }
             }
 
             if (!$saved) {
+                foreach ($toSave as $model) {
+                    method_exists($model, 'delete') && $thread->delete();
+                }
+
                 return ['success' => false];
             }
 

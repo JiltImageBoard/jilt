@@ -7,7 +7,10 @@ use app\models\MimeType;
 use app\models\FileInfo;
 use app\models\PostsSettings;
 use Yii;
+use yii\base\UnknownClassException;
+use yii\helpers\FileHelper;
 use yii\validators\FileValidator;
+use yii\validators\Validator;
 use yii\web\UploadedFile;
 
 class PostedFileValidator extends FileValidator
@@ -28,8 +31,8 @@ class PostedFileValidator extends FileValidator
         $this->maxFiles = 1;
         $this->maxSize = 20971520;
 
-        if (!empty($this->array)) {
-            foreach ($this->array as $prop => $value) {
+        if (!empty($this->params)) {
+            foreach ($this->params as $prop => $value) {
                 $this->$prop = $value;
             }
         }
@@ -103,9 +106,9 @@ class PostedFileValidator extends FileValidator
 
         if (!empty($value->uploadedFile)) {
             return self::validateUploadedFile($value->uploadedFile);
+        } else {
+            return self::validateFileInfo($value->fileInfo);
         }
-
-        return self::validateFileInfo($value->fileInfo);
     }
 
     protected function validateUploadedFile(UploadedFile $file) {
@@ -135,5 +138,28 @@ class PostedFileValidator extends FileValidator
                 ]
             ];
         }
+    }
+
+    public function validate($value, &$error = null)
+    {
+        if (!parent::validate($value, $error)) return false;
+
+        if (!empty($value->uploadedFile)) {
+            $filePath = $value->uploadedFile->tempName;
+        } else {
+            $filePath = $value->fileInfo->filePath;
+        }
+
+        // running special validation for specific file types
+        $mimeType = ucfirst(explode('/', FileHelper::getMimeType($filePath))[0]);
+        $ValidatorClass = "app\\common\\validators\\" . ucfirst($mimeType) . "FileValidator";
+
+        if (!class_exists($ValidatorClass)) {
+            throw new UnknownClassException('Special validator class ' . $ValidatorClass . ' was not found');
+        }
+
+        /** @var Validator $validator */
+        $validator = new $ValidatorClass(['params' => get_object_vars($this)]);
+        return $validator->validate($filePath, $error);
     }
 }
