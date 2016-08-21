@@ -61,7 +61,7 @@ $config = [
     'params' => $params,
     'defaultRoute' => 'board/get-all',
     'aliases' => [
-        '@files' => 'files'
+        'files' => '@web/files'
     ]
 ];
 
@@ -71,5 +71,7 @@ if (YII_ENV_DEV) {
         'class' => 'yii\gii\Module',
     ];
 }
+
+Yii::setAlias('web', dirname(__DIR__) . '/web');
 
 return $config;

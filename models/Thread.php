@@ -104,11 +104,10 @@ class Thread extends ARExtended implements DeletableInterface
     {
         parent::afterSave($insert, $changedAttributes);
         if ($insert) {
-            $tagsArray = Tag::parse($this->postData->postMessage->text);
+            $tagsArray = Tag::parse($this->postData->messageText);
             foreach ($tagsArray as $tag) {
                 $this->link('tags', $tag);
             }
-            
         }
     }
 }

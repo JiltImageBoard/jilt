@@ -67,7 +67,6 @@ class ThreadController extends Controller
 
             $toLoad = [$thread, $postData];
             $toValidate = [$thread, $postData, $uploadForm];
-            $toSave = [$thread, $postData, $uploadForm];
 
             if (!ARExtended::loadMultiple($toLoad, $data) || !Model::validateMultiple($toValidate)) {
                 return ['success' => false];
@@ -76,6 +75,12 @@ class ThreadController extends Controller
             if (strlen($postData->messageText) == 0 && count($uploadForm->files)) {
                 return ['success' => false];
             }
+
+            $toSave = [$postData, $thread, $uploadForm];
+
+            $postData->on(PostData::EVENT_AFTER_INSERT, function ($event) use ($thread) {
+                $thread->postDataId = $event->sender->id;
+            });
 
             $saved = true;
             foreach ($toSave as $model) {
@@ -97,7 +102,6 @@ class ThreadController extends Controller
                 $postData->link('fileInfos', $fileInfo);
             }
 
-            $thread->link('postData', $postData);
             $thread->link('board', $board);
 
             return ['success' => true];

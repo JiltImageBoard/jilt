@@ -21,7 +21,9 @@ class PostedFileValidator extends FileValidator
      */
     public $notArray;
 
-    /** @var  array */
+    /**
+     * @var array
+     */
     public $params;
 
     public function init()
@@ -33,7 +35,9 @@ class PostedFileValidator extends FileValidator
 
         if (!empty($this->params)) {
             foreach ($this->params as $prop => $value) {
-                $this->$prop = $value;
+                if (property_exists($this, $prop)) {
+                    $this->$prop = $value;
+                }
             }
         }
 
@@ -138,6 +142,17 @@ class PostedFileValidator extends FileValidator
                 ]
             ];
         }
+
+        if ($file->size < $this->minSize) {
+            return [
+                $this->tooSmall,
+                [
+                    'file' => $file->originalName,
+                    'limit' => $this->minSize,
+                    'formattedLimit' => Yii::$app->formatter->asShortSize($this->minSize)
+                ]
+            ];
+        }
     }
 
     public function validate($value, &$error = null)
@@ -159,7 +174,7 @@ class PostedFileValidator extends FileValidator
         }
 
         /** @var Validator $validator */
-        $validator = new $ValidatorClass(['params' => get_object_vars($this)]);
+        $validator = new $ValidatorClass(['params' => $this->params]);
         return $validator->validate($filePath, $error);
     }
 }

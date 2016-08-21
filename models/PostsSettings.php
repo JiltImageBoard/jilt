@@ -76,8 +76,8 @@ class PostsSettings extends ARExtended
         }
 
         return [
-            'minFileSize'        => $this->minFileSize,
-            'maxFileSIze'        => $this->maxFileSize,
+            'minSize'            => $this->minFileSize,
+            'maxSize'            => $this->maxFileSize,
             'minImageResolution' => $this->minImageResolution,
             'maxImageResolution' => $this->maxImageResolution,
             'maxFiles'           => $this->maxFiles,
