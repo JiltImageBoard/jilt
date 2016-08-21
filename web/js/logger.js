@@ -7,7 +7,7 @@ var fileForm = {
         this.addInput();
     },
     addInput: function () {
-        var inputName = "file-" + (this.$container.find('input').length + 1);
+        var inputName = "file-" + this.$container.find('input').length;
         var $input = $('<input type="file" name="' + inputName + '" />').css('display', 'block');
         $input.change(function (e) {
             this.fileChanged($input);
@@ -17,7 +17,7 @@ var fileForm = {
     removeInput: function ($input) {
         $input.remove();
         this.$container.find('input').each(function (i, input) {
-            $(input).attr('name', 'file-' + (i + 1));
+            $(input).attr('name', 'file-' + i);
         });
     },
     hasEmptyInputs: function () {

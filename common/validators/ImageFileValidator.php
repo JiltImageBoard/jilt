@@ -20,7 +20,6 @@ class ImageValidator extends Validator
         }
     }
 
-
     /**
      * @param string $filePath valid file path
      * @return array|null
@@ -43,6 +42,4 @@ class ImageValidator extends Validator
 
         return null;
     }
-
-
 }
