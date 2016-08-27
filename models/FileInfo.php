@@ -2,6 +2,7 @@
 
 namespace app\models;
 
+use yii\base\ErrorException;
 use yii\web\UploadedFile;
 
 /**
@@ -90,6 +91,7 @@ class FileInfo extends ARExtended
         $SubClass = $this->getSubClassName();
         if (is_null($SubClass)) {
             parent::delete();
+            throw new ErrorException('File subclass was not found');
             return false;
         }
 

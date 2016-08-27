@@ -91,8 +91,8 @@ class ThreadController extends Controller
             }
 
             if (!$saved) {
-                foreach ($toSave as $model) {
-                    method_exists($model, 'delete') && $thread->delete();
+                for ($i = count($toSave) - 1; $i >= 0; $i--) {
+                    method_exists($toSave[$i], 'delete') && $toSave[$i]->delete();
                 }
 
                 return ['success' => false];

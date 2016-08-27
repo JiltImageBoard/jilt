@@ -4,7 +4,7 @@ namespace app\common\validators;
 
 use yii\validators\Validator;
 
-class ImageValidator extends Validator
+class ImageFileValidator extends Validator
 {
     /** @var array $params */
     public $params;
@@ -14,10 +14,11 @@ class ImageValidator extends Validator
 
     /**
      * Image resolutions in format "{width}x{height}"
-     * @var string $maxImageResoulution
-     * @var string $minImageResolution
      */
-    public $maxImageResoulution;
+    /** @var string $maxImageResolution */
+    public $maxImageResolution;
+
+    /** @var string $minImageResolution */
     public $minImageResolution;
 
     public function init()
@@ -33,7 +34,7 @@ class ImageValidator extends Validator
         }
 
         if ($this->wrongResolution === null) {
-            $this->wrongResolution = Yii::t('yii', 'File "{file}" has wrong resolution. It should be between {minResolution} and {maxResolution}.');
+            $this->wrongResolution = \Yii::t('yii', 'File "{file}" has wrong resolution. It should be between {minResolution} and {maxResolution}.');
         }
     }
 
@@ -41,11 +42,11 @@ class ImageValidator extends Validator
      * @param string $filePath valid file path
      * @return array|null
      */
-    protected function validateValue(string $filePath)
+    public function validateValue($filePath)
     {
         list($sourceWidth, $sourceHeight) = getimagesize($filePath);
         list($minWidth, $minHeight) = explode('x', $this->minImageResolution);
-        list($maxWidth, $maxHeight) = explode('x', $this->maxImageResoulution);
+        list($maxWidth, $maxHeight) = explode('x', $this->maxImageResolution);
         if (
             $sourceWidth < $minWidth || $sourceHeight < $minHeight ||
             $sourceWidth > $maxWidth || $sourceHeight > $maxHeight
@@ -53,7 +54,7 @@ class ImageValidator extends Validator
             return [$this->wrongResolution, [
                 'file' => $filePath,
                 'minResolution' => $this->minImageResolution,
-                'maxResolution' => $this->maxImageResoulution
+                'maxResolution' => $this->maxImageResolution
             ]];
         }
 

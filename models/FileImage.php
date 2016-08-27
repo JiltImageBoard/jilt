@@ -84,11 +84,11 @@ class FileImage extends ARExtended
     {
         $sourcePath = $this->fileInfo->filePath;
         $thumbPath = $this->getThumbPath();
-        list($thumbwidth, $thumbHeight) = $this->getThumbSizes();
+        list($thumbWidth, $thumbHeight) = $this->getThumbSizes();
 
         try {
             Image::thumbnail($sourcePath, $this->width, $this->height)
-                ->resize(new Box($thumbwidth, $thumbHeight))
+                ->resize(new Box($thumbWidth, $thumbHeight))
                 ->save($thumbPath, ['quality' => FileImage::THUMB_QUALITY]);
 
         } catch (\Exception $e) {

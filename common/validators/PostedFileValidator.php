@@ -109,12 +109,22 @@ class PostedFileValidator extends FileValidator
         }
 
         if (!empty($value->uploadedFile)) {
-            return self::validateUploadedFile($value->uploadedFile);
+            $baseValidation = self::validateUploadedFile($value->uploadedFile);
         } else {
-            return self::validateFileInfo($value->fileInfo);
+            $baseValidation = self::validateFileInfo($value->fileInfo);
+        }
+
+        if ($baseValidation) {
+            return $baseValidation;
+        } else {
+            return self::runFileSpecificValidator($value);
         }
     }
 
+    /**
+     * @param UploadedFile $file
+     * @return array|null
+     */
     protected function validateUploadedFile(UploadedFile $file) {
         $baseValidation = parent::validateValue($file);
         if (!empty($baseValidation)) {
@@ -122,6 +132,10 @@ class PostedFileValidator extends FileValidator
         }
     }
 
+    /**
+     * @param FileInfo $file
+     * @return array
+     */
     protected function validateFileInfo(FileInfo $file) {
         $fileType = $file->mimeType->name;
 
@@ -155,10 +169,8 @@ class PostedFileValidator extends FileValidator
         }
     }
 
-    public function validate($value, &$error = null)
+    public function runFileSpecificValidator($value)
     {
-        if (!parent::validate($value, $error)) return false;
-
         if (!empty($value->uploadedFile)) {
             $filePath = $value->uploadedFile->tempName;
         } else {
@@ -175,6 +187,6 @@ class PostedFileValidator extends FileValidator
 
         /** @var Validator $validator */
         $validator = new $ValidatorClass(['params' => $this->params]);
-        return $validator->validate($filePath, $error);
+        return $validator->validateValue($filePath);
     }
 }
