@@ -13,8 +13,10 @@ use app\models\PostData;
 use app\models\PostMessage;
 use app\models\Thread;
 use app\models\UploadForm;
+use app\services\ThreadService;
 use Faker\Provider\File;
 use yii\base\Model;
+use yii\base\Module;
 use yii\helpers\FileHelper;
 use yii\web\Controller;
 use yii\web\Response;
@@ -23,6 +25,10 @@ use Yii;
 
 class ThreadController extends Controller
 {
+    public function __construct($id, Module $module, array $config)
+    {
+        parent::__construct($id, $module, $config);
+    }
 
     /**
      * @param string $name
@@ -47,70 +53,16 @@ class ThreadController extends Controller
     {
         $data = Yii::$app->request->post();
 
-        /** @var Board $board */
-        if (!$board = Board::findOne(['name' => $name])) {
-            Yii::$app->response->setStatusCode(404);
-            return 'Board was not found';
-        }
-        
-        $validationParams = $board->postsSettings->getValidationParams();
-
-        $thread     = new Thread(['boardId' => $board->id]);
-        $postData   = new PostData(['validationParams' => $validationParams]);
-        $uploadForm = new UploadForm([
-            'files'            => PostedFile::getPostedFiles($validationParams['maxFiles']),
-            'validationParams' => $validationParams
-        ]);
-
         if (Yii::$app->request->isAjax) {
-            Yii::$app->response->format = Response::FORMAT_JSON;
-
-            $toLoad = [$thread, $postData];
-            $toValidate = [$thread, $postData, $uploadForm];
-
-            if (!ARExtended::loadMultiple($toLoad, $data) || !Model::validateMultiple($toValidate)) {
-                return ['success' => false];
-            }
-
-            if (strlen($postData->messageText) == 0 && count($uploadForm->files)) {
-                return ['success' => false];
-            }
-
-            $toSave = [$postData, $thread, $uploadForm];
-
-            $postData->on(PostData::EVENT_AFTER_INSERT, function ($event) use ($thread) {
-                $thread->postDataId = $event->sender->id;
-            });
-
-            $saved = true;
-            foreach ($toSave as $model) {
-                if (method_exists($model, 'save')) {
-                    $saved = $saved && $model->save();
-                    if (!$saved) break;
-                }
-            }
-
-            if (!$saved) {
-                for ($i = count($toSave) - 1; $i >= 0; $i--) {
-                    method_exists($toSave[$i], 'delete') && $toSave[$i]->delete();
-                }
-
-                return ['success' => false];
-            }
-
-            foreach ($uploadForm->getFileInfos() as $fileInfo) {
-                $postData->link('fileInfos', $fileInfo);
-            }
-
-            $thread->link('board', $board);
-
-            return ['success' => true];
+            // TODO: probably needs to be injected as dependency obj instead of being static class, idk..
+            $thread = ThreadService::create($name, $data);
+            return $thread;
+        } else {
+            return $this->render('create', [
+                'thread' => new Thread(),
+                'postData' => new PostData()
+            ]);
         }
-
-        return $this->render('create', [
-            'thread'      => $thread,
-            'postData'    => $postData
-        ]);
     }
 
     /**
