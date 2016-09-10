@@ -5,14 +5,10 @@ namespace app\models;
 /**
  * Class FileAudio
  * @package app\models
- * @property string $filePath
- * @property string $originalName
- * @property string $hash
- * @property float $size
  * relations
  * @property FileInfo $fileInfo
  */
-class FileAudio extends FileInfo
+class FileAudio extends ARExtended
 {
     public static function tableName()
     {

@@ -1,5 +1,5 @@
 #### Resource URL
-`PUT /api/control-panel/users/{id}/rights`
+`PUT /api/control-panel/users/{id}/cp-rights`
 
 #### Description
   Edits user rights for board
@@ -31,42 +31,13 @@
 
 
 #### Example Request
-```javascript
-PUT /control-panel/users/5/rights
-{
-  "rights_list": [
-    {
-      "type": "board",
-      "id": "1",
-      "rights": {
-        "can_ban": true,
-        "can_delete_posts": false,
-        "can_delete_threads": true,
-        "can_edit_boards_settings": true,
-        "can_edit_posts": false,
-        "can_edit_threads": true,
-        "can_lock_threads": true,
-        "can_stick_threads": true
-      }
-    },
-    {
-      "type": "chat",
-      "id": "123",
-      "rights": {
-        "can_edit_pages": true,
-        "can_delete_posts": true,
-        "can_edit_posts": true,
-        "can_ban": true
-      }
-    }
-  ]
-}
+`PUT /api/control-panel/users/5/cp-rights`
+```JSON
+
 ```
 
 #### Example Result
-```javascript
-{
-  "errorCode": 0,
-  "errorMessage": ""
-}
+Status code: `200`
+```JSON
+
 ```

@@ -16,106 +16,50 @@ use app\common\interfaces;
  * @property string $description
  * @property \DateTime $createdAt
  * @property \DateTime $updatedAt
- * 
- * @property int $minFileSize
- * @property int $maxFileSize
- * @property string $minImageResolution
- * @property string $maxImageResolution
- * @property int $maxMessageLength
  * @property int $maxThreadsOnPage
  * @property int $maxBoardPages
  * @property int $threadMaxPosts
- * @property string $defaultName
  * @property bool $isClosed
  * @property bool $isDeleted
+ * @property int $maxFiles
  * 
  * relations
- * @property \app\models\FileFormat[] $fileFormats
- * @property \app\models\WordFilter[] $wordFilters
- * @property \app\models\FileRating[] $fileRatings
- * @property \app\models\MarkupType[] $markupTypes
- * @property \app\models\Thread[] $threads
- * @property \app\models\BoardCounter $counter
+ * @property PostsSettings $postsSettings
+ * @property Thread[] $threads
+ * @property BoardCounter $counter
  */
-class Board extends ActiveRecordExtended implements DeletableInterface
+class Board extends ARExtended
 {
+
+    const SCENARIO_CREATE = 'create';
+    const SCENARIO_UPDATE = 'update';
 
     public static function tableName()
     {
         return 'boards';
     }
-    
-    public function getFileFormats()
-    {
-        return $this->hasMany(FileFormat::className(), ['id' => 'file_format_id'])
-            ->viaTable('boards_file_formats', ['board_id' => 'id']);
-    }
 
-    /**
-     * @param int[] $ids
-     */
-    public function setFileFormats($ids)
+    public function getPostsSettings()
     {
-        if ($this->isNewRecord) $this->fileFormats = $ids;
-    }
-    
-    public function getWordFilters()
-    {
-        return $this->hasMany(WordFilter::className(), ['id' => 'wordfilter_id'])
-            ->viaTable('boards_wordfilters', ['board_id' => 'id']);
-    }
-
-    /**
-     * @param int[] $ids
-     */
-    public function setWordFilters($ids)
-    {
-        if ($this->isNewRecord) $this->wordFilters = $ids;
-    }
-    
-    public function getFileRatings()
-    {
-        return $this->hasMany(FileRating::className(), ['id' => 'file_rating_id'])
-            ->viaTable('boards_file_ratings', ['board_id' => 'id']);
-    }
-
-    /**
-     * @param int[] $ids
-     */
-    public function setFileRatings($ids)
-    {
-        if ($this->isNewRecord) $this->fileRatings = $ids;
-    }
-    
-    public function getMarkupTypes()
-    {
-        return $this->hasMany(MarkupType::className(), ['id' => 'markup_type_id'])
-            ->viaTable('boards_markup_types', ['board_id' => 'id']);
-    }
-
-    /**
-     * @param int[] $ids
-     */
-    public function setMarkupTypes($ids)
-    {
-        if ($this->isNewRecord) $this->fileRatings = $ids;
+        return $this->hasOne(PostsSettings::className(), ['id' => 'posts_settings_id']);
     }
     
     public function getThreads()
     {
-        return $this->hasMany(Thread::className(), ['board_id' => 'id']);
+        return $this->hasMany(Thread::className(), ['board_id' => 'id'])
+            ->orderBy(['updated_at' => SORT_DESC]);
     }
 
     public function getCounter()
     {
         return $this->hasOne(BoardCounter::className(), ['board_id' => 'id']);
     }
-    
-    public function prepareToDelete()
-    {
-        
-    }
-    
+
+    /**
+     * TODO: most of these rules related to other Models
+     * Rules for validation
+     * @return array
+     */
     public function rules()
     {
         return [
@@ -154,10 +98,29 @@ class Board extends ActiveRecordExtended implements DeletableInterface
 
             ['is_closed', 'default', 'value' => '0'],
             ['is_closed', 'boolean'],
+            
+            [['mimeTypes', 'wordFilters', 'fileRatings', 'markupTypes'], 'required', 'on' => 'create'],
+            [['mimeTypes', 'wordFilters', 'fileRatings', 'markupTypes'], 'each', 'rule' => ['integer'], 'on' => 'create'],
         ];
     }
-    
 
+    public function scenarios() {
+
+        $scenarios = parent::scenarios();
+
+        $scenarios[self::SCENARIO_CREATE] = [
+            'name', 'description', 'min_file_size', 'max_file_size', 'min_image_resolution', 'max_image_resolution', 
+            'max_message_length', 'max_threads_on_page', 'max_board_pages', 'thread_max_posts', 'default_name', 'is_closed', 
+            'mimeTypes', 'wordFilters', 'fileRatings', 'markupTypes'];
+        $scenarios[self::SCENARIO_UPDATE] = [
+            'name', 'description', 'min_file_size', 'max_file_size', 'min_image_resolution', 'max_image_resolution',
+            'max_message_length', 'max_threads_on_page', 'max_board_pages', 'thread_max_posts', 'default_name', 'is_closed'
+        ];
+
+        return $scenarios;
+
+    }
+    
     public function behaviors()
     {
         return [
@@ -170,9 +133,21 @@ class Board extends ActiveRecordExtended implements DeletableInterface
         ];
     }
 
-    public function getDeletedRows(Array &$carry) 
+    public function afterSave($insert, $changedAttributes)
     {
-        $boards = $this->find()->where(['is_deleted' => '1'])->all();
+        if (!parent::afterSave($insert, $changedAttributes)) {
+            return false;
+        }
+
+        $boardCounter = new BoardCounter(['boardId' => $this->id]);
+        $boardCounter->save();
+    }
+
+
+    // TODO: workaround used here to prevent calling getter in initRelationData: changed 'get*' to 'gat*
+    public static function gatDeletedRows(Array &$carry)
+    {
+        $boards = self::find()->where(['is_deleted' => '1'])->all();
         
         if (empty($boards)) {
             return $carry;

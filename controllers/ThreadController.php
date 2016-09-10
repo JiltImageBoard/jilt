@@ -2,19 +2,24 @@
 
 namespace app\controllers;
 
+use app\common\classes\PostedFile;
 use app\common\classes\MultiLoader;
 use app\common\filters\BanFilter;
 use app\common\helpers\DataFormatter;
-use app\models\ActiveRecordExtended;
+use app\models\ARExtended;
 use app\models\Board;
 use app\models\Post;
 use app\models\PostData;
 use app\models\PostMessage;
 use app\models\Thread;
+use app\models\UploadForm;
+use Faker\Provider\File;
 use yii\base\Model;
-use yii\helpers\Json;
+use yii\helpers\FileHelper;
 use yii\web\Controller;
+use yii\web\Response;
 use yii\web\UploadedFile;
+use Yii;
 
 class ThreadController extends Controller
 {
@@ -26,7 +31,12 @@ class ThreadController extends Controller
      */
     public function actionGet($name, $threadNum = 1)
     {
-        return $threadNum;
+        return 'Not implemented';
+    }
+    
+    public function actionGetPage($name, $threadNum, $pageNum)
+    {
+        return 'Not implemented';
     }
 
     /**
@@ -35,47 +45,92 @@ class ThreadController extends Controller
      */
     public function actionCreate($name)
     {
-        if ($board = Board::find()->where(['name' => $name])->limit(1)->one()) {
-            $postData = new PostData();
-            $thread = new Thread();
-            $postData->files = UploadedFile::getInstancesByName('files');
-            $thread->boardId = $board->id;
-            
-            $models = [&$thread, new PostMessage(), &$postData];
-            
-            if (
-                ActiveRecordExtended::loadMultiple(\Yii::$app->request->post(), $models) &&
-                Model::validateMultiple($models)
-            ) {
-                if (ActiveRecordExtended::saveAndLink($models)) {
-                    //TODO: return thread presented like from ->toArray() method (don't work now)
-                    return 'Thread created';
+        $data = Yii::$app->request->post();
+
+        /** @var Board $board */
+        if (!$board = Board::findOne(['name' => $name])) {
+            Yii::$app->response->setStatusCode(404);
+            return 'Board was not found';
+        }
+        
+        $validationParams = $board->postsSettings->getValidationParams();
+
+        $thread     = new Thread(['boardId' => $board->id]);
+        $postData   = new PostData(['validationParams' => $validationParams]);
+        $uploadForm = new UploadForm([
+            'files'            => PostedFile::getPostedFiles($validationParams['maxFiles']),
+            'validationParams' => $validationParams
+        ]);
+
+        if (Yii::$app->request->isAjax) {
+            Yii::$app->response->format = Response::FORMAT_JSON;
+
+            $toLoad = [$thread, $postData];
+            $toValidate = [$thread, $postData, $uploadForm];
+
+            if (!ARExtended::loadMultiple($toLoad, $data) || !Model::validateMultiple($toValidate)) {
+                return ['success' => false];
+            }
+
+            if (strlen($postData->messageText) == 0 && count($uploadForm->files)) {
+                return ['success' => false];
+            }
+
+            $toSave = [$postData, $thread, $uploadForm];
+
+            $postData->on(PostData::EVENT_AFTER_INSERT, function ($event) use ($thread) {
+                $thread->postDataId = $event->sender->id;
+            });
+
+            $saved = true;
+            foreach ($toSave as $model) {
+                if (method_exists($model, 'save')) {
+                    $saved = $saved && $model->save();
+                    if (!$saved) break;
                 }
             }
 
-            return DataFormatter::collectErrors($models);
+            if (!$saved) {
+                for ($i = count($toSave) - 1; $i >= 0; $i--) {
+                    method_exists($toSave[$i], 'delete') && $toSave[$i]->delete();
+                }
+
+                return ['success' => false];
+            }
+
+            foreach ($uploadForm->getFileInfos() as $fileInfo) {
+                $postData->link('fileInfos', $fileInfo);
+            }
+
+            $thread->link('board', $board);
+
+            return ['success' => true];
         }
 
-        \Yii::$app->response->setStatusCode(404);
-        return 'Board was not found';
+        return $this->render('create', [
+            'thread'      => $thread,
+            'postData'    => $postData
+        ]);
     }
 
     /**
      * @param string $name
      * @param int $threadNum
+     * @return string
      */
-    public function update($name, $threadNum)
+    public function actionUpdate($name, $threadNum)
     {
-
+        return 'Not implemented';
     }
 
     /**
      * @param string $name
      * @param int $threadNum
+     * @return string
      */
-    public function delete($name, $threadNum)
+    public function actionDelete($name, $threadNum)
     {
-
+        return 'Not implemented';
     }
 
     public function behaviors()

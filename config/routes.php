@@ -18,6 +18,8 @@ return [
         'POST boards/<name:\w+>/threads/?' => 'thread/create',
         'PUT boards/<name:\w+>/threads/<threadNum:\d+>/?' => 'thread/update',
         'DELETE boards/<name:\w+>/threads/<threadNum:\d+>/?' => 'thread/delete',
+        /* Threads Debug routes */
+        'GET,POST boards/<name:\w+>/threads/create/?' => 'thread/create',
 
         /* Chats */
         'GET boards/<name:\w+>/threads/<threadNum:\d+>/pages/<pageNum:\d+>/?' => 'thread/get-page',
@@ -31,29 +33,30 @@ return [
         /* Authentication */
         'POST control-panel/login/?' => 'auth/login',
         'POST control-panel/logout/?' => 'auth/logout',
-        'GET control-panel/logout/?' => 'auth/logout', /* временно? */ 
+        'GET control-panel/logout/?' => 'auth/logout', /* временно */ 
         'POST control-panel/reset-password/?' => 'auth/reset-password',
         'GET  control-panel/csrf-token/?' => 'auth/get-csrf-token',
 
         /* Users */
-        'POST control-panel/users/?' => 'user/create',
         'GET control-panel/users/?' => 'user/get-all',
+        'POST control-panel/users/?' => 'user/create',
         'GET control-panel/users/<id:\d+>/?' => 'user/get',
         'PUT control-panel/users/<id:\d+>/?' => 'user/update',
         'DELETE control-panel/users/<id:\d+>/?' => 'user/delete',
-        'GET control-panel/users/<id:\d+>/cp-rights/?' => 'user/get-cp-rights',
-        'PUT control-panel/users/<id:\d+>/cp-rights/?' => 'user/update-cp-rights',
 
         /* Board and chat rights */
-        'GET users/<id:\d+>/rights/?' => 'user/get-rights',
-        'PUT users/<id:\d+>/rights/?' => 'user/update-rights',
+        'GET control-panel/users/<id:\d+>/rights/?' => 'user/get-rights',
+        'PUT control-panel/users/<id:\d+>/rights/?' => 'user/update-rights',
 
         /* Bans */
-        'GET bans/?' => 'ban/index',
+        'GET bans/?' => 'ban/get-all',
         'POST bans/?' => 'ban/create',
         'GET bans/<id:\d+>/?' => 'ban/get',
         'PUT bans/<id:\d+>/?' => 'ban/update',
         'DELETE bans/<id:\d+>/?' => 'ban/delete',
+
+        /* Files */
+        'GET files/exists/<hash:\w+>/?' => 'file/exists',
 
         /* Tests */
         '/test/?' => 'test/run',

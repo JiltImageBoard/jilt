@@ -34,17 +34,16 @@ class UserController extends Controller
             /**
              * @var User $user
              */
-            $users[] = $user->toArray('password', 'cpRights', 'boardRights', 'chatRights');
+            $users[] = $user->toArray();
         }
 
         return $users;
-
     }
     
     public function actionGet($id)
     {
         //TODO: Check rights user get only self related info
-        return User::findOne($id)->toArray('password', 'salt');
+        return User::findOne($id)->toArray();
     }
     
     public function actionUpdate($id)
@@ -88,29 +87,26 @@ class UserController extends Controller
         \Yii::$app->response->setStatusCode(204);
     }
     
-    public function actionGetCpRights($id)
+    public function actionGetRights($id)
     {
-        //TODO: Check rights
-        
+        return 'Not implemented';
     }
 
-    public function actionUpdateCpRights($id)
+    public function actionUpdateRights($id)
     {
-        //TODO: Check rights
+        return 'Not implemented';
     }
 
 
-    public function behaviors()
-    {
-        return [
-            /*[
-                'class' => AuthFilter::className(),
-            ],
-            [
-                'class' => CsrfFilter::className(),
-                'only' => ['create', 'update', 'delete', 'update-cp-rights'],
-                'csrfToken' => \yii::$app->request->post('csrf')
-            ]*/
-        ];
-    }
+//    public function behaviors()
+//    {
+//        return [
+//            
+//            [
+//                'class' => CsrfFilter::className(),
+//                'only' => ['create', 'update', 'delete', 'update-cp-rights'],
+//                'csrfToken' => \yii::$app->request->post('csrf')
+//            ]
+//        ];
+//    }
 }

@@ -3,6 +3,7 @@
 namespace app\models;
 
 use yii\behaviors\TimestampBehavior;
+use yii\db\ActiveRecord;
 use yii\db\Expression;
 use app\common\interfaces\DeletableInterface;
 
@@ -20,13 +21,14 @@ use app\common\interfaces\DeletableInterface;
  * @property bool $isChat
  * @property bool $isDeleted
  * @property int $postDataId
- * @property \DateTime $updatedAt
- * 
- * @property \app\models\Board $board
- * @property \app\models\PostData $postData
- * @property \app\models\Post $posts
+ * @property string $updatedAt
+ * relations
+ * @property Board $board
+ * @property PostData $postData
+ * @property Post[] $posts
+ * @property PostsSettings $postsSettings
  */
-class Thread extends ActiveRecordExtended implements DeletableInterface
+class Thread extends ARExtended implements DeletableInterface
 {
     /**
      * @return string
@@ -57,14 +59,18 @@ class Thread extends ActiveRecordExtended implements DeletableInterface
         return $this->hasMany(Post::className(), ['thread_id' => 'id']);
     }
 
-    //TODO: Проверить что бехавор работает
+    public function getPostsSettings()
+    {
+        return $this->hasOne(PostsSettings::className(), ['id' => 'posts_settings_id']);
+    }
+
     public function behaviors()
     {
         return [
             [
                 'class' => TimestampBehavior::className(),
                 'updatedAtAttribute' => 'updated_at',
-                'value' => new Expression('NOW()'),
+                'value' => (new \DateTime())->format('Y-m-d H:i:s')
             ]
         ];
     }
@@ -72,13 +78,13 @@ class Thread extends ActiveRecordExtended implements DeletableInterface
     public function rules()
     {
         return [
-                ['is_chat', 'default', 'value' => '0'],
-            ];
+            ['is_chat', 'default', 'value' => '0'],
+        ];
     }
     
-    public function getDeletedRows(Array &$carry)
+    public static function getDeletedRows(Array &$carry)
     {
-        $threads = $this->find()->where(['is_deleted' => '1'])->all();
+        $threads = self::find()->where(['is_deleted' => '1'])->all();
 
         if (empty($threads)) {
             return $carry;
@@ -93,16 +99,15 @@ class Thread extends ActiveRecordExtended implements DeletableInterface
         }
         
     }
-    
+
     public function afterSave($insert, $changedAttributes)
     {
         parent::afterSave($insert, $changedAttributes);
         if ($insert) {
-            $tagsArray = Tag::parseTags($this->postData->postMessage->text);
+            $tagsArray = Tag::parse($this->postData->messageText);
             foreach ($tagsArray as $tag) {
                 $this->link('tags', $tag);
             }
-            
         }
     }
 }

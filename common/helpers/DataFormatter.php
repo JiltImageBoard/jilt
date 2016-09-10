@@ -16,7 +16,6 @@ class DataFormatter
         }, []));
     }
 
-
     /**
      * @param array $objects
      * @return array
@@ -30,6 +29,7 @@ class DataFormatter
     }
 
     /**
+     * Converts associative array to stdClass object
      * @param array $arr
      * @return \stdClass object
      */

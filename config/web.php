@@ -33,14 +33,15 @@ $config = [
             'targets' => [
                 [
                     'class' => 'yii\log\FileTarget',
-                    'levels' => ['error', 'warning'],
+                    'levels' => ['info'],
+                    'categories' => ['debug']
                 ],
             ],
         ],
         'db' => require(__DIR__ . '/db.php'),
         'urlManager' => require(__DIR__ . '/routes.php'),
         'response' => [
-            'format' => yii\web\Response::FORMAT_JSON,
+            'format' => yii\web\Response::FORMAT_HTML,
             'charset' => 'UTF-8',
         ],
         'user' => [
@@ -48,6 +49,10 @@ $config = [
             'enableSession' => false,
             'enableAutoLogin' => true
         ]
+        /*'ipGeoBase' => [
+            'class' => 'himiklab\ipgeobase\IpGeoBase',
+            'useLocalDB' => true,
+        ],*/
     ],
     'controller' => [
         'class' => 'yii\web\Controller',
@@ -55,6 +60,9 @@ $config = [
     ],
     'params' => $params,
     'defaultRoute' => 'board/get-all',
+    'aliases' => [
+        'files' => '@web/files'
+    ]
 ];
 
 if (YII_ENV_DEV) {
@@ -63,5 +71,7 @@ if (YII_ENV_DEV) {
         'class' => 'yii\gii\Module',
     ];
 }
+
+Yii::setAlias('web', dirname(__DIR__) . '/web');
 
 return $config;

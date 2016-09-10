@@ -10,18 +10,18 @@
 
 
 #### Example Request
-```javascript
-GET /api/boards/
-```
+`GET /api/boards/`
 
 #### Example Result
-```
-HTTP/1.1 200 OK
+Status code: `200`
+```JSON
 [{
-	"name": "test1",
-	"description": "test1"
-}, {
-	"name": "test",
-	"description": "Test board"
-}]
+    "id": 1,
+	"name": "Test board 1",
+	"description": "Test board 1"
+},{
+    "id": 2,
+   	"name": "Test board 2",
+   	"description": "Test board 2"
+   }]
 ```

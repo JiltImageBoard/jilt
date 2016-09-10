@@ -28,20 +28,20 @@
 | `int`    | default: 500       | thread_max_posts     | Max count of posts that thread on that board can contain
 | `string` | default: 'Anon'    | default_name         | Default name
 | `bool`   | default: false     | is_closed            | Is board closed
-| `array`  | yes                | fileFormats          | File formats ids
+| `array`  | yes                | mimeTypes          | File formats ids
 | `array`  | yes                | wordFilters          | Wordfilters ids
 | `array`  | yes                | fileRatings          | File ratings ids
 | `array`  | yes                | markupTypes          | Markup types ids
 
 
 #### Example Request
-```javascript
-PUT /boards/test/
+`PUT /boards/test/`
+```JSON
 {
   "name": "test",
   "description": "A test board",
   "min_file_size": 1,
-  "max_file_sze": 1000,
+  "max_file_sze": 1,
   "min_image_resolution": "1000x1000",
   "max_image_resolution": "5000x5000",
   "max_message_length": 300,
@@ -50,13 +50,31 @@ PUT /boards/test/
   "thread_max_posts": 500,
   "default_name": "Anon",
   "is_closed": false,
-  "fileFormats": [1],
+  "mimeTypes": [1],
   "wordFilters": [1],
   "fileRatings": [1],
   "markupTypes": [1]
 }
 ```
 #### Example Result
-```javascript
-//TODO: Example Result
+Status code: `200`
+```JSON
+{
+	"id": 86,
+	"name": "test",
+	"description": "A test board",
+	"createdAt": "2016-02-17 13:24:21",
+	"updatedAt": "2016-04-18 08:59:15",
+    "min_file_size": 1,
+    "max_file_sze": 1,
+    "min_image_resolution": "1000x1000",
+    "max_image_resolution": "5000x5000",
+    "max_message_length": 300,
+    "max_threads_on_page": 5,
+    "max_board_pages": 100,
+    "thread_max_posts": 500,
+	"defaultName": "Anon",
+	"isClosed": 0,
+	"isDeleted": 0
+}
 ```

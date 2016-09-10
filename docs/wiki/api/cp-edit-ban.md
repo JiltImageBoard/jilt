@@ -29,14 +29,14 @@
 
 
 #### Example Request
-```javascript
-PUT /control-panel/bans/1
+`PUT /control-panel/bans/1`
+```JSON
 {
   "board_id": 11,
   "thread_id": null,
-  "chat_num": null,
+  "chat_id": null,
   "ip": "127.0.0.1",
-  "subnetwork": null,
+  "subnet": null,
   "session": null,
   "name": null,
   "message": null,
@@ -50,9 +50,7 @@ PUT /control-panel/bans/1
 ```
 
 #### Example Result
-```javascript
-{
-  "errorCode": 0,
-  "errorMessage": ""
-}
+Status code: `200`
+```JSON
+
 ```

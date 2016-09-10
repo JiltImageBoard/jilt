@@ -16,11 +16,10 @@
 
 
 #### Example Request
-```javascript
-GET /boards/test/threads/123
-```
+`GET /boards/test/threads/123`
 
 #### Example Result
-```javascript
-//TODO
+Status code: `200`
+```JSON
+
 ```

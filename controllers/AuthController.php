@@ -48,8 +48,7 @@ class AuthController extends Controller
 
     public function actionResetPassword()
     {
-        //TODO: Need email sending
-        return 'reset pass';
+        return 'Not implemented';
     }
     
     public function actionGetCsrfToken()
@@ -59,18 +58,14 @@ class AuthController extends Controller
         return \yii::$app->getSecurity()->generatePasswordHash($session->id);
     }
     
-    public function behaviors()
-    {
-        return [
-            [
-                'class' => AuthFilter::className(),
-                'only' => ['logout', 'reset-password', 'get-csrf-token'],
-            ],
-            [
-                'class' => CsrfFilter::className(),
-                'only' => ['logout', 'reset-password'],
-                'csrfToken' => \yii::$app->request->post('csrf')
-            ]
-        ];
-    }
+//    public function behaviors()
+//    {
+//        return [
+//            [
+//                'class' => CsrfFilter::className(),
+//                'only' => ['logout', 'reset-password'],
+//                'csrfToken' => \yii::$app->request->post('csrf')
+//            ]
+//        ];
+//    }
 }

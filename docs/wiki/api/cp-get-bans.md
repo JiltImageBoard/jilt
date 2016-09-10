@@ -10,17 +10,16 @@
 
 
 #### Example Request
-```javascript
-GET /control-panel/bans
-```
+`GET /control-panel/bans`
 
 #### Example Result
-```javascript
+Status code: `200`
+```JSON
 {
   "bans":[
     {
       "id": 1,
-      "board_id": 1
+      "board_id": 1,
       "ip": "127.0.0.1",
       "banned_until": "12.12.2016",
       "reason_for_user": "Test ban #1",
@@ -28,12 +27,12 @@ GET /control-panel/bans
     },
     {
       "id": 2,
-      "board_id": 2
+      "board_id": 2,
       "ip": "127.0.0.1",
       "banned_until": "12.12.2016",
       "reason_for_user": "Test ban #2",
       "ban_user_on_violation": false
-    },
+    }
   ]
 }
 ```

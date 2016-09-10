@@ -21,14 +21,11 @@ class BoardController extends Controller
     {
         //TODO: Check authorization.
         $board = new Board();
-
+        $board->scenario = Board::SCENARIO_CREATE;
         if ($board->load(\Yii::$app->request->post()) && $board->validate()) {
             if ($board->save()) {
-                $boardCounter = new BoardCounter();
-                $boardCounter->boardId = $board->id;
-                $boardCounter->save();
-
                 \Yii::$app->response->setStatusCode(201);
+                // TODO: we need to return full entity, not just name 
                 return $this->actionGet($board->name);
             }
         }
@@ -43,8 +40,10 @@ class BoardController extends Controller
     public function actionGetAll()
     {
         $boards = [];
+        /** @var Board $board */
         foreach (Board::find()->all() as $board) {
             $boards[] = [
+                'id'  => $board->id,
                 'name' => $board->name,
                 'description' => $board->description
             ];
@@ -61,13 +60,8 @@ class BoardController extends Controller
      */
     public function actionGetPage($name, $pageNum = 0)
     {
+        /** @var Board $board */
         $board = Board::find()
-            ->joinWith([
-                'threads' => function ($query) {
-                    $query->orderBy('updated_at');
-                },
-                'threads.postData'
-            ])
             ->where(['boards.name' => $name])
             ->one();
         if ($board) {
@@ -76,6 +70,7 @@ class BoardController extends Controller
             // TODO: pagination not implemented
             foreach ($board->threads as $thread) {
                 $threadsJson[] = [
+                    'id' => $thread->id,
                     'boardName' => $thread->board->name,
                     'number' => $thread->number,
                     'isSticked' => $thread->isSticked,
@@ -88,7 +83,7 @@ class BoardController extends Controller
                     'files' => [], //TODO: Реализовать файлы
                     'isModPost' => $thread->postData->isModPost,
                     'createdAt' => $thread->postData->createdAt,
-                    'updatedAt' => $thread->postData->updatedAt
+                    'updatedAt' => $thread->updatedAt
                 ];
             }
             return $threadsJson;
@@ -104,8 +99,8 @@ class BoardController extends Controller
      */
     public function actionGet($name)
     {
-        if ($board = Board::find()->where(['name' => $name])->limit(1)->one()) {
-                return $board->toArray('id', 'counter');
+        if ($board = Board::findOne(['name' => $name])) {
+            return $board->toArray();
         }
 
         \Yii::$app->response->setStatusCode(404);
@@ -120,8 +115,9 @@ class BoardController extends Controller
      */
     public function actionUpdate($name)
     {
-        $board = Board::find()->where(['name' => $name])->limit(1)->one();
-
+        $board = Board::findOne(['name' => $name]);
+        $board->scenario = Board::SCENARIO_UPDATE;
+        
         if ($board->load(\Yii::$app->request->post()) && $board->validate()) {
             if ($board->save()) {
                 return $this->actionGet($board->name);

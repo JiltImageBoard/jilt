@@ -15,11 +15,7 @@
 
 
 #### Example Request
-```javascript
-DELETE /boards/test
-```
+`DELETE /boards/test`
 
 #### Example Result
-```javascript
-//TODO: Example Result (void?)
-```
+Status code: `204`

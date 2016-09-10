@@ -14,7 +14,7 @@ use app\common\interfaces\DeletableInterface;
  * @property \app\models\PostData $postData
  */
 
-class Post extends ActiveRecordExtended implements DeletableInterface
+class Post extends ARExtended implements DeletableInterface
 {
     public static function tableName()
     {
@@ -26,9 +26,9 @@ class Post extends ActiveRecordExtended implements DeletableInterface
         return $this->hasOne(PostData::className(), ['id' => 'post_data_id']);
     }
 
-    public function getDeletedRows(Array &$carry)
+    public static function getDeletedRows(Array &$carry)
     {
-        $posts = $this->find()->where(['is_deleted' => '1'])->all();
+        $posts = self::find()->where(['is_deleted' => '1'])->all();
 
         if (empty($posts)) {
             return $carry;

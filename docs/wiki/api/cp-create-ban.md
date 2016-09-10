@@ -2,12 +2,12 @@
 `POST /api/control-panel/bans`
 
 #### Description
-  Adds ban by `board_id` / `thread_id` / `chat_num`
-  AND
+  Adds ban by `board_id` / `thread_id` / `chat_id`  
+  AND  
   `ip` / `subnetwork` / `session` / `name` / `message` / `file` / `country`.
 
 #### Resource information:
-  Requires authenticationyes  
+  Requires authentication:yes  
   Response formats: `JSON`
 
 
@@ -17,8 +17,8 @@
 | `int`    | optional | board_id              | Board id, on which ban will work. If not set, ban will be considered as global.
 | `int`    | optional | thread_id             | Thread id. If not set, ban will work for whole board.
 | `int`    | optional | chat_page_num         | Chat page number. If not set, ban will work for whole thread.
-| `string` | no       | ip                    | Ip adress
-| `string` | no       | subnetwork            | Subnetwork. Can be set only if ip is not empty.
+| `string` | no       | ip                    | Ip address
+| `string` | no       | subnet                | Subnet. Can be set only if ip is not empty.
 | `string` | no       | session               | Session
 | `string` | no       | name                  | Name
 | `string` | no       | message               | Message
@@ -31,8 +31,8 @@
 
 
 #### Example Request
-```javascript
-POST /control-panel/bans
+`POST /control-panel/bans`
+```JSON
 {
   "board_id": 11,
   "ip": "127.0.0.1",
@@ -43,9 +43,7 @@ POST /control-panel/bans
 ```
 
 #### Example Result
-```javascript
-{
-  "errorCode": 0,
-  "errorMessage": ""
-}
+Status code: `200`
+```JSON
+
 ```

@@ -65,8 +65,8 @@ class Ban
 
     public function getCountry()
     {
-        //TODO: Вычислять страну
-        return '';
+        /*location = \Yii::$app->ipGeoBase->getLocation($this->ip);*/
+        return isset($location['country']) ? $location['country'] : null;
     }
 
     public function getFiles()
@@ -78,7 +78,7 @@ class Ban
 
     public function banStrict()
     {
-        //TODO: Если вызывается этот метод, то глобально банить юзера абсолютно по всем имеющимся данным
+        //TODO: Если вызывается этот метод, то глобально банить юзера по айпи и сессии
     }
 
     public function check()
@@ -91,7 +91,7 @@ class Ban
 
         ->join('LEFT JOIN', 'bans_boards', 'bans_boards.bans_settings_id = bans_settings.id');
 
-        if ($this->scenario = 'inThread') {
+        if ($this->scenario == 'inThread') {
             $query->join('LEFT JOIN', 'bans_threads', 'bans_threads.bans_settings_id = bans_settings.id');
         }
 
@@ -105,7 +105,7 @@ class Ban
         /**
          *  Select all data we can retrieve from user
          */
-        if ($this->scenario = 'inThread') {
+        if ($this->scenario == 'inThread') {
             $query->where([
                 'bans_boards.id' => $this->board->id,
                 'bans_threads.id' => $this->thread->id
@@ -132,7 +132,7 @@ class Ban
             ->orWhere(['session' => $this->session])
             ->orWhere(['message' => $this->message])
             ->orWhere(['files_info_id' => 1])
-            ->orWhere(['country' => 'UA']);
+            ->orWhere(['country' => $this->getCountry()]);
         
 
         if (empty($query->all())) {

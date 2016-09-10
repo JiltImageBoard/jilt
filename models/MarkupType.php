@@ -2,7 +2,7 @@
 
 namespace app\models;
 
-class MarkupType extends ActiveRecordExtended
+class MarkupType extends ARExtended
 {
     public static function tableName()
     {
