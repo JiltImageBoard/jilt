@@ -25,11 +25,6 @@ use Yii;
 
 class ThreadController extends Controller
 {
-    public function __construct($id, Module $module, array $config)
-    {
-        parent::__construct($id, $module, $config);
-    }
-
     /**
      * @param string $name
      * @param int $threadNum
