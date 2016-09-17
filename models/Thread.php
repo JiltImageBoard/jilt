@@ -12,20 +12,20 @@ use app\common\interfaces\DeletableInterface;
  * Class Thread
  * @package app\models
  *
- * @property int $id
- * @property int $boardId
- * @property int $number
- * @property bool $isSticked
- * @property bool $isLocked
- * @property bool $isOpMarkEnabled
- * @property bool $isChat
- * @property bool $isDeleted
- * @property int $postDataId
+ * @property int    $id
+ * @property int    $boardId
+ * @property int    $number
+ * @property bool   $isSticked
+ * @property bool   $isLocked
+ * @property bool   $isOpMarkEnabled
+ * @property bool   $isChat
+ * @property bool   $isDeleted
+ * @property int    $postDataId
  * @property string $updatedAt
  * relations
- * @property Board $board
- * @property PostData $postData
- * @property Post[] $posts
+ * @property Board         $board
+ * @property PostData      $postData
+ * @property Post[]        $posts
  * @property PostsSettings $postsSettings
  */
 class Thread extends ARExtended implements DeletableInterface

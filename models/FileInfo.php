@@ -8,12 +8,15 @@ use yii\web\UploadedFile;
 /**
  * Class FileInfo
  * @package app\models
- * @property int $id
- * @property int $mimeTypesId
- * @property string $filePath
- * @property string $originalName
- * @property string $hash
- * @property float $size
+ * @property int        $id
+ * @property int        $mimeTypesId
+ * @property string     $filePath
+ * @property string     $fileName
+ * @property string     $url
+ * @property string     $thumbUrl
+ * @property string     $originalName
+ * @property string     $hash
+ * @property float      $size
  * @property ARExtended $subClassInstance
  * relations
  * @property MimeType $mimeType
@@ -66,20 +69,36 @@ class FileInfo extends ARExtended
             print_r('subclass instance was not found' . PHP_EOL);
         }
 
-        unlink($this->filePath);
+        unlink($this->fileName);
 
         return true;
     }
 
+    /**
+     * @return bool|string
+     */
+    public function getFilePath() {
+        return \Yii::getAlias('@files/' . $this->fileName);
+    }
+
+    public function getUrl() {
+        return \Yii::getAlias('@files-dir/' . $this->fileName);
+    }
+
+    public function getThumbUrl() {
+        $parts = explode('.', $this->getUrl());
+        return implode('.', array_slice($parts, 0, count($parts) - 1)) . '_thumb' . '.' . $parts[count($parts) - 1];
+    }
+
     public function save($runValidation = true, $attributeNames = null)
     {
-        $isFilePathChanged = $this->getOldAttribute('file_path') !== $this->filePath;
+        $isFileNameChanged = $this->getOldAttribute('file_name') !== $this->fileName;
 
         if (!parent::save($runValidation, $attributeNames)) {
             return false;
         }
 
-        if (!$isFilePathChanged) {
+        if (!$isFileNameChanged) {
             return true;
         }
 

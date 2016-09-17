@@ -61,7 +61,9 @@ $config = [
     'params' => $params,
     'defaultRoute' => 'board/get-all',
     'aliases' => [
-        'files' => '@web/files'
+        '@files-dir' => 'files',
+        'files'      => '@web/@files-dir',
+        'bower'      => '@vendor/bower-asset'
     ]
 ];
 

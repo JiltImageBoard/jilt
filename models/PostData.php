@@ -12,15 +12,15 @@ use yii\web\UploadedFile;
  * Class PostData
  * @package app\models
  *
- * @property int $id
- * @property string $name
- * @property string $messageText
- * @property string $subject
- * @property int $ip
- * @property string $session
- * @property bool $isPremoded
- * @property bool $isModPost
- * @property bool $isDeleted
+ * @property int       $id
+ * @property string    $name
+ * @property string    $messageText
+ * @property string    $subject
+ * @property int       $ip
+ * @property string    $session
+ * @property bool      $isPremoded
+ * @property bool      $isModPost
+ * @property bool      $isDeleted
  * @property \DateTime $createdAt
  * @property \DateTime $updatedAt
  * relations

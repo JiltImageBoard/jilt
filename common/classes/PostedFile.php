@@ -83,7 +83,8 @@ class PostedFile extends Object
             return true;
         }
 
-        $filePath = Yii::getAlias('@files/' . $fileHash . '.' . $file->extension);
+        $fileName = $fileHash . '.' . $file->extension;
+        $filePath = Yii::getAlias('@files/' . $fileName);
         if (!$file->saveAs($filePath)) {
             return false;
         }
@@ -91,7 +92,7 @@ class PostedFile extends Object
         $mimeType = MimeType::findOne(['name' => FileHelper::getMimeType($filePath)]);
 
         $fileInfo = new FileInfo([
-            'filePath' => $filePath,
+            'fileName' => fileName,
             'originalName' => $file->name,
             'hash' => $fileHash,
             'mimeTypeId' => $mimeType->id,

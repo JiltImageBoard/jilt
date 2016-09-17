@@ -4,10 +4,12 @@ use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 use app\assets\DebugAssets;
 
-/* @var yii\web\View $this */
-/* @var string $content */
-/* @var \app\models\PostData $postData */
-/* @var \app\models\Thread $thread */
+/**
+ * @var yii\web\View $this
+ * @var string $content
+ * @var \app\models\PostData $postData
+ * @var \app\models\Thread $thread
+ */
 
 DebugAssets::register($this);
 

@@ -4,7 +4,10 @@ namespace app\controllers;
 
 use app\models\Board;
 use app\models\BoardCounter;
+use app\services\BoardService;
+use yii\base\UserException;
 use yii\web\Controller;
+use yii\web\Response;
 
 /**
  * Class BoardController
@@ -54,48 +57,27 @@ class BoardController extends Controller
 
     /**
      * Returns N threads from board
-     * @param $name
+     * @param $boardName
      * @param int $pageNum
      * @return array|\yii\web\Response|bool
+     * @throws UserException
      */
-    public function actionGetPage($name, $pageNum = 0)
+    public function actionGetThreadsPage(string $boardName, int $pageNum = 0)
     {
-        /** @var Board $board */
-        $board = Board::find()
-            ->where(['boards.name' => $name])
-            ->one();
-        if ($board) {
-            $threadsJson = [];
+        $threads = BoardService::getThreadsPage($boardName, $pageNum);
 
-            // TODO: pagination not implemented
-            foreach ($board->threads as $thread) {
-                $threadsJson[] = [
-                    'id' => $thread->id,
-                    'boardName' => $thread->board->name,
-                    'number' => $thread->number,
-                    'isSticked' => $thread->isSticked,
-                    'isLocked' => $thread->isLocked,
-                    'isChat' => $thread->isChat,
-                    'isOpMarkEnabled' => $thread->isOpMarkEnabled,
-                    'name' => $thread->postData->name,
-                    'subject' => $thread->postData->subject,
-                    'message' => $thread->postData->postMessage->text,
-                    'files' => [], //TODO: Реализовать файлы
-                    'isModPost' => $thread->postData->isModPost,
-                    'createdAt' => $thread->postData->createdAt,
-                    'updatedAt' => $thread->updatedAt
-                ];
-            }
-            return $threadsJson;
+        if (\Yii::$app->request->isAjax) {
+            \Yii::$app->response->format = Response::FORMAT_JSON;
+            return $threads;
         }
 
-        return null;
+        return $this->render('threads-paged', ['threads' => $threads]);
     }
 
     /**
-     * Gets board info
      * @param $name
-     * @return array|\yii\web\Response
+     * @return array
+     * @throws UserException
      */
     public function actionGet($name)
     {
@@ -103,9 +85,7 @@ class BoardController extends Controller
             return $board->toArray();
         }
 
-        \Yii::$app->response->setStatusCode(404);
-        //TODO: Нормальная ошибка
-        return 'Board was not found';
+        throw new UserException('Board was not found', 404);
     }
 
     /**

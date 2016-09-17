@@ -11,9 +11,9 @@ use yii\base\Model;
 use yii\base\UserException;
 use yii\web\Response;
 
-class ThreadService {
-
-    public function create(string $boardName, array $data)
+class ThreadService
+{
+    public static function create(string $boardName, array $data)
     {
         /** @var Board $board */
         if (!$board = Board::findOne(['name' => $boardName])) {
