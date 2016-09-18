@@ -17,6 +17,7 @@ namespace app\models;
  * @property string $maxImageResolution
  * @property int    $maxFiles
  * @property string $maxMessageLength
+ * @property string $defaultName
  * relations
  * @property Board[]      $boards
  * @property Thread[]     $threads

@@ -30,7 +30,7 @@ abstract class ARExtended extends ActiveRecord
 
     public function __get($key)
     {
-        if ($key = $this->hasKey($key)){
+        if ($key = $this->hasKey($key)) {
             return parent::__get($key);
         }
     }

@@ -59,19 +59,25 @@ class BoardController extends Controller
      * Returns N threads from board
      * @param $boardName
      * @param int $pageNum
-     * @return array|\yii\web\Response|bool
+     * @return mixed
      * @throws UserException
      */
     public function actionGetThreadsPage(string $boardName, int $pageNum = 0)
     {
-        $threads = BoardService::getThreadsPage($boardName, $pageNum);
+        $board = Board::getByName($boardName);
+        $threads = BoardService::getThreadsPage($board, $pageNum);
+
+        $test = $threads[0]->postData->createdAt;
 
         if (\Yii::$app->request->isAjax) {
             \Yii::$app->response->format = Response::FORMAT_JSON;
             return $threads;
         }
 
-        return $this->render('threads-paged', ['threads' => $threads]);
+        return $this->render('threads-paged', [
+            'threads' => $threads,
+            'defaultName' => $board->postsSettings->defaultName
+        ]);
     }
 
     /**

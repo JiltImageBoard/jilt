@@ -2,7 +2,9 @@
 
 namespace app\models;
 
+use app\common\classes\Date;
 use app\common\interfaces\DeletableInterface;
+use yii\base\UserException;
 use yii\behaviors\TimestampBehavior;
 use yii\db\Expression;
 use app\common\interfaces;
@@ -11,22 +13,22 @@ use app\common\interfaces;
  * Class Board
  * @package app\models
  *
- * @property int $id
+ * @property int    $id
  * @property string $name
  * @property string $description
- * @property \DateTime $createdAt
- * @property \DateTime $updatedAt
- * @property int $maxThreadsOnPage
- * @property int $maxBoardPages
- * @property int $threadMaxPosts
- * @property bool $isClosed
- * @property bool $isDeleted
- * @property int $maxFiles
+ * @property Date   $createdAt
+ * @property Date   $updatedAt
+ * @property int    $maxThreadsOnPage
+ * @property int    $maxBoardPages
+ * @property int    $threadMaxPosts
+ * @property bool   $isClosed
+ * @property bool   $isDeleted
+ * @property int    $maxFiles
  * 
  * relations
  * @property PostsSettings $postsSettings
- * @property Thread[] $threads
- * @property BoardCounter $counter
+ * @property Thread[]      $threads
+ * @property BoardCounter  $counter
  */
 class Board extends ARExtended
 {
@@ -38,6 +40,17 @@ class Board extends ARExtended
     {
         return 'boards';
     }
+
+    public static function getByName(string $name)
+    {
+        $board = Board::find()->where(['boards.name' => $name])->one();
+        if (!$board) {
+            throw new UserException('Board was not found', 404);
+        }
+
+        return $board;
+    }
+
 
     public function getPostsSettings()
     {
@@ -53,6 +66,16 @@ class Board extends ARExtended
     public function getCounter()
     {
         return $this->hasOne(BoardCounter::className(), ['board_id' => 'id']);
+    }
+
+    public function getCreatedAt()
+    {
+        return new Date($this->createdAt);
+    }
+
+    public function getUpdatedAt()
+    {
+        return new Date($this->updatedAt);
     }
 
     /**

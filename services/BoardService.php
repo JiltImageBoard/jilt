@@ -15,14 +15,8 @@ class BoardService
      * @return Thread[]
      * @throws UserException
      */
-    public static function getThreadsPage(string $boardName, int $pageNum, int $perPage = 10)
+    public static function getThreadsPage(Board $board, int $pageNum, int $perPage = 10)
     {
-        /** @var Board $board */
-        $board = Board::find()->where(['boards.name' => $boardName])->one();
-        if (!$board) {
-            throw new UserException('Board was not found', 404);
-        }
-
         return $board->getThreads()->limit(10)->offset($pageNum * $perPage)->with(['postData', 'postData.fileInfos'])->all();
     }
 }

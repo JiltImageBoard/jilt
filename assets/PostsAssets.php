@@ -7,6 +7,6 @@ use yii\web\AssetBundle;
 class PostsAssets extends AssetBundle
 {
     public $css = [
-        'css/posts.css'
+        'css/posts-base.css'
     ];
 }
