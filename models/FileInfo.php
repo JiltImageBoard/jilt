@@ -17,6 +17,7 @@ use yii\web\UploadedFile;
  * @property string     $originalName
  * @property string     $hash
  * @property float      $size
+ * @property string     $sizeStr
  * @property ARExtended $subClassInstance
  * relations
  * @property MimeType $mimeType
@@ -77,15 +78,29 @@ class FileInfo extends ARExtended
     /**
      * @return bool|string
      */
-    public function getFilePath() {
+    public function getFilePath()
+    {
         return \Yii::getAlias('@files/' . $this->fileName);
     }
 
-    public function getUrl() {
+    public function getUrl()
+    {
         return \Yii::getAlias('@files-dir/' . $this->fileName);
     }
 
-    public function getThumbUrl() {
+    public function getSizeStr()
+    {
+        $size = $this->size;
+        $degree = 1;
+        $degreeToLabel = [1 => 'B', 2 => 'KB', 3 => 'MB', 4 => 'GB'];
+
+        while ($size > 1024) { $size /= 1024; $degree++; }
+
+        return number_format($size, 2, '.', '') . $degreeToLabel[$degree];
+    }
+
+    public function getThumbUrl()
+    {
         $parts = explode('.', $this->getUrl());
         return implode('.', array_slice($parts, 0, count($parts) - 1)) . '_thumb' . '.' . $parts[count($parts) - 1];
     }

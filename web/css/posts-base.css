@@ -1,9 +1,38 @@
 .post {
+    display: inline-block;
     margin: 20px;
     padding: 10px;
+    min-width: 33em;
+    max-width: 100%;
+}
+
+.post .message-text {
+    display: inline-block;
+    border-left: none;
+    padding-top: 30px;
+}
+
+.files.single {
+    float: left;
+}
+
+.file {
+    display: inline-block;
+    margin: 0px 10px 0px 10px;
+    vertical-align: top;
 }
 
 /*this should go to theme style files*/
+
+.file-url {
+    text-decoration: underline;
+    font-size: 0.9em
+}
+
+.file-size {
+    display: block;
+    font-size: 0.85em;
+}
 
 .post {
     background: lightgrey;
@@ -13,3 +42,4 @@
     font-weight: bold;
     font-size: 1.5em;
 }
+

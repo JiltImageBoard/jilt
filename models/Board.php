@@ -70,12 +70,12 @@ class Board extends ARExtended
 
     public function getCreatedAt()
     {
-        return new Date($this->createdAt);
+        return new Date($this->attributes['created_at']);
     }
 
     public function getUpdatedAt()
     {
-        return new Date($this->updatedAt);
+        return new Date($this->attributes['update_at']);
     }
 
     /**

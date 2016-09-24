@@ -2,6 +2,7 @@
 
 namespace app\models;
 
+use app\common\classes\Date;
 use app\common\classes\PostedFile;
 use app\common\validators\PostedFileValidator;
 use yii\behaviors\TimestampBehavior;
@@ -12,17 +13,17 @@ use yii\web\UploadedFile;
  * Class PostData
  * @package app\models
  *
- * @property int       $id
- * @property string    $name
- * @property string    $messageText
- * @property string    $subject
- * @property int       $ip
- * @property string    $session
- * @property bool      $isPremoded
- * @property bool      $isModPost
- * @property bool      $isDeleted
- * @property \DateTime $createdAt
- * @property \DateTime $updatedAt
+ * @property int    $id
+ * @property string $name
+ * @property string $messageText
+ * @property string $subject
+ * @property int    $ip
+ * @property string $session
+ * @property bool   $isPremoded
+ * @property bool   $isModPost
+ * @property bool   $isDeleted
+ * @property Date   $createdAt
+ * @property Date   $updatedAt
  * relations
  * @property FileInfo[] $fileInfos
  */
@@ -75,5 +76,10 @@ class PostData extends ARExtended
                 'value' => new Expression('NOW()'),
             ]
         ];
+    }
+
+    public function getCreatedAt()
+    {
+        return new Date($this->attributes['created_at']);
     }
 }
