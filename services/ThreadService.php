@@ -2,6 +2,7 @@
 
 namespace app\services;
 
+use app\common\classes\PostedFile;
 use app\models\ARExtended;
 use app\models\Board;
 use app\models\PostData;
@@ -9,7 +10,6 @@ use app\models\Thread;
 use app\models\UploadForm;
 use yii\base\Model;
 use yii\base\UserException;
-use yii\web\Response;
 
 class ThreadService
 {

@@ -26,6 +26,8 @@ use yii\web\UploadedFile;
  * @property Date   $updatedAt
  * relations
  * @property FileInfo[] $fileInfos
+ * @property Thread     $thread
+ * @property Post       $post
  */
 class PostData extends ARExtended
 {
@@ -40,6 +42,16 @@ class PostData extends ARExtended
     public static function tableName()
     {
         return 'post_data';
+    }
+
+    public function getThread()
+    {
+        return $this->hasOne(Thread::className(), ['post_data_id' => 'id']);
+    }
+
+    public function getPost()
+    {
+        return $this->hasOne(Thread::className(), ['post_data_id' => 'id']);
     }
 
     public function rules()
@@ -78,8 +90,30 @@ class PostData extends ARExtended
         ];
     }
 
+    /**
+     * @return Date
+     */
     public function getCreatedAt()
     {
         return new Date($this->attributes['created_at']);
+    }
+
+    /**
+     * @return string
+     */
+    public function getDefaultName()
+    {
+        $thread = $this->thread ?: $this->post->thread;
+        $postsSettings = $thread->postsSettings ?: $thread->board->postsSettings;
+        return $postsSettings->defaultName;
+    }
+
+    /**
+     * @return string
+     */
+    public function getName()
+    {
+        $name = $this->attributes['name'];
+        return !empty($name) ? $name : $this->getDefaultName();
     }
 }

@@ -67,17 +67,12 @@ class BoardController extends Controller
         $board = Board::getByName($boardName);
         $threads = BoardService::getThreadsPage($board, $pageNum);
 
-        $test = $threads[0]->postData->createdAt;
-
         if (\Yii::$app->request->isAjax) {
             \Yii::$app->response->format = Response::FORMAT_JSON;
             return $threads;
         }
 
-        return $this->render('threads-paged', [
-            'threads' => $threads,
-            'defaultName' => $board->postsSettings->defaultName
-        ]);
+        return $this->render('threads-paged', ['threads' => $threads]);
     }
 
     /**

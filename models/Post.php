@@ -9,9 +9,11 @@ use app\common\interfaces\DeletableInterface;
  * @package app\models
  *
  * @property int $id
+ * @property int $number
  * @property int $postDataId
- *
- * @property \app\models\PostData $postData
+ * relations
+ * @property PostData $postData
+ * @property Thread   $thread
  */
 
 class Post extends ARExtended implements DeletableInterface
@@ -26,16 +28,21 @@ class Post extends ARExtended implements DeletableInterface
         return $this->hasOne(PostData::className(), ['id' => 'post_data_id']);
     }
 
+    public function getThread()
+    {
+        return $this->hasOne(Thread::className(), ['id' => 'thread_id']);
+    }
+
     public static function getDeletedRows(Array &$carry)
     {
-        $posts = self::find()->where(['is_deleted' => '1'])->all();
+        $posts = static::find()->where(['is_deleted' => '1'])->all();
 
         if (empty($posts)) {
             return $carry;
         }
 
         foreach ($posts as $post) {
-            $carry['postsIds'][] = $post->id;
+            $carry['postsIds'][] = $post->getPrimaryKey();
         }
     }
 
