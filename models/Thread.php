@@ -110,4 +110,17 @@ class Thread extends ARExtended implements DeletableInterface
             }
         }
     }
+
+    public function delete($physically = false)
+    {
+        if ($physically) {
+            $postData = $this->postData;
+            return parent::delete() ? $postData->delete() : false;
+        } else {
+            $this->isDeleted = true;
+            $this->save();
+        }
+    }
+
+
 }

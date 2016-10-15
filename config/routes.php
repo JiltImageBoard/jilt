@@ -5,7 +5,8 @@ return [
     'enablePrettyUrl' => true,
     'showScriptName' => false,
     'rules' => [
-        'GET <boardName:\w+>/?' => 'board/get-threads-page'
+        '<boardName:\w+>/?' => 'board/get-threads-page',
+        '<boardName:\w+>/threads/create/?' => 'thread/create',
     ]
 ];
 

@@ -41,16 +41,20 @@ class ThreadController extends Controller
     }
 
     /**
-     * @param string $name
+     * @param string $boardName
      * @return array|string
      */
-    public function actionCreate($name)
+    public function actionCreate($boardName)
     {
         $data = Yii::$app->request->post();
 
         if (Yii::$app->request->isAjax) {
-            // TODO: probably needs to be injected as dependency obj instead of being static class, idk..
-            $thread = ThreadService::create($name, $data);
+            /** @var Board $board */
+            if (!$board = Board::findOne(['name' => $boardName])) {
+                throw new UserException('Board was not found', 404);
+            }
+
+            $thread = ThreadService::create($board, $data);
             return $thread;
         } else {
             return $this->render('create', [

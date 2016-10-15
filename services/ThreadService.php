@@ -13,13 +13,14 @@ use yii\base\UserException;
 
 class ThreadService
 {
-    public static function create(string $boardName, array $data)
+    /**
+     * @param Board $board
+     * @param array $data
+     * @return Thread
+     * @throws UserException
+     */
+    public static function create(Board $board, array $data)
     {
-        /** @var Board $board */
-        if (!$board = Board::findOne(['name' => $boardName])) {
-            throw new UserException('Board was not found', 404);
-        }
-
         $validationParams = $board->postsSettings->getValidationParams();
 
         $thread     = new Thread(['boardId' => $board->id]);
